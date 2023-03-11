@@ -60,6 +60,8 @@ compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
 }
 
+compileQuerydsl.dependsOn(clean)
+
 test {
     useJUnitPlatform()
 }
