@@ -182,6 +182,31 @@ class QueryTestIT {
     }
 
     @Test
+    void findUsersWhoMadeAnOrderOfSpecificProduct() {
+        @Cleanup Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        var productFilter = ProductFilter.builder()
+                .brand(Brand.SONY)
+                .catalog(Catalog.builder()
+                        .category("HeadPhones")
+                        .build())
+                .build();
+        var results = query.findUsersWhoMadeAnOrderOfSpecificProduct(session, productFilter);
+        assertThat(results).hasSize(4);
+
+        var actualResult = results.stream().map(ShoppingCart::getUsersNameAndMailAndSpecificProduct).toList();
+        assertThat(actualResult).contains(
+                "Petr 321-45-67 petr@gmail.com Headphones SONY XM3",
+                "Dima 321-32-32 dima@gmail.com Headphones SONY XM4",
+                "Ksenia 123-32-32 ksenia@gmail.com Headphones SONY XM4",
+                "Vlad 981-01-18 vlad@gmail.com Headphones SONY XM5");
+
+        session.getTransaction().commit();
+
+    }
+
+    @Test
     void findAllOrdersWithProductsOfOneUser() {
         @Cleanup Session session = sessionFactory.openSession();
         session.beginTransaction();
@@ -210,7 +235,8 @@ class QueryTestIT {
         assertThat(results).hasSize(4);
 
         var actualResult = results.stream().map(ShoppingCart::getUserIdAndOrderIdAndLocalDateOfOrder).collect(toList());
-        assertThat(actualResult).containsExactlyInAnyOrder("Ivanov ivan@gmail.com 1 2022-12-10",
+        assertThat(actualResult).containsExactlyInAnyOrder(
+                "Ivanov ivan@gmail.com 1 2022-12-10",
                 "Svetikova sveta@gmail.com 2 2022-11-05",
                 "Vasev vasia@gmail.com 7 2022-11-05",
                 "Vasev vasia@gmail.com 7 2022-11-05");
@@ -223,11 +249,11 @@ class QueryTestIT {
         @Cleanup Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        var result = query.getStatisticOfAllOrders(session);
+        var result = query.getStatisticOfEachOrdersWithSum(session);
         assertThat(result).hasSize(8);
 
         var actualResult = result.stream().map(Tuple::toString).collect(toList());
-        assertThat(actualResult).contains("[1, 1000]","[2, 1100]","[3, 3400]", "[4, 2000]", "[5, 1450]", "[6, 1450]", "[7, 4000]", "[8, 3350]");
+        assertThat(actualResult).contains("[1, 1000]", "[2, 1100]", "[3, 3400]", "[4, 2000]", "[5, 1450]", "[6, 1450]", "[7, 4000]", "[8, 3350]");
 
         session.getTransaction().commit();
     }
