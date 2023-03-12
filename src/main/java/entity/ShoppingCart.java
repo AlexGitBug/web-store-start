@@ -21,8 +21,6 @@ import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.Arrays;
 
-import static util.StringUtil.SPACE;
-
 @NamedEntityGraph(name = "findAllOrdersOfUsers",
         attributeNodes = {
                 @NamedAttributeNode(value = "order", subgraph = "user"),
@@ -74,18 +72,4 @@ public class ShoppingCart {
                 .forEach(session::save);
     }
 
-    public String getIdAndCatalogOfProduct() {
-        return order.getId() + " " + product.getCatalog().getCategory() + SPACE + product.getModel();
-    }
-
-    public String getUserIdAndOrderIdAndLocalDateOfOrder() {
-        return order.getUser().getPersonalInformation().getLastName() + SPACE + order.getUser().getPersonalInformation().getEmail() + SPACE +
-                order.getId() + SPACE + getCreatedAt();
-    }
-
-    public String getUsersNameAndMailAndSpecificProduct() {
-        return order.getUser().getPersonalInformation().getFirstName() + SPACE + order.getUser().getPersonalInformation().getTelephone() + SPACE + order.getUser().getPersonalInformation().getEmail() + SPACE +
-                getProduct().getCategoryAndBrandAndModel();
-
-    }
 }

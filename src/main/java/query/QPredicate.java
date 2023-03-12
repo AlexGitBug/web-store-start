@@ -1,4 +1,4 @@
-package service;
+package query;
 
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
@@ -27,7 +27,7 @@ public class QPredicate {
         return this;
     }
 
-    //автоматически вызывает "and" и получается один единственный Predicate
+//    автоматически вызывает "and" и получается один единственный Predicate
     public Predicate buildAnd() {
         return ExpressionUtils.allOf(predicates);
     }

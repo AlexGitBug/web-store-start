@@ -63,16 +63,4 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<ShoppingCart> shoppingCarts = new ArrayList<>();
 
-    public String getCategoryAndBrandAndPrice() {
-        return getCatalog().getCategory() + " " + getBrand().name() + " " + price;
-    }
-
-    public String getCategoryAndBrandAndModel() {
-        return getCatalog().getCategory() + " " + getBrand().name() + " " + getModel();
-    }
-
-    public String getFullFilterForOneProduct() {
-        return getCatalog().getCategory() + " " + getBrand() + " " + getModel() + " " + getDateOfRelease() + " "
-                + getPrice() + " " + getColor();
-    }
 }

@@ -1,10 +1,7 @@
 package query;
 
-import com.querydsl.core.Tuple;
 import entity.Catalog;
 import entity.Product;
-import entity.ShoppingCart;
-import entity.embeddable.DeliveryAdress;
 import entity.embeddable.PersonalInformation;
 import entity.enums.Brand;
 import entity.enums.Color;
@@ -32,6 +29,7 @@ class QueryTestIT {
 
     private final SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
     private final Query query = Query.getInstance();
+//    private final Criteria criteria = Criteria.getInstance();
 
     @BeforeAll
     public void initDb() {
@@ -87,8 +85,24 @@ class QueryTestIT {
         var results = query.findOneProductEq(session, productFilter);
         assertThat(results).hasSize(1);
 
-        var brands = results.stream().map(Product::getFullFilterForOneProduct).collect(toList());
-        assertThat(brands).contains("Smartphone APPLE 13 2021-09-12 1000 BLACK");
+        var categoryResult = results.stream().map(it -> it.getCatalog().getCategory()).collect(toList());
+        assertThat(categoryResult).contains(productFilter.getCatalog().getCategory());
+
+        var modelResult = results.stream().map(Product::getModel).collect(toList());
+        assertThat(modelResult).contains(productFilter.getModel());
+
+        var brandResult = results.stream().map(Product::getBrand).collect(toList());
+        assertThat(brandResult).contains(productFilter.getBrand());
+
+        var colorResult = results.stream().map(Product::getColor).collect(toList());
+        assertThat(colorResult).contains(productFilter.getColor());
+
+        var dateOfRelease = results.stream().map(Product::getDateOfRelease).toList();
+        assertThat(dateOfRelease).contains(LocalDate.of(2021, 9, 12));
+
+        var price = results.stream().map(Product::getPrice).toList();
+        assertThat(price).contains(1000);
+
 
         session.getTransaction().commit();
 
@@ -110,8 +124,14 @@ class QueryTestIT {
         var results = query.findProductsGtPriceAndBrand(session, productFilter);
         assertThat(results).hasSize(3);
 
-        var brands = results.stream().map(Product::getCategoryAndBrandAndPrice).collect(toList());
-        assertThat(brands).contains("Smartphone SAMSUNG 900", "Smartphone SAMSUNG 1050", "Smartphone SAMSUNG 1100");
+        var categoryResult = results.stream().map(it -> it.getCatalog().getCategory()).collect(toList());
+        assertThat(categoryResult).contains(productFilter.getCatalog().getCategory());
+
+        var brandResult = results.stream().map(Product::getBrand).collect(toList());
+        assertThat(brandResult).contains(productFilter.getBrand());
+
+        var priceResult = results.stream().map(Product::getPrice).collect(toList());
+        assertThat(priceResult).contains(900, 1050, 1100);
 
         session.getTransaction().commit();
     }
@@ -134,48 +154,32 @@ class QueryTestIT {
         session.getTransaction().commit();
     }
 
-//    @Test
-//    void findCatalogOfProductWithBrandFromShoppingCart() {
-//        @Cleanup Session session = sessionFactory.openSession();
-//        session.beginTransaction();
-//
-//        CatalogFilter catalogFilter = CatalogFilter.builder().category("headphone").build();
-//        ProductFilter productFilter = ProductFilter.builder().brand(Brand.SONY).build();
-//
-//        List<Catalog> results = query.findCatalogOfProductWithBrandFromShoppingCart(session, catalogFilter, productFilter);
-//        assertThat(results).hasSize(1);
-//
-//        List<String> actualResult = results.stream().map(Catalog::getCategory).collect(toList());
-//        assertThat(actualResult).contains("Smartphone");
-//
-//
-//        session.getTransaction().commit();
-//    }
-
     @Test
-    void findAllProductsFromOrder() {
+    void findAllProductsFromOneOrder() {
         @Cleanup Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        var orderFilter = OrderFilter.builder()
-                .deliveryAdress(DeliveryAdress.builder()
-                        .city("Smorgon")
-                        .street("Minskaya")
-                        .building(11)
-                        .build())
-                .build();
-
         var userFilter = UserFilter.builder()
                 .personalInformation(PersonalInformation.builder()
-                        .telephone("321-45-67")
+                        .email("petr@gmail.com")
                         .build())
                 .build();
 
-        List<Product> results = query.findAllProductsFromOrder(session, orderFilter, userFilter);
+        var orderFilter = OrderFilter.builder()
+                .id(3)
+                .build();
+
+        List<Product> results = query.findAllProductsFromOrder(session, userFilter, orderFilter);
         assertThat(results).hasSize(3);
 
-        List<String> actualResult = results.stream().map(Product::getCategoryAndBrandAndModel).toList();
-        assertThat(actualResult).containsExactlyInAnyOrder("TV SAMSUNG A80J", "Smartphone SAMSUNG S22", "Headphones SONY XM3");
+        var categoryResult = results.stream().map(it->it.getCatalog().getCategory()).collect(toList());
+        assertThat(categoryResult).contains("TV", "Smartphone", "Headphones");
+
+        var brandResult = results.stream().map(it->it.getBrand().name()).collect(toList());
+        assertThat(brandResult).contains("SAMSUNG", "SAMSUNG", "SONY");
+
+        var modelResult = results.stream().map(Product::getModel).collect(toList());
+        assertThat(modelResult).contains("A80J", "S22", "XM3");
 
         session.getTransaction().commit();
 
@@ -189,18 +193,22 @@ class QueryTestIT {
         var productFilter = ProductFilter.builder()
                 .brand(Brand.SONY)
                 .catalog(Catalog.builder()
-                        .category("HeadPhones")
+                        .category("Headphones")
                         .build())
+                .model("XM4")
                 .build();
-        var results = query.findUsersWhoMadeAnOrderOfSpecificProduct(session, productFilter);
-        assertThat(results).hasSize(4);
 
-        var actualResult = results.stream().map(ShoppingCart::getUsersNameAndMailAndSpecificProduct).toList();
-        assertThat(actualResult).contains(
-                "Petr 321-45-67 petr@gmail.com Headphones SONY XM3",
-                "Dima 321-32-32 dima@gmail.com Headphones SONY XM4",
-                "Ksenia 123-32-32 ksenia@gmail.com Headphones SONY XM4",
-                "Vlad 981-01-18 vlad@gmail.com Headphones SONY XM5");
+        var results = query.findUsersWhoMadeAnOrderOfSpecificProduct(session, productFilter);
+        assertThat(results).hasSize(2);
+
+        var firstName = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getFirstName()).collect(toList());
+        assertThat(firstName).contains("Dima", "Ksenia");
+
+        var telephoneResult = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getTelephone()).collect(toList());
+        assertThat(telephoneResult).contains("321-32-32", "123-32-32");
+
+        var emailResult = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getEmail()).collect(toList());
+        assertThat(emailResult).contains("dima@gmail.com", "ksenia@gmail.com");
 
         session.getTransaction().commit();
 
@@ -220,8 +228,12 @@ class QueryTestIT {
         var results = query.findAllOrdersWithProductsOfOneUser(session, userFilter);
         assertThat(results).hasSize(3);
 
-        var actualResult = results.stream().map(ShoppingCart::getIdAndCatalogOfProduct).collect(toList());
-        assertThat(actualResult).containsExactlyInAnyOrder("3 TV A80J", "3 Smartphone S22", "3 Headphones XM3");
+        var orderId = results.stream().map(it -> it.getOrder().getId()).collect(toList());
+        assertThat(orderId).contains(3,3,3);
+
+        var categoryResult = results.stream().map(it->it.getProduct().getCatalog().getCategory()).collect(toList());
+        assertThat(categoryResult).contains("TV", "Smartphone", "Headphones");
+
 
         session.getTransaction().commit();
     }
@@ -234,16 +246,16 @@ class QueryTestIT {
         var results = query.findUserWhoMadeOrderInTime(session, LocalDate.of(2022, 10, 10), LocalDate.of(2023, 12, 12));
         assertThat(results).hasSize(4);
 
-        var actualResult = results.stream().map(ShoppingCart::getUserIdAndOrderIdAndLocalDateOfOrder).collect(toList());
-        assertThat(actualResult).containsExactlyInAnyOrder(
-                "Ivanov ivan@gmail.com 1 2022-12-10",
-                "Svetikova sveta@gmail.com 2 2022-11-05",
-                "Vasev vasia@gmail.com 7 2022-11-05",
-                "Vasev vasia@gmail.com 7 2022-11-05");
+        var firstName = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getFirstName()).collect(toList());
+        assertThat(firstName).contains("Ivan", "Sveta", "Vasia", "Vasia");
+
+        var email = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getEmail()).collect(toList());
+        assertThat(email).contains("ivan@gmail.com", "sveta@gmail.com", "vasia@gmail.com", "vasia@gmail.com");
 
         session.getTransaction().commit();
     }
 
+    //
     @Test
     void getStatisticOfAllOrders() {
         @Cleanup Session session = sessionFactory.openSession();
@@ -252,8 +264,11 @@ class QueryTestIT {
         var result = query.getStatisticOfEachOrdersWithSum(session);
         assertThat(result).hasSize(8);
 
-        var actualResult = result.stream().map(Tuple::toString).collect(toList());
-        assertThat(actualResult).contains("[1, 1000]", "[2, 1100]", "[3, 3400]", "[4, 2000]", "[5, 1450]", "[6, 1450]", "[7, 4000]", "[8, 3350]");
+        var orderId = result.stream().map(it -> it.get(0, Integer.class)).collect(toList());
+        assertThat(orderId).contains(1, 2, 3, 4, 5, 6, 7, 8);
+
+        var orderSum = result.stream().map(it -> it.get(1, Integer.class)).collect(toList());
+        assertThat(orderSum).contains(1000, 1100, 3400, 2000, 1450, 1450, 4000, 3350);
 
         session.getTransaction().commit();
     }

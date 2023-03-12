@@ -10,7 +10,6 @@ import org.hibernate.graph.GraphSemantic;
 import query.filter.OrderFilter;
 import query.filter.ProductFilter;
 import query.filter.UserFilter;
-import service.QPredicate;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,7 +20,6 @@ import static entity.QOrder.order;
 import static entity.QProduct.product;
 import static entity.QShoppingCart.shoppingCart;
 import static entity.QUser.user;
-
 
 public class Query {
 
@@ -107,13 +105,14 @@ public class Query {
 //                .fetch();
 //    }
 
-    public List<Product> findAllProductsFromOrder(Session session, OrderFilter orderFilter, UserFilter userFilter) {
+    public List<Product> findAllProductsFromOrder(Session session, UserFilter userFilter, OrderFilter orderFilter) {
+
         var predicate = QPredicate.builder()
-                .add(orderFilter.getDeliveryAdress().getCity(), order.deliveryAdress.city::eq)
-                .add(orderFilter.getDeliveryAdress().getStreet(), order.deliveryAdress.street::eq)
-                .add(orderFilter.getDeliveryAdress().getBuilding(), order.deliveryAdress.building::eq)
-                .add(userFilter.getPersonalInformation().getTelephone(), user.personalInformation.telephone::eq)
+                .add(userFilter.getPersonalInformation().getEmail(), user.personalInformation.email::eq)
+                .add(orderFilter.getId(), order.id::eq)
                 .buildAnd();
+
+
 
         return new JPAQuery<Product>(session)
                 .select(product)
@@ -177,15 +176,13 @@ public class Query {
                 .groupBy(order.id)
                 .select(order.id, product.price.sum())
                 .fetch();
-
     }
-
-
 
     public List<ShoppingCart> findUsersWhoMadeAnOrderOfSpecificProduct(Session session, ProductFilter productFilter) {
 
         var predicate = QPredicate.builder()
                 .add(productFilter.getBrand(), product.brand::eq)
+                .add(productFilter.getCatalog().getCategory(), catalog.category::eq)
                 .add(productFilter.getModel(), product.model::eq)
                 .buildAnd();
 
