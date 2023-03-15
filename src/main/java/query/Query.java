@@ -25,9 +25,6 @@ public class Query {
 
     private static final Query INSTANCE = new Query();
 
-    //пробный тест на поиск определенного товара
-
-
     public Product findById(Session session, Integer productId) {
 
         session.getEntityGraph("withCatalog");
@@ -38,14 +35,65 @@ public class Query {
         return session.find(Product.class, productId, properties);
     }
 
-    public List<Product> findOneProductEq(Session session, ProductFilter filter) {
+    public List<Product> findListOfProductsEq(Session session, ProductFilter filter) {
 
         var predicate = QPredicate.builder()
                 .add(filter.getCatalog().getCategory(), catalog.category::eq)
                 .add(filter.getBrand(), product.brand::eq)
-                .add(filter.getDateOfRelease(), product.dateOfRelease::eq)
-                .add(filter.getPrice(), product.price::eq)
-                .add(filter.getColor(), product.color::eq)
+//                .add(filter.getDateOfRelease(), product.dateOfRelease::eq)
+//                .add(filter.getPrice(), product.price::eq)
+//                .add(filter.getColor(), product.color::eq)
+                .buildAnd();
+
+        return new JPAQuery<Product>(session)
+                .select(product)
+                .from(product)
+                .join(product.catalog, catalog)
+                .where(predicate)
+                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("withCatalog"))
+                .fetch();
+    }
+
+
+    public List<Product> findListOfProductBetweenTwoPrice(Session session, ProductFilter filter, Integer sumA, Integer sumB) {
+
+        var predicate = QPredicate.builder()
+                .add(filter.getCatalog().getCategory(), catalog.category::eq)
+                .add(filter.getBrand(), product.brand::eq)
+                .buildAnd();
+
+        return new JPAQuery<Product>(session)
+                .select(product)
+                .from(product)
+                .join(product.catalog, catalog)
+                .where(predicate, product.price.between(sumA, sumB))
+                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("withCatalog"))
+                .fetch();
+    }
+
+    public List<Product> findListOfProductGtPrice(Session session, ProductFilter filter, Integer price) {
+
+        var predicate = QPredicate.builder()
+                .add(filter.getCatalog().getCategory(), catalog.category::eq)
+                .add(filter.getBrand(), product.brand::eq)
+                .add(price, product.price::gt)
+                .buildAnd();
+
+        return new JPAQuery<Product>(session)
+                .select(product)
+                .from(product)
+                .join(product.catalog, catalog)
+                .where(predicate)
+                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("withCatalog"))
+                .fetch();
+    }
+
+    public List<Product> findListOfProductLtPrice(Session session, ProductFilter filter, Integer price) {
+
+        var predicate = QPredicate.builder()
+                .add(filter.getCatalog().getCategory(), catalog.category::eq)
+                .add(filter.getBrand(), product.brand::eq)
+                .add(price, product.price::lt)
                 .buildAnd();
 
         return new JPAQuery<Product>(session)
@@ -89,21 +137,6 @@ public class Query {
                 .where(predicate)
                 .fetch();
     }
-
-//    public List<Catalog> findCatalogOfProductWithBrandFromShoppingCart(Session session, CatalogFilter catalogFilter, ProductFilter productFilter) {
-//        var predicate = QPredicate.builder()
-//                .add(productFilter.getBrand(), product.brand::eq)
-//                .add(catalogFilter.getCategory(), catalog.category::eq)
-//                .buildAnd();
-//
-//        return new JPAQuery<Catalog>(session)
-//                .select(catalog)
-//                .from(catalog)
-//                .join(catalog.products, product)
-//                .join(product.shoppingCarts, shoppingCart)
-//                .where(predicate)
-//                .fetch();
-//    }
 
     public List<Product> findAllProductsFromOrder(Session session, UserFilter userFilter, OrderFilter orderFilter) {
 

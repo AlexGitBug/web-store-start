@@ -4,7 +4,6 @@ import entity.Catalog;
 import entity.Product;
 import entity.embeddable.PersonalInformation;
 import entity.enums.Brand;
-import entity.enums.Color;
 import lombok.Cleanup;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -65,9 +64,28 @@ class QueryTestIT {
         session.getTransaction().commit();
     }
 
+    @Test
+    void findListOfProductBetweenTwoPrice() {
+        @Cleanup Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        var productFilter = ProductFilter.builder()
+                .catalog(Catalog.builder()
+                        .category("Headphones")
+                        .build())
+                .brand(Brand.SONY)
+                .build();
+
+        var results = query.findListOfProductBetweenTwoPrice(session, productFilter, 349, 401);
+        assertThat(results).hasSize(2);
+
+        var brands = results.stream().map(Product::getBrand).collect(toList());
+        assertThat(brands).contains(productFilter.getBrand());
+
+    }
 
     @Test
-    void findOneProductEq() {
+    void findListOfProductsEq() {
         @Cleanup Session session = sessionFactory.openSession();
         session.beginTransaction();
 
@@ -75,36 +93,58 @@ class QueryTestIT {
                 .catalog(Catalog.builder()
                         .category("Smartphone")
                         .build())
-                .price(1000)
-                .model("13")
                 .brand(Brand.APPLE)
-                .dateOfRelease(LocalDate.of(2021, 9, 12))
-                .color(Color.BLACK)
                 .build();
 
-        var results = query.findOneProductEq(session, productFilter);
+        var results = query.findListOfProductsEq(session, productFilter);
+        assertThat(results).hasSize(2);
+
+        var categoryResult = results.stream().map(it -> it.getCatalog().getCategory()).collect(toList());
+        assertThat(categoryResult).contains(productFilter.getCatalog().getCategory());
+
+        var brandResult = results.stream().map(Product::getBrand).collect(toList());
+        assertThat(brandResult).contains(productFilter.getBrand());
+
+
+        session.getTransaction().commit();
+
+    }
+
+    @Test
+    void findListOfProductGtPrice() {
+        @Cleanup Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        var productFilter = ProductFilter.builder()
+                .catalog(Catalog.builder()
+                        .category("Smartphone")
+                        .build())
+                .brand(Brand.APPLE)
+                .build();
+        var results = query.findListOfProductGtPrice(session, productFilter, 1050);
         assertThat(results).hasSize(1);
 
         var categoryResult = results.stream().map(it -> it.getCatalog().getCategory()).collect(toList());
         assertThat(categoryResult).contains(productFilter.getCatalog().getCategory());
 
-        var modelResult = results.stream().map(Product::getModel).collect(toList());
-        assertThat(modelResult).contains(productFilter.getModel());
+    }
 
-        var brandResult = results.stream().map(Product::getBrand).collect(toList());
-        assertThat(brandResult).contains(productFilter.getBrand());
+    @Test
+    void findListOfProductLtPrice() {
+        @Cleanup Session session = sessionFactory.openSession();
+        session.beginTransaction();
 
-        var colorResult = results.stream().map(Product::getColor).collect(toList());
-        assertThat(colorResult).contains(productFilter.getColor());
+        var productFilter = ProductFilter.builder()
+                .catalog(Catalog.builder()
+                        .category("Smartphone")
+                        .build())
+                .brand(Brand.APPLE)
+                .build();
+        var results = query.findListOfProductLtPrice(session, productFilter, 1050);
+        assertThat(results).hasSize(1);
 
-        var dateOfRelease = results.stream().map(Product::getDateOfRelease).toList();
-        assertThat(dateOfRelease).contains(LocalDate.of(2021, 9, 12));
-
-        var price = results.stream().map(Product::getPrice).toList();
-        assertThat(price).contains(1000);
-
-
-        session.getTransaction().commit();
+        var categoryResult = results.stream().map(it -> it.getCatalog().getCategory()).collect(toList());
+        assertThat(categoryResult).contains(productFilter.getCatalog().getCategory());
 
     }
 

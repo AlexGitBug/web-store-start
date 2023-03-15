@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.Session;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,7 +18,6 @@ import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedSubgraph;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.util.Arrays;
 
 @NamedEntityGraph(name = "findAllOrdersOfUsers",
         attributeNodes = {
@@ -62,14 +60,5 @@ public class ShoppingCart {
         this.product.getShoppingCarts().add(this);
     }
 
-    public void addProduct(Session session, Order order, Product... products) {
-        Arrays.stream(products)
-                .map(product -> ShoppingCart.builder()
-                        .order(order)
-                        .product(product)
-                        .createdAt(LocalDate.now())
-                        .build())
-                .forEach(session::save);
-    }
 
 }

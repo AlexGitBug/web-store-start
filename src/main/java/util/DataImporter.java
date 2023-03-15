@@ -38,6 +38,8 @@ public class DataImporter {
         var sonyHeadphoneXm3 = saveProduct(session, headphone, Brand.SONY, "XM3", LocalDate.of(2019, 1, 10), 300, Color.BLACK, "image");
         var sonyHeadphoneXm4 = saveProduct(session, headphone, Brand.SONY, "XM4", LocalDate.of(2020, 1, 10), 350, Color.BLACK, "image");
         var sonyHeadphoneXm5 = saveProduct(session, headphone, Brand.SONY, "XM5", LocalDate.of(2021, 1, 10), 400, Color.BLACK, "image");
+        var appleHeadphone = saveProduct(session, headphone, Brand.APPLE, "AirPodsMax", LocalDate.of(2021, 2, 15), 400, Color.WHITE, "image");
+        var samsungHeadphone = saveProduct(session, headphone, Brand.SAMSUNG, "GalaxyBuds", LocalDate.of(2020, 10, 10), 150, Color.BLACK, "image");
 
         var ivan = saveUser(session, "Ivan", "Ivanov", "ivan@gmail.com", "ivan", "123-45-67", LocalDate.of(1990, 10, 10), Role.USER);
         var sveta = saveUser(session, "Sveta", "Svetikova", "sveta@gmail.com", "sveta", "123-67-47", LocalDate.of(1985, 2, 2), Role.USER);
