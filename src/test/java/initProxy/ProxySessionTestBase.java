@@ -7,8 +7,12 @@ import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInstance;
+import util.TestDataImporter;
 
 import java.lang.reflect.Proxy;
+
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 @RequiredArgsConstructor
 public abstract class ProxySessionTestBase {

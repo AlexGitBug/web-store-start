@@ -1,10 +1,8 @@
-package dao;
+package dao.repisitory;
 
 import entity.Catalog;
-import query.Query;
 
 import javax.persistence.EntityManager;
-import javax.swing.text.html.parser.Entity;
 
 public class CatalogRepository extends RepositoryBase<Integer, Catalog> {
 

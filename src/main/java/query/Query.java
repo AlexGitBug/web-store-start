@@ -2,18 +2,15 @@ package query;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQuery;
-import entity.Product;
 import entity.ShoppingCart;
 import entity.User;
 import org.hibernate.Session;
 import org.hibernate.graph.GraphSemantic;
-import query.filter.OrderFilter;
-import query.filter.ProductFilter;
-import query.filter.UserFilter;
+import dao.repisitory.filter.ProductFilter;
+import dao.repisitory.filter.UserFilter;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 import static entity.QCatalog.catalog;
 import static entity.QOrder.order;
@@ -25,138 +22,133 @@ public class Query {
 
     private static final Query INSTANCE = new Query();
 
-    public Product findById(Session session, Integer productId) {
+//    public Product findById(Session session, Integer productId) {
+//
+//        session.getEntityGraph("withCatalog");
+//
+//        Map<String, Object> properties = Map.of(
+//                GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("withCatalog"));
+//
+//        return session.find(Product.class, productId, properties);
+//    }
 
-        session.getEntityGraph("withCatalog");
-
-        Map<String, Object> properties = Map.of(
-                GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("withCatalog"));
-
-        return session.find(Product.class, productId, properties);
-    }
-
-    public List<Product> findListOfProductsEq(Session session, ProductFilter filter) {
-
-        var predicate = QPredicate.builder()
-                .add(filter.getCatalog().getCategory(), catalog.category::eq)
-                .add(filter.getBrand(), product.brand::eq)
-//                .add(filter.getDateOfRelease(), product.dateOfRelease::eq)
-//                .add(filter.getPrice(), product.price::eq)
-//                .add(filter.getColor(), product.color::eq)
-                .buildAnd();
-
-        return new JPAQuery<Product>(session)
-                .select(product)
-                .from(product)
-                .join(product.catalog, catalog)
-                .where(predicate)
-                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("withCatalog"))
-                .fetch();
-    }
+//    public List<Product> findListOfProductsEq(Session session, ProductFilter filter) {
+//
+//        var predicate = QPredicate.builder()
+//                .add(filter.getCatalog().getCategory(), catalog.category::eq)
+//                .add(filter.getBrand(), product.brand::eq)
+//                .buildAnd();
+//
+//        return new JPAQuery<Product>(session)
+//                .select(product)
+//                .from(product)
+//                .join(product.catalog, catalog)
+//                .where(predicate)
+//                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("withCatalog"))
+//                .fetch();
+//    }
 
 
-    public List<Product> findListOfProductBetweenTwoPrice(Session session, ProductFilter filter, Integer sumA, Integer sumB) {
+//    public List<Product> findListOfProductBetweenTwoPrice(Session session, ProductFilter filter, Integer sumA, Integer sumB) {
+//
+//        var predicate = QPredicate.builder()
+//                .add(filter.getCatalog().getCategory(), catalog.category::eq)
+//                .add(filter.getBrand(), product.brand::eq)
+//                .buildAnd();
+//
+//        return new JPAQuery<Product>(session)
+//                .select(product)
+//                .from(product)
+//                .join(product.catalog, catalog)
+//                .where(predicate, product.price.between(sumA, sumB))
+//                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("withCatalog"))
+//                .fetch();
+//    }
 
-        var predicate = QPredicate.builder()
-                .add(filter.getCatalog().getCategory(), catalog.category::eq)
-                .add(filter.getBrand(), product.brand::eq)
-                .buildAnd();
+//    public List<Product> findListOfProductGtPrice(Session session, ProductFilter filter, Integer price) {
+//
+//        var predicate = QPredicate.builder()
+//                .add(filter.getCatalog().getCategory(), catalog.category::eq)
+//                .add(filter.getBrand(), product.brand::eq)
+//                .add(price, product.price::gt)
+//                .buildAnd();
+//
+//        return new JPAQuery<Product>(session)
+//                .select(product)
+//                .from(product)
+//                .join(product.catalog, catalog)
+//                .where(predicate)
+//                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("withCatalog"))
+//                .fetch();
+//    }
 
-        return new JPAQuery<Product>(session)
-                .select(product)
-                .from(product)
-                .join(product.catalog, catalog)
-                .where(predicate, product.price.between(sumA, sumB))
-                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("withCatalog"))
-                .fetch();
-    }
-
-    public List<Product> findListOfProductGtPrice(Session session, ProductFilter filter, Integer price) {
-
-        var predicate = QPredicate.builder()
-                .add(filter.getCatalog().getCategory(), catalog.category::eq)
-                .add(filter.getBrand(), product.brand::eq)
-                .add(price, product.price::gt)
-                .buildAnd();
-
-        return new JPAQuery<Product>(session)
-                .select(product)
-                .from(product)
-                .join(product.catalog, catalog)
-                .where(predicate)
-                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("withCatalog"))
-                .fetch();
-    }
-
-    public List<Product> findListOfProductLtPrice(Session session, ProductFilter filter, Integer price) {
-
-        var predicate = QPredicate.builder()
-                .add(filter.getCatalog().getCategory(), catalog.category::eq)
-                .add(filter.getBrand(), product.brand::eq)
-                .add(price, product.price::lt)
-                .buildAnd();
-
-        return new JPAQuery<Product>(session)
-                .select(product)
-                .from(product)
-                .join(product.catalog, catalog)
-                .where(predicate)
-                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("withCatalog"))
-                .fetch();
-    }
+//    public List<Product> findListOfProductLtPrice(Session session, ProductFilter filter, Integer price) {
+//
+//        var predicate = QPredicate.builder()
+//                .add(filter.getCatalog().getCategory(), catalog.category::eq)
+//                .add(filter.getBrand(), product.brand::eq)
+//                .add(price, product.price::lt)
+//                .buildAnd();
+//
+//        return new JPAQuery<Product>(session)
+//                .select(product)
+//                .from(product)
+//                .join(product.catalog, catalog)
+//                .where(predicate)
+//                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("withCatalog"))
+//                .fetch();
+//    }
 
     //Список всех товаров выше 1000 и определенного бренда
-    public List<Product> findProductsGtPriceAndBrand(Session session, ProductFilter filter) {
-
-        var predicate = QPredicate.builder()
-                .add(filter.getCatalog().getCategory(), catalog.category::eq)
-                .add(filter.getBrand(), product.brand::eq)
-                .add(filter.getPrice(), product.price::gt)
-                .buildAnd();
-
-        return new JPAQuery<Product>(session)
-                .select(product)
-                .from(product)
-                .join(product.catalog, catalog)
-                .where(predicate)
-                .orderBy(product.price.asc())
-                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("withCatalog"))
-                .fetch();
-    }
+//    public List<Product> findProductsGtPriceAndBrand(Session session, ProductFilter filter) {
+//
+//        var predicate = QPredicate.builder()
+//                .add(filter.getCatalog().getCategory(), catalog.category::eq)
+//                .add(filter.getBrand(), product.brand::eq)
+//                .add(filter.getPrice(), product.price::gt)
+//                .buildAnd();
+//
+//        return new JPAQuery<Product>(session)
+//                .select(product)
+//                .from(product)
+//                .join(product.catalog, catalog)
+//                .where(predicate)
+//                .orderBy(product.price.asc())
+//                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("withCatalog"))
+//                .fetch();
+//    }
 
     //Список всех продуктов по бренду
-    public List<Product> findAllProductOfBrand(Session session, ProductFilter filter) {
+//    public List<Product> findAllProductOfBrand(Session session, ProductFilter filter) {
+//
+//        var predicate = QPredicate.builder()
+//                .add(filter.getBrand(), product.brand::eq)
+//                .buildAnd();
+//
+//        return new JPAQuery<Product>(session)
+//                .select(product)
+//                .from(product)
+//                .where(predicate)
+//                .fetch();
+//    }
 
-        var predicate = QPredicate.builder()
-                .add(filter.getBrand(), product.brand::eq)
-                .buildAnd();
-
-        return new JPAQuery<Product>(session)
-                .select(product)
-                .from(product)
-                .where(predicate)
-                .fetch();
-    }
-
-    public List<Product> findAllProductsFromOrder(Session session, UserFilter userFilter, OrderFilter orderFilter) {
-
-        var predicate = QPredicate.builder()
-                .add(userFilter.getPersonalInformation().getEmail(), user.personalInformation.email::eq)
-                .add(orderFilter.getId(), order.id::eq)
-                .buildAnd();
-
-
-
-        return new JPAQuery<Product>(session)
-                .select(product)
-                .from(product)
-                .join(product.shoppingCarts, shoppingCart)
-                .join(shoppingCart.order, order)
-                .join(order.user, user)
-                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("withCatalog"))
-                .where(predicate)
-                .fetch();
-    }
+//    public List<Product> findAllProductsFromOrder(Session session, UserFilter userFilter, OrderFilter orderFilter) {
+//
+//        var predicate = QPredicate.builder()
+//                .add(userFilter.getPersonalInformation().getEmail(), user.personalInformation.email::eq)
+//                .add(orderFilter.getId(), order.id::eq)
+//                .buildAnd();
+//
+//        return new JPAQuery<Product>(session)
+//                .select(product)
+//                .from(product)
+//                .join(product.shoppingCarts, shoppingCart)
+//                .join(shoppingCart.order, order)
+//                .join(order.user, user)
+//                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("withCatalog"))
+//                .where(predicate)
+//                .fetch();
+//    }
 
     public List<ShoppingCart> findAllOrdersWithProductsOfOneUser(Session session, UserFilter userFilter) {
 
@@ -192,12 +184,12 @@ public class Query {
                 .fetch();
     }
 
-    public Product findMinPriceOfProduct(Session session) {
-        var result = session.createQuery("select p from Product p order by p.price asc", Product.class)
-                .setMaxResults(1)
-                .uniqueResult();
-        return result;
-    }
+//    public Product findMinPriceOfProduct(Session session) {
+//        var result = session.createQuery("select p from Product p order by p.price asc", Product.class)
+//                .setMaxResults(1)
+//                .uniqueResult();
+//        return result;
+//    }
 
     public List<Tuple> getStatisticOfEachOrdersWithSum(Session session) {
 

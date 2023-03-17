@@ -33,7 +33,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "orders", schema = "public")
-public class Order {
+public class Order implements BaseEntity<Integer>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

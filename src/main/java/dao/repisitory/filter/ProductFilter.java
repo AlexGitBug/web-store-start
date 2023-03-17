@@ -1,4 +1,4 @@
-package query.filter;
+package dao.repisitory.filter;
 
 import entity.Catalog;
 import entity.enums.Brand;

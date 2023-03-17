@@ -1,4 +1,4 @@
-package query.filter;
+package dao.repisitory.filter;
 
 import lombok.Builder;
 import lombok.Value;

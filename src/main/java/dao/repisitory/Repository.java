@@ -1,4 +1,4 @@
-package dao;
+package dao.repisitory;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +18,7 @@ public interface Repository<K, T> {
 
     void delete(K id);
 
-    boolean update(T entity);
+    void update(T entity);
 
     T save(T entity);
 }

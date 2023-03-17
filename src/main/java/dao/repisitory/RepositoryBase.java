@@ -1,23 +1,22 @@
-package dao;
+package dao.repisitory;
 
 
 
 import entity.BaseEntity;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.EntityManager;
-import javax.xml.catalog.Catalog;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Collections.emptyMap;
-
 @RequiredArgsConstructor
 public abstract class RepositoryBase<K extends Serializable, E extends BaseEntity<K>> implements Repository<K, E> {
 
     private final Class<E> clazz;
+    @Getter
     private final EntityManager entityManager;
 
     @Override
@@ -33,10 +32,9 @@ public abstract class RepositoryBase<K extends Serializable, E extends BaseEntit
     }
 
     @Override
-    public boolean update(E entity) {
+    public void update(E entity) {
         entityManager.merge(entity);
         entityManager.flush();
-        return true;
     }
 
     @Override

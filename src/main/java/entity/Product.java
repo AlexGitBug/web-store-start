@@ -35,7 +35,7 @@ import java.util.List;
 @ToString(exclude = {"shoppingCarts", "catalog"})
 @Builder
 @Entity
-public class Product {
+public class Product implements BaseEntity<Integer>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
