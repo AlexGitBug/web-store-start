@@ -24,22 +24,23 @@ public class DataImporter {
 
     public void importData(SessionFactory sessionFactory) {
         @Cleanup Session session = sessionFactory.openSession();
-
+        session.beginTransaction();
         var smartphone = saveCatalog(session, "Smartphone");
         var tv = saveCatalog(session, "TV");
         var headphone = saveCatalog(session, "Headphones");
 
-        var apple13 = saveProduct(session, smartphone, Brand.APPLE, "13", LocalDate.of(2021, 9, 12), 1000, Color.BLACK, "image");
-        var apple14 = saveProduct(session, smartphone, Brand.APPLE, "14", LocalDate.of(2022, 9, 12), 1100, Color.WHITE, "image");
-        var samsungS21 = saveProduct(session, smartphone, Brand.SAMSUNG, "S21", LocalDate.of(2022, 1, 10), 1050, Color.WHITE, "image");
-        var samsungS22 = saveProduct(session, smartphone, Brand.SAMSUNG, "S22", LocalDate.of(2022, 1, 12), 1100, Color.BLACK, "image");
-        var samsungS20 = saveProduct(session, smartphone, Brand.SAMSUNG, "S22", LocalDate.of(2022, 1, 12), 900, Color.BLACK, "image");
-        var samsungA80J = saveProduct(session, tv, Brand.SAMSUNG, "A80J", LocalDate.of(2022, 1, 12), 2000, Color.BLACK, "image");
-        var sonyHeadphoneXm3 = saveProduct(session, headphone, Brand.SONY, "XM3", LocalDate.of(2019, 1, 10), 300, Color.BLACK, "image");
-        var sonyHeadphoneXm4 = saveProduct(session, headphone, Brand.SONY, "XM4", LocalDate.of(2020, 1, 10), 350, Color.BLACK, "image");
-        var sonyHeadphoneXm5 = saveProduct(session, headphone, Brand.SONY, "XM5", LocalDate.of(2021, 1, 10), 400, Color.BLACK, "image");
-        var appleHeadphone = saveProduct(session, headphone, Brand.APPLE, "AirPodsMax", LocalDate.of(2021, 2, 15), 400, Color.WHITE, "image");
-        var samsungHeadphone = saveProduct(session, headphone, Brand.SAMSUNG, "GalaxyBuds", LocalDate.of(2020, 10, 10), 150, Color.BLACK, "image");
+        var apple12 = saveProduct(session, smartphone, Brand.APPLE, "12", LocalDate.of(2020, 9, 12), 950, Color.BLACK, "image", 100);
+        var apple13 = saveProduct(session, smartphone, Brand.APPLE, "13", LocalDate.of(2021, 9, 12), 1000, Color.BLACK, "image", 100);
+        var apple14 = saveProduct(session, smartphone, Brand.APPLE, "14", LocalDate.of(2022, 9, 12), 1100, Color.WHITE, "image", 100);
+        var samsungS21 = saveProduct(session, smartphone, Brand.SAMSUNG, "S21", LocalDate.of(2022, 1, 10), 1050, Color.WHITE, "image", 100);
+        var samsungS22 = saveProduct(session, smartphone, Brand.SAMSUNG, "S22", LocalDate.of(2022, 1, 12), 1100, Color.BLACK, "image", 100);
+        var samsungS20 = saveProduct(session, smartphone, Brand.SAMSUNG, "S22", LocalDate.of(2022, 1, 12), 900, Color.BLACK, "image", 100);
+        var samsungA80J = saveProduct(session, tv, Brand.SAMSUNG, "A80J", LocalDate.of(2022, 1, 12), 2000, Color.BLACK, "image", 100);
+        var sonyHeadphoneXm3 = saveProduct(session, headphone, Brand.SONY, "XM3", LocalDate.of(2019, 1, 10), 300, Color.BLACK, "image", 100);
+        var sonyHeadphoneXm4 = saveProduct(session, headphone, Brand.SONY, "XM4", LocalDate.of(2020, 1, 10), 350, Color.BLACK, "image", 100);
+        var sonyHeadphoneXm5 = saveProduct(session, headphone, Brand.SONY, "XM5", LocalDate.of(2021, 1, 10), 400, Color.BLACK, "image", 100);
+        var appleHeadphone = saveProduct(session, headphone, Brand.APPLE, "AirPodsMax", LocalDate.of(2021, 2, 15), 400, Color.WHITE, "image", 100);
+        var samsungHeadphone = saveProduct(session, headphone, Brand.SAMSUNG, "GalaxyBuds", LocalDate.of(2020, 10, 10), 150, Color.BLACK, "image", 100);
 
         var ivan = saveUser(session, "Ivan", "Ivanov", "ivan@gmail.com", "ivan", "123-45-67", LocalDate.of(1990, 10, 10), Role.USER);
         var sveta = saveUser(session, "Sveta", "Svetikova", "sveta@gmail.com", "sveta", "123-67-47", LocalDate.of(1985, 2, 2), Role.USER);
@@ -54,11 +55,11 @@ public class DataImporter {
         var orderIvan = saveOrder(session, "Minsk", "Masherova", 17, LocalDate.of(2022, 12, 10), PaymentCondition.CARD, ivan);
         var orderSveta = saveOrder(session, "Minsk", "Pobedi", 10, LocalDate.of(2022, 11, 5), PaymentCondition.CASH, sveta);
         var orderPetr = saveOrder(session, "Smorgon", "Minskaya", 11, LocalDate.of(2022, 10, 4), PaymentCondition.CARD, petr);
-        var orderSasha = saveOrder(session, "Minsk>", "Pobedi", 15, LocalDate.of(2019, 8, 4), PaymentCondition.CARD, sasha);
-        var orderDima = saveOrder(session, "Minsk>", "Geelyna", 7, LocalDate.of(2022, 7, 4), PaymentCondition.CASH, dima);
-        var orderKsenia = saveOrder(session, "Minsk>", "Vashina", 18, LocalDate.of(2019, 10, 4), PaymentCondition.CASH, ksenia);
-        var orderVasia = saveOrder(session, "Minsk>", "Porovnu", 55, LocalDate.of(2022, 11, 5), PaymentCondition.CASH, vasia);
-        var orderVlad = saveOrder(session, "Minsk>", "Vasheva", 10, LocalDate.of(1990, 12, 4), PaymentCondition.CASH, vlad);
+        var orderSasha = saveOrder(session, "Minsk", "Pobedi", 15, LocalDate.of(2019, 8, 4), PaymentCondition.CARD, sasha);
+        var orderDima = saveOrder(session, "Minsk", "Geelyna", 7, LocalDate.of(2022, 7, 4), PaymentCondition.CASH, dima);
+        var orderKsenia = saveOrder(session, "Minsk", "Vashina", 18, LocalDate.of(2019, 10, 4), PaymentCondition.CASH, ksenia);
+        var orderVasia = saveOrder(session, "Minsk", "Porovnu", 55, LocalDate.of(2022, 11, 5), PaymentCondition.CASH, vasia);
+        var orderVlad = saveOrder(session, "Minsk", "Vasheva", 10, LocalDate.of(1990, 12, 4), PaymentCondition.CASH, vlad);
 
         addToShoppingCart(session, LocalDate.of(2022, 12, 10), orderIvan, apple13);
         addToShoppingCart(session, LocalDate.of(2022, 11, 5), orderSveta, apple14);
@@ -70,14 +71,16 @@ public class DataImporter {
         addToShoppingCart(session, LocalDate.of(2022, 7, 4), orderDima, samsungS22);
         addToShoppingCart(session, LocalDate.of(2019, 10, 4), orderKsenia, apple14);
         addToShoppingCart(session, LocalDate.of(2019, 10, 4), orderKsenia, sonyHeadphoneXm4);
-        addToShoppingCart(session,  LocalDate.of(2022, 11, 5), orderVasia, samsungA80J);
-        addToShoppingCart(session,  LocalDate.of(2022, 11, 5), orderVasia, samsungA80J);
+        addToShoppingCart(session, LocalDate.of(2022, 11, 5), orderVasia, samsungA80J);
+        addToShoppingCart(session, LocalDate.of(2022, 11, 5), orderVasia, samsungA80J);
         addToShoppingCart(session, LocalDate.of(2021, 12, 4), orderVlad, sonyHeadphoneXm5);
         addToShoppingCart(session, LocalDate.of(2021, 12, 4), orderVlad, apple13);
         addToShoppingCart(session, LocalDate.of(2021, 12, 4), orderVlad, samsungS21);
         addToShoppingCart(session, LocalDate.of(2021, 12, 4), orderVlad, samsungS20);
+        session.getTransaction().commit();
     }
-    private void addToShoppingCart(Session session, LocalDate instant, Order order, Product... products){
+
+    private void addToShoppingCart(Session session, LocalDate instant, Order order, Product... products) {
         Arrays.stream(products)
                 .map(product -> ShoppingCart.builder()
                         .order(order)
@@ -95,7 +98,7 @@ public class DataImporter {
                             LocalDate deliveryDate,
                             PaymentCondition paymentCondition,
                             User user
-                            ) {
+    ) {
 
         var order = Order.builder()
                 .deliveryAdress(DeliveryAdress.builder()
@@ -146,7 +149,8 @@ public class DataImporter {
                                 LocalDate dateOfRelease,
                                 Integer price,
                                 Color color,
-                                String image) {
+                                String image,
+                                Integer count) {
         var product = Product.builder()
                 .catalog(catalog)
                 .brand(brand)
@@ -155,6 +159,7 @@ public class DataImporter {
                 .price(price)
                 .color(color)
                 .image(image)
+                .count(count)
                 .build();
 
         session.save(product);
@@ -162,14 +167,14 @@ public class DataImporter {
         return product;
     }
 
-
-
     private Catalog saveCatalog(Session session, String categoryName) {
         Catalog catalog = Catalog.builder()
+                .id(1)
                 .category(categoryName)
                 .build();
         session.save(catalog);
 
         return catalog;
     }
+
 }

@@ -3,6 +3,7 @@ package util;
 import entity.Catalog;
 import entity.Order;
 import entity.Product;
+import entity.ShoppingCart;
 import entity.User;
 import entity.converter.BirthdayConverter;
 import org.hibernate.SessionFactory;
@@ -18,6 +19,7 @@ public class HibernateUtil {
         configuration.addAnnotatedClass(Product.class);
         configuration.addAnnotatedClass(Catalog.class);
         configuration.addAnnotatedClass(Order.class);
+        configuration.addAnnotatedClass(ShoppingCart.class);
         configuration.addAttributeConverter(BirthdayConverter.class);
         configuration.configure();
 

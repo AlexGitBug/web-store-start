@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,18 +37,20 @@ import java.util.List;
 @ToString(exclude = {"shoppingCarts", "catalog"})
 @Builder
 @Entity
-public class Product implements BaseEntity<Integer>{
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE) // Second Level Cache
+public class Product implements BaseEntity<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "catalog_id")
     private Catalog catalog;
 
     @Enumerated(EnumType.STRING)
     private Brand brand;
+
+    private Integer count;
 
     private String model;
 
