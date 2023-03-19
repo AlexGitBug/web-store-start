@@ -1,4 +1,4 @@
-package dao;
+package dao.crudIT;
 
 import entity.Order;
 import entity.embeddable.DeliveryAdress;

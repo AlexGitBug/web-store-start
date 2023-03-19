@@ -1,4 +1,4 @@
-package dao.repisitory;
+package dao.repository;
 
 import entity.Catalog;
 

@@ -1,23 +1,5 @@
 package query;
 
-import com.querydsl.core.Tuple;
-import com.querydsl.jpa.impl.JPAQuery;
-import entity.ShoppingCart;
-import entity.User;
-import org.hibernate.Session;
-import org.hibernate.graph.GraphSemantic;
-import dao.repisitory.filter.ProductFilter;
-import dao.repisitory.filter.UserFilter;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import static entity.QCatalog.catalog;
-import static entity.QOrder.order;
-import static entity.QProduct.product;
-import static entity.QShoppingCart.shoppingCart;
-import static entity.QUser.user;
-
 public class Query {
 
     private static final Query INSTANCE = new Query();
@@ -150,39 +132,39 @@ public class Query {
 //                .fetch();
 //    }
 
-    public List<ShoppingCart> findAllOrdersWithProductsOfOneUser(Session session, UserFilter userFilter) {
-
-        var predicate = QPredicate.builder()
-                .add(userFilter.getPersonalInformation().getEmail(), user.personalInformation.email::eq)
-                .buildAnd();
-
-        return new JPAQuery<ShoppingCart>(session)
-                .select(shoppingCart)
-                .from(shoppingCart)
-                .join(shoppingCart.order, order)
-                .join(order.user, user)
-                .join(shoppingCart.product, product)
-                .join(product.catalog)
-                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("findAllOrdersOfUsers"))
-                .where(predicate)
-                .fetch();
-    }
-
-    public List<ShoppingCart> findUserWhoMadeOrderInTime(Session session, LocalDate startDate, LocalDate endDate) {
-
+//    public List<ShoppingCart> findAllOrdersWithProductsOfOneUser(Session session, UserFilter userFilter) {
+//
 //        var predicate = QPredicate.builder()
-//                .add(shoppingCartFilter.getCreatedAt(), shoppingCart.createdAt::eq)
+//                .add(userFilter.getPersonalInformation().getEmail(), user.personalInformation.email::eq)
 //                .buildAnd();
+//
+//        return new JPAQuery<ShoppingCart>(session)
+//                .select(shoppingCart)
+//                .from(shoppingCart)
+//                .join(shoppingCart.order, order)
+//                .join(order.user, user)
+//                .join(shoppingCart.product, product)
+//                .join(product.catalog)
+//                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("findAllOrdersOfUsers"))
+//                .where(predicate)
+//                .fetch();
+//    }
 
-        return new JPAQuery<ShoppingCart>(session)
-                .select(shoppingCart)
-                .from(shoppingCart)
-                .join(shoppingCart.order, order)
-                .join(order.user, user)
-                .where(shoppingCart.createdAt.between(startDate, endDate))
-                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("findAllOrdersOfUsers"))
-                .fetch();
-    }
+//    public List<ShoppingCart> findUserWhoMadeOrderInTime(Session session, LocalDate startDate, LocalDate endDate) {
+//
+////        var predicate = QPredicate.builder()
+////                .add(shoppingCartFilter.getCreatedAt(), shoppingCart.createdAt::eq)
+////                .buildAnd();
+//
+//        return new JPAQuery<ShoppingCart>(session)
+//                .select(shoppingCart)
+//                .from(shoppingCart)
+//                .join(shoppingCart.order, order)
+//                .join(order.user, user)
+//                .where(shoppingCart.createdAt.between(startDate, endDate))
+//                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("findAllOrdersOfUsers"))
+//                .fetch();
+//    }
 
 //    public Product findMinPriceOfProduct(Session session) {
 //        var result = session.createQuery("select p from Product p order by p.price asc", Product.class)
@@ -190,47 +172,47 @@ public class Query {
 //                .uniqueResult();
 //        return result;
 //    }
-
-    public List<Tuple> getStatisticOfEachOrdersWithSum(Session session) {
-
-        return new JPAQuery<Tuple>(session)
-                .select(shoppingCart)
-                .from(shoppingCart)
-                .join(shoppingCart.product, product)
-                .join(shoppingCart.order, order)
-                .groupBy(order.id)
-                .select(order.id, product.price.sum())
-                .fetch();
-    }
-
-    public List<ShoppingCart> findUsersWhoMadeAnOrderOfSpecificProduct(Session session, ProductFilter productFilter) {
-
-        var predicate = QPredicate.builder()
-                .add(productFilter.getBrand(), product.brand::eq)
-                .add(productFilter.getCatalog().getCategory(), catalog.category::eq)
-                .add(productFilter.getModel(), product.model::eq)
-                .buildAnd();
-
-        return new JPAQuery<ShoppingCart>(session)
-                .select(shoppingCart)
-                .from(shoppingCart)
-                .join(shoppingCart.order, order)
-                .join(order.user, user)
-                .join(shoppingCart.product, product)
-                .join(product.catalog, catalog)
-                .where(predicate)
-                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("findAllOrdersOfUsers"))
-                .fetch();
-    }
-
-    public List<User> findUsersWhoPayOrderWithCash(Session session, UserFilter userFilter) {
-        return null;
-    }
-
-
-    public static Query getInstance() {
-        return INSTANCE;
-    }
+//
+//    public List<Tuple> getStatisticOfEachOrdersWithSum(Session session) {
+//
+//        return new JPAQuery<Tuple>(session)
+//                .select(shoppingCart)
+//                .from(shoppingCart)
+//                .join(shoppingCart.product, product)
+//                .join(shoppingCart.order, order)
+//                .groupBy(order.id)
+//                .select(order.id, product.price.sum())
+//                .fetch();
+//    }
+//
+//    public List<ShoppingCart> findUsersWhoMadeAnOrderOfSpecificProduct(Session session, ProductFilter productFilter) {
+//
+//        var predicate = QPredicate.builder()
+//                .add(productFilter.getBrand(), product.brand::eq)
+//                .add(productFilter.getCatalog().getCategory(), catalog.category::eq)
+//                .add(productFilter.getModel(), product.model::eq)
+//                .buildAnd();
+//
+//        return new JPAQuery<ShoppingCart>(session)
+//                .select(shoppingCart)
+//                .from(shoppingCart)
+//                .join(shoppingCart.order, order)
+//                .join(order.user, user)
+//                .join(shoppingCart.product, product)
+//                .join(product.catalog, catalog)
+//                .where(predicate)
+//                .setHint(GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("findAllOrdersOfUsers"))
+//                .fetch();
+//    }
+//
+//    public List<User> findUsersWhoPayOrderWithCash(Session session, UserFilter userFilter) {
+//        return null;
+//    }
+//
+//
+//    public static Query getInstance() {
+//        return INSTANCE;
+//    }
 
 
 }

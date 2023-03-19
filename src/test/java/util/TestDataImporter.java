@@ -11,6 +11,7 @@ import entity.enums.Brand;
 import entity.enums.Color;
 import entity.enums.PaymentCondition;
 import entity.enums.Role;
+import initProxy.ProxySessionTestBase;
 import lombok.Cleanup;
 import lombok.experimental.UtilityClass;
 import org.hibernate.Session;
@@ -20,15 +21,16 @@ import java.time.LocalDate;
 import java.util.Arrays;
 
 @UtilityClass
-public class TestDataImporter {
+public class TestDataImporter extends ProxySessionTestBase {
 
     public void importData(SessionFactory sessionFactory) {
-        @Cleanup Session session = sessionFactory.openSession();
+//        @Cleanup Session session = sessionFactory.openSession();
 
         var smartphone = saveCatalog(session, "Smartphone");
         var tv = saveCatalog(session, "TV");
         var headphone = saveCatalog(session, "Headphones");
 
+        var apple12 = saveProduct(session, smartphone, Brand.APPLE, "12", LocalDate.of(2020, 9, 12), 950, Color.BLACK, "image");
         var apple13 = saveProduct(session, smartphone, Brand.APPLE, "13", LocalDate.of(2021, 9, 12), 1000, Color.BLACK, "image");
         var apple14 = saveProduct(session, smartphone, Brand.APPLE, "14", LocalDate.of(2022, 9, 12), 1100, Color.WHITE, "image");
         var samsungS21 = saveProduct(session, smartphone, Brand.SAMSUNG, "S21", LocalDate.of(2022, 1, 10), 1050, Color.WHITE, "image");
@@ -54,11 +56,11 @@ public class TestDataImporter {
         var orderIvan = saveOrder(session, "Minsk", "Masherova", 17, LocalDate.of(2022, 12, 10), PaymentCondition.CARD, ivan);
         var orderSveta = saveOrder(session, "Minsk", "Pobedi", 10, LocalDate.of(2022, 11, 5), PaymentCondition.CASH, sveta);
         var orderPetr = saveOrder(session, "Smorgon", "Minskaya", 11, LocalDate.of(2022, 10, 4), PaymentCondition.CARD, petr);
-        var orderSasha = saveOrder(session, "Minsk>", "Pobedi", 15, LocalDate.of(2019, 8, 4), PaymentCondition.CARD, sasha);
-        var orderDima = saveOrder(session, "Minsk>", "Geelyna", 7, LocalDate.of(2022, 7, 4), PaymentCondition.CASH, dima);
-        var orderKsenia = saveOrder(session, "Minsk>", "Vashina", 18, LocalDate.of(2019, 10, 4), PaymentCondition.CASH, ksenia);
-        var orderVasia = saveOrder(session, "Minsk>", "Porovnu", 55, LocalDate.of(2022, 11, 5), PaymentCondition.CASH, vasia);
-        var orderVlad = saveOrder(session, "Minsk>", "Vasheva", 10, LocalDate.of(1990, 12, 4), PaymentCondition.CASH, vlad);
+        var orderSasha = saveOrder(session, "Minsk", "Pobedi", 15, LocalDate.of(2019, 8, 4), PaymentCondition.CARD, sasha);
+        var orderDima = saveOrder(session, "Minsk", "Geelyna", 7, LocalDate.of(2022, 7, 4), PaymentCondition.CASH, dima);
+        var orderKsenia = saveOrder(session, "Minsk", "Vashina", 18, LocalDate.of(2019, 10, 4), PaymentCondition.CASH, ksenia);
+        var orderVasia = saveOrder(session, "Minsk", "Porovnu", 55, LocalDate.of(2022, 11, 5), PaymentCondition.CASH, vasia);
+        var orderVlad = saveOrder(session, "Minsk", "Vasheva", 10, LocalDate.of(1990, 12, 4), PaymentCondition.CASH, vlad);
 
         addToShoppingCart(session, LocalDate.of(2022, 12, 10), orderIvan, apple13);
         addToShoppingCart(session, LocalDate.of(2022, 11, 5), orderSveta, apple14);

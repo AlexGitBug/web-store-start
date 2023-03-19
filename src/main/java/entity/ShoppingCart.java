@@ -33,7 +33,7 @@ import java.time.LocalDate;
 @Entity
 @Builder
 @Table(name = "shopping_cart")
-public class ShoppingCart {
+public class ShoppingCart implements BaseEntity<Integer>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

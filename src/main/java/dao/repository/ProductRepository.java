@@ -1,13 +1,13 @@
-package dao.repisitory;
+package dao.repository;
 
 import com.querydsl.jpa.impl.JPAQuery;
 import entity.Product;
 import org.hibernate.Session;
 import org.hibernate.graph.GraphSemantic;
 import query.QPredicate;
-import dao.repisitory.filter.OrderFilter;
-import dao.repisitory.filter.ProductFilter;
-import dao.repisitory.filter.UserFilter;
+import dao.repository.filter.OrderFilter;
+import dao.repository.filter.ProductFilter;
+import dao.repository.filter.UserFilter;
 
 import javax.persistence.EntityManager;
 import java.util.List;

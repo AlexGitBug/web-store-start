@@ -1,18 +1,19 @@
-package dao;
+package dao.dao;
 
-import entity.User;
+import entity.Order;
 
 import java.util.List;
 import java.util.Optional;
 
-public class UserDao implements Dao<Integer, User> {
+public class OrderDao implements Dao<Integer, Order> {
+
     @Override
-    public List<User> findAll() {
+    public List<Order> findAll() {
         return null;
     }
 
     @Override
-    public Optional<User> findById(Integer id) {
+    public Optional<Order> findById(Integer id) {
         return Optional.empty();
     }
 
@@ -22,12 +23,12 @@ public class UserDao implements Dao<Integer, User> {
     }
 
     @Override
-    public User update(User entity) {
+    public Order update(Order entity) {
         return null;
     }
 
     @Override
-    public User save(User entity) {
+    public Order save(Order entity) {
         return null;
     }
 }

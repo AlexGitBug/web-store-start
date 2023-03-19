@@ -1,24 +1,18 @@
 package dao.repository;
 
-import dao.repisitory.CatalogRepository;
-import dao.repisitory.OrderRepository;
-import dao.repisitory.ProductRepository;
-import dao.repisitory.filter.OrderFilter;
-import dao.repisitory.filter.ProductFilter;
-import dao.repisitory.filter.UserFilter;
+import dao.repository.filter.OrderFilter;
+import dao.repository.filter.ProductFilter;
+import dao.repository.filter.UserFilter;
 import entity.Catalog;
-import entity.Order;
 import entity.Product;
 import entity.embeddable.PersonalInformation;
 import entity.enums.Brand;
-import entity.enums.Color;
 import initProxy.ProxySessionTestBase;
 import org.hibernate.graph.GraphSemantic;
 import org.junit.jupiter.api.Test;
 import util.TestCreateObjectForRepository;
 import util.TestDataImporter;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,13 +24,13 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
 
     private final ProductRepository productRepository = new ProductRepository(Product.class, session);
     private final CatalogRepository catalogRepository = new CatalogRepository(Catalog.class, session);
-    private final OrderRepository orderRepository = new OrderRepository(Order.class, session);
+
 
     @Test
     void deleteProduct() {
         var catalog = TestCreateObjectForRepository.getCatalog();
         catalogRepository.save(catalog);
-        var product = getProduct(catalog);
+        var product = TestCreateObjectForRepository.getProduct(catalog);
         productRepository.save(product);
 
         productRepository.delete(product.getId());
@@ -49,7 +43,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
     void saveProduct() {
         var catalog = TestCreateObjectForRepository.getCatalog();
         catalogRepository.save(catalog);
-        var product = getProduct(catalog);
+        var product = TestCreateObjectForRepository.getProduct(catalog);
 
         productRepository.save(product);
 
@@ -61,7 +55,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
     void updateProduct() {
         var catalog = TestCreateObjectForRepository.getCatalog();
         catalogRepository.save(catalog);
-        var product = getProduct(catalog);
+        var product = TestCreateObjectForRepository.getProduct(catalog);
         productRepository.save(product);
 
         Product result = session.get(Product.class, product.getId());
@@ -74,10 +68,10 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
     }
 
     @Test
-    void findById() {
+    void findByIdProduct() {
         var catalog = TestCreateObjectForRepository.getCatalog();
         catalogRepository.save(catalog);
-        var product = getProduct(catalog);
+        var product = TestCreateObjectForRepository.getProduct(catalog);
         productRepository.save(product);
 
         Map<String, Object> properties = Map.of(
@@ -92,10 +86,9 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
     @Test
     void findListOfProductsEq() {
         TestDataImporter.importData(sessionFactory);
-                var productFilter = ProductFilter.builder()
-                .catalog(Catalog.builder()
-                        .category("Smartphone")
-                        .build())
+
+        var productFilter = ProductFilter.builder()
+                .catalog(TestCreateObjectForRepository.getCatalog())
                 .brand(Brand.APPLE)
                 .build();
 
@@ -157,7 +150,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
                 .build();
 
         var results = productRepository.findListOfProductLtPrice(session, productFilter, 1050);
-        assertThat(results).hasSize(1);
+        assertThat(results).hasSize(2);
 
         var categoryResult = results.stream().map(it -> it.getCatalog().getCategory()).collect(toList());
         assertThat(categoryResult).contains(productFilter.getCatalog().getCategory());
@@ -223,25 +216,5 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
 
         assertThat(result.getPrice()).isEqualTo(150);
     }
-
-
-    private static Product getProduct(Catalog catalog) {
-        return new Product().builder()
-                .catalog(catalog)
-                .brand(Brand.SONY)
-                .model("test")
-                .dateOfRelease(LocalDate.of(2021, 1, 1))
-                .price(151)
-                .color(Color.BLACK)
-                .image("test")
-                .build();
-    }
-
-    public static Catalog getCatalog() {
-        return Catalog.builder()
-                .category("categoryName")
-                .build();
-    }
-
 
 }

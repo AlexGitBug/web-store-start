@@ -1,4 +1,4 @@
-package dao.repisitory;
+package dao.repository;
 
 
 
@@ -32,9 +32,10 @@ public abstract class RepositoryBase<K extends Serializable, E extends BaseEntit
     }
 
     @Override
-    public void update(E entity) {
+    public E update(E entity) {
         entityManager.merge(entity);
         entityManager.flush();
+        return entity;
     }
 
     @Override

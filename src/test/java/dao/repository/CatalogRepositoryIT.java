@@ -1,6 +1,5 @@
 package dao.repository;
 
-import dao.repisitory.CatalogRepository;
 import entity.Catalog;
 import initProxy.ProxySessionTestBase;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package dao;
+package dao.crudIT;
 
 import entity.User;
 import entity.embeddable.PersonalInformation;
