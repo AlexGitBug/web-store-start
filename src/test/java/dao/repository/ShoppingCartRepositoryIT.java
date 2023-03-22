@@ -127,11 +127,6 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         var categoryResult = results.stream().map(it -> it.getProduct().getCatalog().getCategory()).collect(toList());
         assertThat(categoryResult).contains("TV", "Smartphone", "Headphones");
-        session.createNativeQuery("delete table catalog", Catalog.class).executeUpdate();
-        session.createNativeQuery("delete table orders", Order.class).executeUpdate();
-        session.createNativeQuery("delete table product", Product.class).executeUpdate();
-        session.createNativeQuery("delete table shopping_cart", ShoppingCart.class).executeUpdate();
-        session.createNativeQuery("delete table users", User.class).executeUpdate();
     }
 
     @Test
@@ -146,11 +141,6 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         var email = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getEmail()).collect(toList());
         assertThat(email).contains("ivan@gmail.com", "sveta@gmail.com", "vasia@gmail.com", "vasia@gmail.com");
-        session.createNativeQuery("delete table catalog", Catalog.class).executeUpdate();
-        session.createNativeQuery("delete table orders", Order.class).executeUpdate();
-        session.createNativeQuery("delete table product", Product.class).executeUpdate();
-        session.createNativeQuery("delete table shopping_cart", ShoppingCart.class).executeUpdate();
-        session.createNativeQuery("delete table users", User.class).executeUpdate();
     }
 
     @Test
@@ -165,11 +155,6 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         var orderSum = result.stream().map(it -> it.get(1, Integer.class)).collect(toList());
         assertThat(orderSum).contains(1000, 1100, 3400, 2000, 1450, 1450, 4000, 3350);
-        session.createNativeQuery("delete table catalog", Catalog.class).executeUpdate();
-        session.createNativeQuery("delete table orders", Order.class).executeUpdate();
-        session.createNativeQuery("delete table product", Product.class).executeUpdate();
-        session.createNativeQuery("delete table shopping_cart", ShoppingCart.class).executeUpdate();
-        session.createNativeQuery("delete table users", User.class).executeUpdate();
     }
 
     @Test
@@ -195,11 +180,7 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         var emailResult = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getEmail()).collect(toList());
         assertThat(emailResult).contains("dima@gmail.com", "ksenia@gmail.com");
-        session.createNativeQuery("delete table catalog", Catalog.class).executeUpdate();
-        session.createNativeQuery("delete table orders", Order.class).executeUpdate();
-        session.createNativeQuery("delete table product", Product.class).executeUpdate();
-        session.createNativeQuery("delete table shopping_cart", ShoppingCart.class).executeUpdate();
-        session.createNativeQuery("delete table users", User.class).executeUpdate();
+
     }
 }
 
