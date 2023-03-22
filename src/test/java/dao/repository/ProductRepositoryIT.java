@@ -3,11 +3,12 @@ package dao.repository;
 import dao.repository.filter.OrderFilter;
 import dao.repository.filter.ProductFilter;
 import dao.repository.filter.UserFilter;
+import dao.repository.initProxy.ProxySessionTestBase;
 import entity.Catalog;
 import entity.Product;
 import entity.embeddable.PersonalInformation;
 import entity.enums.Brand;
-import initProxy.ProxySessionTestBase;
+
 import org.hibernate.graph.GraphSemantic;
 import org.junit.jupiter.api.Test;
 import util.TestCreateObjectForRepository;
@@ -74,12 +75,9 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
         var product = TestCreateObjectForRepository.getProduct(catalog);
         productRepository.save(product);
 
-        Map<String, Object> properties = Map.of(
-                GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("withCatalog")
-        );
-        Optional<Product> actualResult = productRepository.findById(product.getId(), properties);
+        var actualResult = session.get(Product.class, product.getId());
 
-        assertThat(actualResult).contains(product);
+        assertThat(actualResult).isEqualTo(product);
 
     }
 
@@ -92,8 +90,8 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
                 .brand(Brand.APPLE)
                 .build();
 
-        var results = productRepository.findListOfProductsEq(session, productFilter);
-        assertThat(results).hasSize(2);
+        var results = productRepository.findListOfProductsEq(productFilter);
+        assertThat(results).hasSize(3);
 
         var categoryResult = results.stream().map(it -> it.getCatalog().getCategory()).collect(toList());
         assertThat(categoryResult).contains(productFilter.getCatalog().getCategory());
@@ -103,7 +101,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
     }
 
     @Test
-    void findListOfProductBetweenTwoPrice() {
+    void findListOfProductOfOneCategoryAndBrandBetweenTwoPrice() {
         TestDataImporter.importData(sessionFactory);
 
         var productFilter = ProductFilter.builder()
@@ -113,11 +111,14 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
                 .brand(Brand.SONY)
                 .build();
 
-        var results = productRepository.findListOfProductBetweenTwoPrice(session, productFilter, 349, 401);
+        var results = productRepository.findListOfProductOfOneCategoryAndBrandBetweenTwoPrice(productFilter, 349, 401);
         assertThat(results).hasSize(2);
 
         var brands = results.stream().map(Product::getBrand).collect(toList());
         assertThat(brands).contains(productFilter.getBrand());
+
+        var price = results.stream().map(Product::getPrice).toList();
+        assertThat(price).contains(350, 400);
     }
 
     @Test
@@ -131,7 +132,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
                 .brand(Brand.APPLE)
                 .build();
 
-        var results = productRepository.findListOfProductGtPrice(session, productFilter, 1050);
+        var results = productRepository.findListOfProductGtPrice(productFilter, 1050);
         assertThat(results).hasSize(1);
 
         var categoryResult = results.stream().map(it -> it.getCatalog().getCategory()).collect(toList());
@@ -149,7 +150,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
                 .brand(Brand.APPLE)
                 .build();
 
-        var results = productRepository.findListOfProductLtPrice(session, productFilter, 1050);
+        var results = productRepository.findListOfProductLtPrice(productFilter, 1050);
         assertThat(results).hasSize(2);
 
         var categoryResult = results.stream().map(it -> it.getCatalog().getCategory()).collect(toList());
@@ -167,7 +168,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
                 .brand(Brand.SAMSUNG)
                 .build();
 
-        var results = productRepository.findProductsGtPriceAndBrand(session, productFilter);
+        var results = productRepository.findProductsGtPriceAndBrand(productFilter);
         assertThat(results).hasSize(3);
 
         var categoryResult = results.stream().map(it -> it.getCatalog().getCategory()).collect(toList());
@@ -181,7 +182,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
                 .brand(Brand.SAMSUNG)
                 .build();
 
-        var results = productRepository.findAllProductOfBrand(session, productFilter);
+        var results = productRepository.findAllProductOfBrand(productFilter);
         assertThat(results).hasSize(5);
 
         var brands = results.stream().map(Product::getBrand).toList();
@@ -191,28 +192,26 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
     @Test
     void findAllProductsFromOrder() {
         TestDataImporter.importData(sessionFactory);
-        var userFilter = UserFilter.builder()
-                .personalInformation(PersonalInformation.builder()
-                        .email("petr@gmail.com")
-                        .build())
-                .build();
 
         var orderFilter = OrderFilter.builder()
                 .id(3)
                 .build();
 
-        List<Product> results = productRepository.findAllProductsFromOrder(session, userFilter, orderFilter);
+        List<Product> results = productRepository.findAllProductsFromOrder(orderFilter);
         assertThat(results).hasSize(3);
 
-        var categoryResult = results.stream().map(it -> it.getCatalog().getCategory()).collect(toList());
-        assertThat(categoryResult).contains("TV", "Smartphone", "Headphones");
+        var brands = results.stream().map(Product::getBrand).toList();
+        assertThat(brands).contains(Brand.SAMSUNG, Brand.SAMSUNG, Brand.SONY);
+
+        var modelResult = results.stream().map(Product::getModel).collect(toList());
+        assertThat(modelResult).contains("A80J", "S22", "XM3");
     }
 
     @Test
     void findMinPriceOfProduct() {
         TestDataImporter.importData(sessionFactory);
 
-        var result = productRepository.findMinPriceOfProduct(session);
+        var result = productRepository.findMinPriceOfProduct();
 
         assertThat(result.getPrice()).isEqualTo(150);
     }

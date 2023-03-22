@@ -1,7 +1,7 @@
 package dao.repository;
 
 import entity.Catalog;
-import initProxy.ProxySessionTestBase;
+import dao.repository.initProxy.ProxySessionTestBase;
 import org.junit.jupiter.api.Test;
 import util.TestCreateObjectForRepository;
 
@@ -53,8 +53,8 @@ class CatalogRepositoryIT extends ProxySessionTestBase {
         var catalog = TestCreateObjectForRepository.getCatalog();
         catalogRepository.save(catalog);
 
-        Optional<Catalog> actualResult = catalogRepository.findById(catalog.getId());
+        var actualResult =  session.get(Catalog.class, catalog.getId());
 
-        assertThat(actualResult).contains(catalog);
+        assertThat(actualResult).isEqualTo(catalog);
     }
 }

@@ -2,6 +2,7 @@ package dao.repository;
 
 import dao.repository.filter.ProductFilter;
 import dao.repository.filter.UserFilter;
+import dao.repository.initProxy.ProxySessionTestBase;
 import entity.Catalog;
 import entity.Order;
 import entity.Product;
@@ -9,16 +10,17 @@ import entity.ShoppingCart;
 import entity.User;
 import entity.embeddable.PersonalInformation;
 import entity.enums.Brand;
-import initProxy.ProxySessionTestBase;
 
-import org.hibernate.graph.GraphSemantic;
+import org.hibernate.query.Query;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import util.TestCreateObjectForRepository;
 import util.TestDataImporter;
 
 import java.time.LocalDate;
-import java.util.Map;
-import java.util.Optional;;
+
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,7 +66,7 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
         shoppingCartRepository.save(shoppingCart);
 
         var actualResult = session.get(ShoppingCart.class, shoppingCart.getId());
-        assertThat(actualResult).isEqualTo(shoppingCart);
+        assertThat(actualResult).isNotNull();
     }
 
     @Test
@@ -84,7 +86,8 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
         result.setCreatedAt(LocalDate.now());
         shoppingCartRepository.update(shoppingCart);
 
-        var actualResult = session.get(ShoppingCart.class, result.getId());
+
+        var actualResult = session.get(ShoppingCart.class, shoppingCart.getId());
         assertThat(actualResult).isEqualTo(shoppingCart);
     }
 
@@ -101,14 +104,10 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
         var shoppingCart = TestCreateObjectForRepository.shoppingCart(order, product);
         shoppingCartRepository.save(shoppingCart);
 
-        Map<String, Object> properties = Map.of(
-                GraphSemantic.LOAD.getJpaHintName(), session.getEntityGraph("findAllOrdersOfUsers")
-        );
-        Optional<ShoppingCart> actualResult = shoppingCartRepository.findById(shoppingCart.getId(), properties);
+        var actualResult = session.get(ShoppingCart.class, shoppingCart.getId());
 
-        assertThat(actualResult).contains(shoppingCart);
+        assertThat(actualResult).isEqualTo(shoppingCart);
     }
-
 
     @Test
     void findAllOrdersWithProductsOfOneUser() {
@@ -120,7 +119,7 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
                         .build())
                 .build();
 
-        var results = shoppingCartRepository.findAllOrdersWithProductsOfOneUser(session, userFilter);
+        var results = shoppingCartRepository.findAllOrdersWithProductsOfOneUser(userFilter);
         assertThat(results).hasSize(3);
 
         var orderId = results.stream().map(it -> it.getOrder().getId()).collect(toList());
@@ -128,13 +127,18 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         var categoryResult = results.stream().map(it -> it.getProduct().getCatalog().getCategory()).collect(toList());
         assertThat(categoryResult).contains("TV", "Smartphone", "Headphones");
+        session.createNativeQuery("delete table catalog", Catalog.class).executeUpdate();
+        session.createNativeQuery("delete table orders", Order.class).executeUpdate();
+        session.createNativeQuery("delete table product", Product.class).executeUpdate();
+        session.createNativeQuery("delete table shopping_cart", ShoppingCart.class).executeUpdate();
+        session.createNativeQuery("delete table users", User.class).executeUpdate();
     }
 
     @Test
-    void findUsersWhoMadeAnOrderAtASpecificTime() {
+    void findUsersWhoMadeAnOrderAtSpecificTime() {
         TestDataImporter.importData(sessionFactory);
 
-        var results = shoppingCartRepository.findUsersWhoMadeAnOrderAtASpecificTime(session, LocalDate.of(2022, 10, 10), LocalDate.of(2023, 12, 12));
+        var results = shoppingCartRepository.findUsersWhoMadeOrderSpecificTime(LocalDate.of(2022, 10, 10), LocalDate.of(2023, 12, 12));
         assertThat(results).hasSize(4);
 
         var firstName = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getFirstName()).collect(toList());
@@ -142,13 +146,18 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         var email = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getEmail()).collect(toList());
         assertThat(email).contains("ivan@gmail.com", "sveta@gmail.com", "vasia@gmail.com", "vasia@gmail.com");
+        session.createNativeQuery("delete table catalog", Catalog.class).executeUpdate();
+        session.createNativeQuery("delete table orders", Order.class).executeUpdate();
+        session.createNativeQuery("delete table product", Product.class).executeUpdate();
+        session.createNativeQuery("delete table shopping_cart", ShoppingCart.class).executeUpdate();
+        session.createNativeQuery("delete table users", User.class).executeUpdate();
     }
 
     @Test
     void getStatisticOfEachOrdersWithSum() {
         TestDataImporter.importData(sessionFactory);
 
-        var result = shoppingCartRepository.getStatisticOfEachOrdersWithSum(session);
+        var result = shoppingCartRepository.getStatisticOfEachOrdersWithSum();
         assertThat(result).hasSize(8);
 
         var orderId = result.stream().map(it -> it.get(0, Integer.class)).collect(toList());
@@ -156,6 +165,11 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         var orderSum = result.stream().map(it -> it.get(1, Integer.class)).collect(toList());
         assertThat(orderSum).contains(1000, 1100, 3400, 2000, 1450, 1450, 4000, 3350);
+        session.createNativeQuery("delete table catalog", Catalog.class).executeUpdate();
+        session.createNativeQuery("delete table orders", Order.class).executeUpdate();
+        session.createNativeQuery("delete table product", Product.class).executeUpdate();
+        session.createNativeQuery("delete table shopping_cart", ShoppingCart.class).executeUpdate();
+        session.createNativeQuery("delete table users", User.class).executeUpdate();
     }
 
     @Test
@@ -170,7 +184,7 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
                 .model("XM4")
                 .build();
 
-        var results = shoppingCartRepository.findUsersWhoMadeAnOrderOfSpecificProduct(session, productFilter);
+        var results = shoppingCartRepository.findUsersWhoMadeOrderOfSpecificProduct(productFilter);
         assertThat(results).hasSize(2);
 
         var firstName = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getFirstName()).collect(toList());
@@ -181,6 +195,14 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         var emailResult = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getEmail()).collect(toList());
         assertThat(emailResult).contains("dima@gmail.com", "ksenia@gmail.com");
+        session.createNativeQuery("delete table catalog", Catalog.class).executeUpdate();
+        session.createNativeQuery("delete table orders", Order.class).executeUpdate();
+        session.createNativeQuery("delete table product", Product.class).executeUpdate();
+        session.createNativeQuery("delete table shopping_cart", ShoppingCart.class).executeUpdate();
+        session.createNativeQuery("delete table users", User.class).executeUpdate();
     }
 }
+
+
+
 

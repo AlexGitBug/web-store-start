@@ -1,4 +1,4 @@
-package initProxy;
+package dao.repository.initProxy;
 
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
@@ -37,6 +37,7 @@ public abstract class ProxySessionTestBase {
     @AfterEach
     void closeSession() {
         session.getTransaction().commit();
+
     }
 
 }

@@ -1,5 +1,6 @@
 package util;
 
+import dao.repository.initProxy.ProxySessionTestBase;
 import entity.Catalog;
 import entity.Order;
 import entity.Product;
@@ -11,7 +12,6 @@ import entity.enums.Brand;
 import entity.enums.Color;
 import entity.enums.PaymentCondition;
 import entity.enums.Role;
-import initProxy.ProxySessionTestBase;
 import lombok.Cleanup;
 import lombok.experimental.UtilityClass;
 import org.hibernate.Session;
@@ -22,9 +22,8 @@ import java.util.Arrays;
 
 @UtilityClass
 public class TestDataImporter extends ProxySessionTestBase {
-
     public void importData(SessionFactory sessionFactory) {
-//        @Cleanup Session session = sessionFactory.openSession();
+
 
         var smartphone = saveCatalog(session, "Smartphone");
         var tv = saveCatalog(session, "TV");
@@ -72,14 +71,15 @@ public class TestDataImporter extends ProxySessionTestBase {
         addToShoppingCart(session, LocalDate.of(2022, 7, 4), orderDima, samsungS22);
         addToShoppingCart(session, LocalDate.of(2019, 10, 4), orderKsenia, apple14);
         addToShoppingCart(session, LocalDate.of(2019, 10, 4), orderKsenia, sonyHeadphoneXm4);
-        addToShoppingCart(session,  LocalDate.of(2022, 11, 5), orderVasia, samsungA80J);
-        addToShoppingCart(session,  LocalDate.of(2022, 11, 5), orderVasia, samsungA80J);
+        addToShoppingCart(session, LocalDate.of(2022, 11, 5), orderVasia, samsungA80J);
+        addToShoppingCart(session, LocalDate.of(2022, 11, 5), orderVasia, samsungA80J);
         addToShoppingCart(session, LocalDate.of(2021, 12, 4), orderVlad, sonyHeadphoneXm5);
         addToShoppingCart(session, LocalDate.of(2021, 12, 4), orderVlad, apple13);
         addToShoppingCart(session, LocalDate.of(2021, 12, 4), orderVlad, samsungS21);
         addToShoppingCart(session, LocalDate.of(2021, 12, 4), orderVlad, samsungS20);
     }
-    private void addToShoppingCart(Session session, LocalDate instant, Order order, Product... products){
+
+    private void addToShoppingCart(Session session, LocalDate instant, Order order, Product... products) {
         Arrays.stream(products)
                 .map(product -> ShoppingCart.builder()
                         .order(order)
@@ -88,7 +88,6 @@ public class TestDataImporter extends ProxySessionTestBase {
                         .build())
                 .forEach(session::save);
     }
-
 
     private Order saveOrder(Session session,
                             String city,
@@ -163,8 +162,6 @@ public class TestDataImporter extends ProxySessionTestBase {
 
         return product;
     }
-
-
 
     private Catalog saveCatalog(Session session, String categoryName) {
         Catalog catalog = Catalog.builder()

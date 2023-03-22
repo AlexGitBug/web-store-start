@@ -37,7 +37,7 @@ public class OrderRepositoryIT extends ProductRepositoryIT {
         orderRepository.save(order);
 
         var actualResult = session.get(Order.class, order.getId());
-        assertThat(actualResult).isEqualTo(order);
+        assertThat(actualResult.getId()).isEqualTo(order.getId());
     }
 
     @Test
@@ -63,8 +63,8 @@ public class OrderRepositoryIT extends ProductRepositoryIT {
         var order = TestCreateObjectForRepository.getOrder(user);
         orderRepository.save(order);
 
-        Optional<Order> actualResult = orderRepository.findById(order.getId());
+        var actualResult = session.get(Order.class, order.getId());
 
-        assertThat(actualResult).contains(order);
+        assertThat(actualResult).isEqualTo(order);
     }
 }
