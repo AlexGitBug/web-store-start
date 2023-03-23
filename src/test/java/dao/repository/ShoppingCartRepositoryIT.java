@@ -1,20 +1,17 @@
 package dao.repository;
 
-import dao.repository.filter.ProductFilter;
-import dao.repository.filter.UserFilter;
+import com.dmdev.webStore.dao.repository.*;
+import com.dmdev.webStore.dao.repository.filter.ProductFilter;
+import com.dmdev.webStore.dao.repository.filter.UserFilter;
 import dao.repository.initProxy.ProxySessionTestBase;
-import entity.Catalog;
-import entity.Order;
-import entity.Product;
-import entity.ShoppingCart;
-import entity.User;
-import entity.embeddable.PersonalInformation;
-import entity.enums.Brand;
+import com.dmdev.webStore.entity.Catalog;
+import com.dmdev.webStore.entity.Order;
+import com.dmdev.webStore.entity.Product;
+import com.dmdev.webStore.entity.ShoppingCart;
+import com.dmdev.webStore.entity.User;
+import com.dmdev.webStore.entity.embeddable.PersonalInformation;
+import com.dmdev.webStore.entity.enums.Brand;
 
-import org.hibernate.query.Query;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import util.TestCreateObjectForRepository;
 import util.TestDataImporter;

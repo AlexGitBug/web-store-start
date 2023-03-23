@@ -1,8 +1,8 @@
 package dao.crudIT;
 
-import entity.Order;
-import entity.embeddable.DeliveryAdress;
-import entity.enums.PaymentCondition;
+import com.dmdev.webStore.entity.Order;
+import com.dmdev.webStore.entity.embeddable.DeliveryAdress;
+import com.dmdev.webStore.entity.enums.PaymentCondition;
 import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
 
@@ -10,8 +10,8 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static util.SessionUtil.closeTransactionSession;
-import static util.SessionUtil.openTransactionSession;
+import static com.dmdev.webStore.util.SessionUtil.closeTransactionSession;
+import static com.dmdev.webStore.util.SessionUtil.openTransactionSession;
 
 class OrderDaoTestIT {
 

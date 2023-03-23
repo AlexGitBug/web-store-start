@@ -18,11 +18,11 @@
     <property name="hibernate.current_session_context_class">thread</property>
 
 
-    <mapping class="entity.Catalog"/>
-    <mapping class="entity.Order"/>
-    <mapping class="entity.Product"/>
-    <mapping class="entity.User"/>
-    <mapping class="entity.ShoppingCart"/>
+    <mapping class="com.dmdev.webStore.entity.Catalog"/>
+    <mapping class="com.dmdev.webStore.entity.Order"/>
+    <mapping class="com.dmdev.webStore.entity.Product"/>
+    <mapping class="com.dmdev.webStore.entity.User"/>
+    <mapping class="com.dmdev.webStore.entity.ShoppingCart"/>
     <!-- DB schema will be updated if needed -->
     <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
   </session-factory>

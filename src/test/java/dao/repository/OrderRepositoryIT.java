@@ -1,12 +1,12 @@
 package dao.repository;
 
-import entity.Order;
-import entity.User;
-import entity.enums.PaymentCondition;
+import com.dmdev.webStore.dao.repository.OrderRepository;
+import com.dmdev.webStore.dao.repository.UserRepository;
+import com.dmdev.webStore.entity.Order;
+import com.dmdev.webStore.entity.User;
+import com.dmdev.webStore.entity.enums.PaymentCondition;
 import org.junit.jupiter.api.Test;
 import util.TestCreateObjectForRepository;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

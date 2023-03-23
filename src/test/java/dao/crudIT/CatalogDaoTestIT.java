@@ -1,13 +1,13 @@
 package dao.crudIT;
 
-import entity.Catalog;
+import com.dmdev.webStore.entity.Catalog;
 import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static util.SessionUtil.closeTransactionSession;
-import static util.SessionUtil.openTransactionSession;
+import static com.dmdev.webStore.util.SessionUtil.closeTransactionSession;
+import static com.dmdev.webStore.util.SessionUtil.openTransactionSession;
 
 class CatalogDaoTestIT {
 

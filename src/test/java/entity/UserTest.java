@@ -1,9 +1,10 @@
 package entity;
 
-import entity.embeddable.PersonalInformation;
-import entity.enums.Role;
+import com.dmdev.webStore.entity.User;
+import com.dmdev.webStore.entity.embeddable.PersonalInformation;
+import com.dmdev.webStore.entity.enums.Role;
 import org.junit.jupiter.api.Test;
-import util.HibernateUtil;
+import com.dmdev.webStore.util.HibernateUtil;
 
 import java.time.LocalDate;
 

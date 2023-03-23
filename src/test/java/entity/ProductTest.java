@@ -1,9 +1,11 @@
 package entity;
 
-import entity.enums.Brand;
-import entity.enums.Color;
+import com.dmdev.webStore.entity.Catalog;
+import com.dmdev.webStore.entity.Product;
+import com.dmdev.webStore.entity.enums.Brand;
+import com.dmdev.webStore.entity.enums.Color;
 import org.junit.jupiter.api.Test;
-import util.HibernateUtil;
+import com.dmdev.webStore.util.HibernateUtil;
 
 import java.time.LocalDate;
 

@@ -1,8 +1,9 @@
 package entity;
 
+import com.dmdev.webStore.entity.Catalog;
 import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
-import util.SessionUtil;
+import com.dmdev.webStore.util.SessionUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

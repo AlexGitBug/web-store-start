@@ -1,8 +1,8 @@
 package dao.crudIT;
 
-import entity.User;
-import entity.embeddable.PersonalInformation;
-import entity.enums.Role;
+import com.dmdev.webStore.entity.User;
+import com.dmdev.webStore.entity.embeddable.PersonalInformation;
+import com.dmdev.webStore.entity.enums.Role;
 import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
 
@@ -10,8 +10,8 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static util.SessionUtil.closeTransactionSession;
-import static util.SessionUtil.openTransactionSession;
+import static com.dmdev.webStore.util.SessionUtil.closeTransactionSession;
+import static com.dmdev.webStore.util.SessionUtil.openTransactionSession;
 
 class UserDaoTestIT {
 

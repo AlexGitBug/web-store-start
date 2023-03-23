@@ -1,16 +1,16 @@
 package query;
 
-import entity.Catalog;
-import entity.Order;
-import entity.Product;
-import entity.ShoppingCart;
-import entity.User;
-import entity.embeddable.DeliveryAdress;
-import entity.embeddable.PersonalInformation;
-import entity.enums.Brand;
-import entity.enums.Color;
-import entity.enums.PaymentCondition;
-import entity.enums.Role;
+import com.dmdev.webStore.entity.Catalog;
+import com.dmdev.webStore.entity.Order;
+import com.dmdev.webStore.entity.Product;
+import com.dmdev.webStore.entity.ShoppingCart;
+import com.dmdev.webStore.entity.User;
+import com.dmdev.webStore.entity.embeddable.DeliveryAdress;
+import com.dmdev.webStore.entity.embeddable.PersonalInformation;
+import com.dmdev.webStore.entity.enums.Brand;
+import com.dmdev.webStore.entity.enums.Color;
+import com.dmdev.webStore.entity.enums.PaymentCondition;
+import com.dmdev.webStore.entity.enums.Role;
 import lombok.Cleanup;
 import lombok.experimental.UtilityClass;
 import org.hibernate.Session;

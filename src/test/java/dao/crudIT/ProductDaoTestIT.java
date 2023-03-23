@@ -1,9 +1,9 @@
 package dao.crudIT;
 
-import entity.Catalog;
-import entity.Product;
-import entity.enums.Brand;
-import entity.enums.Color;
+import com.dmdev.webStore.entity.Catalog;
+import com.dmdev.webStore.entity.Product;
+import com.dmdev.webStore.entity.enums.Brand;
+import com.dmdev.webStore.entity.enums.Color;
 import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
 
@@ -11,8 +11,8 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static util.SessionUtil.closeTransactionSession;
-import static util.SessionUtil.openTransactionSession;
+import static com.dmdev.webStore.util.SessionUtil.closeTransactionSession;
+import static com.dmdev.webStore.util.SessionUtil.openTransactionSession;
 
 class ProductDaoTestIT {
 

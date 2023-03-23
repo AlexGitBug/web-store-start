@@ -1,22 +1,19 @@
 package dao.repository;
 
-import dao.repository.filter.OrderFilter;
-import dao.repository.filter.ProductFilter;
-import dao.repository.filter.UserFilter;
+import com.dmdev.webStore.dao.repository.CatalogRepository;
+import com.dmdev.webStore.dao.repository.ProductRepository;
+import com.dmdev.webStore.dao.repository.filter.OrderFilter;
+import com.dmdev.webStore.dao.repository.filter.ProductFilter;
 import dao.repository.initProxy.ProxySessionTestBase;
-import entity.Catalog;
-import entity.Product;
-import entity.embeddable.PersonalInformation;
-import entity.enums.Brand;
+import com.dmdev.webStore.entity.Catalog;
+import com.dmdev.webStore.entity.Product;
+import com.dmdev.webStore.entity.enums.Brand;
 
-import org.hibernate.graph.GraphSemantic;
 import org.junit.jupiter.api.Test;
 import util.TestCreateObjectForRepository;
 import util.TestDataImporter;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,11 +1,10 @@
 package dao.repository;
 
-import entity.Catalog;
+import com.dmdev.webStore.dao.repository.CatalogRepository;
+import com.dmdev.webStore.entity.Catalog;
 import dao.repository.initProxy.ProxySessionTestBase;
 import org.junit.jupiter.api.Test;
 import util.TestCreateObjectForRepository;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

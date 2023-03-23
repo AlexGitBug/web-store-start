@@ -1,7 +1,8 @@
 package dao.repository;
 
-import entity.User;
-import entity.enums.Role;
+import com.dmdev.webStore.dao.repository.UserRepository;
+import com.dmdev.webStore.entity.User;
+import com.dmdev.webStore.entity.enums.Role;
 import org.junit.jupiter.api.Test;
 import util.TestCreateObjectForRepository;
 
