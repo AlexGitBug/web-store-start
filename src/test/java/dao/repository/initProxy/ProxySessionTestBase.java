@@ -1,43 +1,48 @@
 package dao.repository.initProxy;
 
+import com.dmdev.webStore.config.ApplicationConfiguration;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Session;
+
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.TestInstance;
-import util.TestDataImporter;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.lang.reflect.Proxy;
-
-import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import javax.persistence.EntityManager;
 
 @RequiredArgsConstructor
-public abstract class ProxySessionTestBase {
+public abstract class ProxySessionTestBase extends TestDelete {
 
+    protected static AnnotationConfigApplicationContext applicationContext;
+    protected static EntityManager entityManager;
     protected static SessionFactory sessionFactory;
-    protected static Session session;
 
     @BeforeAll
     static void init() {
-        var configuration = new Configuration();
-        configuration.configure();
-        sessionFactory = configuration.buildSessionFactory();
-        session = (Session) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{Session.class},
-                (proxy, method, args) -> method.invoke(sessionFactory.getCurrentSession(), args));
+        applicationContext = new AnnotationConfigApplicationContext(ApplicationConfiguration.class);
+        entityManager = applicationContext.getBean(EntityManager.class);
+        sessionFactory = applicationContext.getBean(SessionFactory.class);
     }
 
     @BeforeEach
-    void getSession() {
-        session.beginTransaction();
+    void beginSession() {
+        entityManager.getTransaction().begin();
     }
 
     @AfterEach
     void closeSession() {
-        session.getTransaction().commit();
-
+        entityManager.close();
     }
 
+    @AfterAll
+    static void closeSessionFactory() {
+        sessionFactory.close();
+    }
+
+    @Override
+    public void deleteAll(EntityManager entityManager) {
+        super.deleteAll(entityManager);
+    }
 }

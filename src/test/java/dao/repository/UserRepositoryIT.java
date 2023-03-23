@@ -3,23 +3,24 @@ package dao.repository;
 import com.dmdev.webStore.dao.repository.UserRepository;
 import com.dmdev.webStore.entity.User;
 import com.dmdev.webStore.entity.enums.Role;
+import dao.repository.initProxy.ProxySessionTestBase;
 import org.junit.jupiter.api.Test;
 import util.TestCreateObjectForRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserRepositoryIT extends ProductRepositoryIT {
+public class UserRepositoryIT extends ProxySessionTestBase {
 
-    private final UserRepository userRepository = new UserRepository(User.class, session);
+    private final UserRepository userRepository = applicationContext.getBean(UserRepository.class);
 
     @Test
     void deleteUser() {
         var user = TestCreateObjectForRepository.getUser();
         userRepository.save(user);
 
-        userRepository.delete(user.getId());
+        userRepository.delete(user);
 
-        var actualResult = session.get(User.class, user.getId());
+        var actualResult = entityManager.find(User.class, user.getId());
         assertThat(actualResult).isNull();
     }
 
@@ -29,7 +30,7 @@ public class UserRepositoryIT extends ProductRepositoryIT {
 
         userRepository.save(user);
 
-        var actualResult = session.get(User.class, user.getId());
+        var actualResult = entityManager.find(User.class, user.getId());
 
         assertThat(actualResult).isEqualTo(user);
     }
@@ -39,11 +40,11 @@ public class UserRepositoryIT extends ProductRepositoryIT {
         var user = TestCreateObjectForRepository.getUser();
         userRepository.save(user);
 
-        var result = session.get(User.class, user.getId());
+        var result = entityManager.find(User.class, user.getId());
         result.setRole(Role.ADMIN);
         userRepository.update(user);
 
-        var actualResult = session.get(User.class, user.getId());
+        var actualResult = entityManager.find(User.class, user.getId());
         assertThat(actualResult).isEqualTo(user);
     }
 
@@ -52,9 +53,9 @@ public class UserRepositoryIT extends ProductRepositoryIT {
         var user = TestCreateObjectForRepository.getUser();
         userRepository.save(user);
 
-        var actualResult = userRepository.findById(user.getId());
+        var actualResult = entityManager.find(User.class, user.getId());
 
-        assertThat(actualResult).contains(user);
+        assertThat(actualResult).isEqualTo(user);
     }
 
 }

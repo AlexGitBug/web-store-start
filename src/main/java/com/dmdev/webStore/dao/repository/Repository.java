@@ -16,7 +16,7 @@ public interface Repository<K, T> {
         return findById(id, emptyMap());
     }
 
-    void delete(K id);
+    void delete(T entity);
 
     T update(T entity);
 

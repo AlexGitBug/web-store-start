@@ -7,6 +7,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.dmdev.webStore.dao.repository.filter.ProductFilter;
 import com.dmdev.webStore.dao.repository.filter.UserFilter;
 import org.hibernate.graph.GraphSemantic;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -18,10 +19,11 @@ import static com.dmdev.webStore.entity.QProduct.product;
 import static com.dmdev.webStore.entity.QShoppingCart.shoppingCart;
 import static com.dmdev.webStore.entity.QUser.user;
 
+@Repository
 public class ShoppingCartRepository extends RepositoryBase<Integer, ShoppingCart>{
 
-    public ShoppingCartRepository(Class<ShoppingCart> clazz, EntityManager entityManager) {
-        super(clazz, entityManager);
+    public ShoppingCartRepository(EntityManager entityManager) {
+        super(ShoppingCart.class, entityManager);
     }
 
     public List<ShoppingCart> findAllOrdersWithProductsOfOneUser(UserFilter userFilter) {

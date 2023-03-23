@@ -25,7 +25,6 @@ import java.util.List;
 @Table(name = "catalog", schema = "public")
 @Entity
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Component
 public class Catalog implements BaseEntity<Integer>{
 
     @Id

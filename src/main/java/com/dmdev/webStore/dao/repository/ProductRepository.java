@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import org.hibernate.graph.GraphSemantic;
 import com.dmdev.webStore.dao.repository.filter.OrderFilter;
 import com.dmdev.webStore.dao.repository.filter.ProductFilter;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -16,10 +17,11 @@ import static com.dmdev.webStore.entity.QProduct.product;
 import static com.dmdev.webStore.entity.QShoppingCart.shoppingCart;
 import static com.dmdev.webStore.entity.QUser.user;
 
+@Repository
 public class ProductRepository extends RepositoryBase<Integer, Product> {
 
-    public ProductRepository(Class<Product> clazz, EntityManager entityManager) {
-        super(clazz, entityManager);
+    public ProductRepository(EntityManager entityManager) {
+        super(Product.class, entityManager);
     }
 
     public List<Product> findListOfProductsEq(ProductFilter filter) {

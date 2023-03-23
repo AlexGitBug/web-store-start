@@ -1,7 +1,7 @@
 package com.dmdev.webStore.config;
 
 
-import org.hibernate.Session;
+
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -11,8 +11,6 @@ import org.springframework.context.annotation.PropertySource;
 import javax.annotation.PreDestroy;
 import javax.persistence.EntityManager;
 import java.lang.reflect.Proxy;
-
-import static org.springframework.context.annotation.ComponentScan.*;
 
 @Configuration
 @PropertySource("classpath:application.properties") //информация из property
@@ -36,13 +34,13 @@ public class ApplicationConfiguration {
 
     @Bean
     EntityManager entityManager(SessionFactory sessionFactory) {
-        return (EntityManager) Proxy.newProxyInstance(SessionFactory.class.getClassLoader(), new Class[]{Session.class},
+        return (EntityManager) Proxy.newProxyInstance(EntityManager.class.getClassLoader(), new Class[]{EntityManager.class},
                 (proxy, method, args) -> method.invoke(sessionFactory.getCurrentSession(), args));
     }
 
     @PreDestroy
     void closeSessionFactory() {
-        sessionFactory().close();
+        sessionFactory(configuration()).close();
     }
 }
 

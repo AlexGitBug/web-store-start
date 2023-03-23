@@ -18,11 +18,10 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ProductRepositoryIT extends ProxySessionTestBase {
+public class ProductRepositoryIT extends ProxySessionTestBase{
 
-    private final ProductRepository productRepository = new ProductRepository(Product.class, session);
-    private final CatalogRepository catalogRepository = new CatalogRepository(Catalog.class, session);
-
+    private final ProductRepository productRepository = applicationContext.getBean(ProductRepository.class);
+    private final CatalogRepository catalogRepository = applicationContext.getBean(CatalogRepository.class);
 
     @Test
     void deleteProduct() {
@@ -31,9 +30,9 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
         var product = TestCreateObjectForRepository.getProduct(catalog);
         productRepository.save(product);
 
-        productRepository.delete(product.getId());
+        productRepository.delete(product);
 
-        var actualResult = session.get(Product.class, product.getId());
+        var actualResult = entityManager.find(Product.class, product.getId());
         assertThat(actualResult).isNull();
     }
 
@@ -45,7 +44,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
 
         productRepository.save(product);
 
-        var actualResult = session.get(Product.class, product.getId());
+        var actualResult = entityManager.find(Product.class, product.getId());
         assertThat(actualResult).isEqualTo(product);
     }
 
@@ -56,11 +55,11 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
         var product = TestCreateObjectForRepository.getProduct(catalog);
         productRepository.save(product);
 
-        Product result = session.get(Product.class, product.getId());
+        Product result = entityManager.find(Product.class, product.getId());
         product.setModel("test-update");
         productRepository.update(product);
 
-        var actualResult = session.get(Product.class, result.getId());
+        var actualResult = entityManager.find(Product.class, result.getId());
         assertThat(actualResult).isEqualTo(product);
 
     }
@@ -72,7 +71,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
         var product = TestCreateObjectForRepository.getProduct(catalog);
         productRepository.save(product);
 
-        var actualResult = session.get(Product.class, product.getId());
+        var actualResult = entityManager.find(Product.class, product.getId());
 
         assertThat(actualResult).isEqualTo(product);
 
@@ -95,6 +94,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
 
         var brandResult = results.stream().map(Product::getBrand).collect(toList());
         assertThat(brandResult).contains(productFilter.getBrand());
+        deleteAll(entityManager);
     }
 
     @Test
@@ -116,6 +116,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
 
         var price = results.stream().map(Product::getPrice).toList();
         assertThat(price).contains(350, 400);
+        deleteAll(entityManager);
     }
 
     @Test
@@ -134,6 +135,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
 
         var categoryResult = results.stream().map(it -> it.getCatalog().getCategory()).collect(toList());
         assertThat(categoryResult).contains(productFilter.getCatalog().getCategory());
+        deleteAll(entityManager);
     }
 
     @Test
@@ -152,6 +154,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
 
         var categoryResult = results.stream().map(it -> it.getCatalog().getCategory()).collect(toList());
         assertThat(categoryResult).contains(productFilter.getCatalog().getCategory());
+        deleteAll(entityManager);
     }
 
     @Test
@@ -170,6 +173,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
 
         var categoryResult = results.stream().map(it -> it.getCatalog().getCategory()).collect(toList());
         assertThat(categoryResult).contains(productFilter.getCatalog().getCategory());
+        deleteAll(entityManager);
     }
 
     @Test
@@ -184,6 +188,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
 
         var brands = results.stream().map(Product::getBrand).toList();
         assertThat(brands).contains(productFilter.getBrand());
+        deleteAll(entityManager);
     }
 
     @Test
@@ -202,6 +207,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
 
         var modelResult = results.stream().map(Product::getModel).collect(toList());
         assertThat(modelResult).contains("A80J", "S22", "XM3");
+        deleteAll(entityManager);
     }
 
     @Test
@@ -211,6 +217,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
         var result = productRepository.findMinPriceOfProduct();
 
         assertThat(result.getPrice()).isEqualTo(150);
+        deleteAll(entityManager);
     }
 
 }

@@ -3,12 +3,10 @@ package dao.repository;
 import com.dmdev.webStore.dao.repository.*;
 import com.dmdev.webStore.dao.repository.filter.ProductFilter;
 import com.dmdev.webStore.dao.repository.filter.UserFilter;
+import com.dmdev.webStore.entity.Product;
 import dao.repository.initProxy.ProxySessionTestBase;
 import com.dmdev.webStore.entity.Catalog;
-import com.dmdev.webStore.entity.Order;
-import com.dmdev.webStore.entity.Product;
 import com.dmdev.webStore.entity.ShoppingCart;
-import com.dmdev.webStore.entity.User;
 import com.dmdev.webStore.entity.embeddable.PersonalInformation;
 import com.dmdev.webStore.entity.enums.Brand;
 
@@ -17,17 +15,17 @@ import util.TestCreateObjectForRepository;
 import util.TestDataImporter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
-
-    private final ShoppingCartRepository shoppingCartRepository = new ShoppingCartRepository(ShoppingCart.class, session);
-    private final ProductRepository productRepository = new ProductRepository(Product.class, session);
-    private final OrderRepository orderRepository = new OrderRepository(Order.class, session);
-    private final UserRepository userRepository = new UserRepository(User.class, session);
-    private final CatalogRepository catalogRepository = new CatalogRepository(Catalog.class, session);
+    private final ShoppingCartRepository shoppingCartRepository = applicationContext.getBean(ShoppingCartRepository.class);
+    private final ProductRepository productRepository = applicationContext.getBean(ProductRepository.class);
+    private final OrderRepository orderRepository = applicationContext.getBean(OrderRepository.class);
+    private final UserRepository userRepository = applicationContext.getBean(UserRepository.class);
+    private final CatalogRepository catalogRepository = applicationContext.getBean(CatalogRepository.class);
 
     @Test
     void deleteShoppingCart() {
@@ -42,9 +40,9 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
         var shoppingCart = TestCreateObjectForRepository.shoppingCart(order, product);
         shoppingCartRepository.save(shoppingCart);
 
-        shoppingCartRepository.delete(shoppingCart.getId());
+        shoppingCartRepository.delete(shoppingCart);
 
-        var actualResult = session.get(ShoppingCart.class, shoppingCart.getId());
+        var actualResult = entityManager.find(ShoppingCart.class, shoppingCart.getId());
         assertThat(actualResult).isNull();
     }
 
@@ -62,7 +60,7 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         shoppingCartRepository.save(shoppingCart);
 
-        var actualResult = session.get(ShoppingCart.class, shoppingCart.getId());
+        var actualResult = entityManager.find(ShoppingCart.class, shoppingCart.getId());
         assertThat(actualResult).isNotNull();
     }
 
@@ -79,12 +77,12 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
         var shoppingCart = TestCreateObjectForRepository.shoppingCart(order, product);
         shoppingCartRepository.save(shoppingCart);
 
-        var result = session.get(ShoppingCart.class, shoppingCart.getId());
+        var result = entityManager.find(ShoppingCart.class, shoppingCart.getId());
         result.setCreatedAt(LocalDate.now());
         shoppingCartRepository.update(shoppingCart);
 
 
-        var actualResult = session.get(ShoppingCart.class, shoppingCart.getId());
+        var actualResult = entityManager.find(ShoppingCart.class, shoppingCart.getId());
         assertThat(actualResult).isEqualTo(shoppingCart);
     }
 
@@ -101,7 +99,7 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
         var shoppingCart = TestCreateObjectForRepository.shoppingCart(order, product);
         shoppingCartRepository.save(shoppingCart);
 
-        var actualResult = session.get(ShoppingCart.class, shoppingCart.getId());
+        var actualResult = entityManager.find(ShoppingCart.class, shoppingCart.getId());
 
         assertThat(actualResult).isEqualTo(shoppingCart);
     }
@@ -124,6 +122,7 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         var categoryResult = results.stream().map(it -> it.getProduct().getCatalog().getCategory()).collect(toList());
         assertThat(categoryResult).contains("TV", "Smartphone", "Headphones");
+        deleteAll(entityManager);
     }
 
     @Test
@@ -138,6 +137,7 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         var email = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getEmail()).collect(toList());
         assertThat(email).contains("ivan@gmail.com", "sveta@gmail.com", "vasia@gmail.com", "vasia@gmail.com");
+        deleteAll(entityManager);
     }
 
     @Test
@@ -152,6 +152,7 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         var orderSum = result.stream().map(it -> it.get(1, Integer.class)).collect(toList());
         assertThat(orderSum).contains(1000, 1100, 3400, 2000, 1450, 1450, 4000, 3350);
+        deleteAll(entityManager);
     }
 
     @Test
@@ -177,8 +178,11 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         var emailResult = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getEmail()).collect(toList());
         assertThat(emailResult).contains("dima@gmail.com", "ksenia@gmail.com");
+        deleteAll(entityManager);
 
     }
+
+
 }
 
 
