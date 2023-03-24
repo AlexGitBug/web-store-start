@@ -6,7 +6,7 @@ import com.dmdev.webStore.entity.Order;
 import com.dmdev.webStore.entity.enums.PaymentCondition;
 import dao.repository.initProxy.ProxySessionTestBase;
 import org.junit.jupiter.api.Test;
-import util.TestCreateObjectForRepository;
+import dao.repository.util.TestCreateObjectForRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

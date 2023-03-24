@@ -1,4 +1,4 @@
-package com.dmdev.webStore.query;
+package com.dmdev.webStore.queryExample;
 
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;

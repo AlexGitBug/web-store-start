@@ -1,4 +1,4 @@
-package util;
+package dao.repository.util;
 
 import dao.repository.initProxy.ProxySessionTestBase;
 import com.dmdev.webStore.entity.Catalog;

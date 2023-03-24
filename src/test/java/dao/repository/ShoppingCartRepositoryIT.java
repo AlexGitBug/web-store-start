@@ -3,7 +3,6 @@ package dao.repository;
 import com.dmdev.webStore.dao.repository.*;
 import com.dmdev.webStore.dao.repository.filter.ProductFilter;
 import com.dmdev.webStore.dao.repository.filter.UserFilter;
-import com.dmdev.webStore.entity.Product;
 import dao.repository.initProxy.ProxySessionTestBase;
 import com.dmdev.webStore.entity.Catalog;
 import com.dmdev.webStore.entity.ShoppingCart;
@@ -11,11 +10,10 @@ import com.dmdev.webStore.entity.embeddable.PersonalInformation;
 import com.dmdev.webStore.entity.enums.Brand;
 
 import org.junit.jupiter.api.Test;
-import util.TestCreateObjectForRepository;
-import util.TestDataImporter;
+import dao.repository.util.TestCreateObjectForRepository;
+import dao.repository.util.TestDataImporter;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -178,11 +176,9 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         var emailResult = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getEmail()).collect(toList());
         assertThat(emailResult).contains("dima@gmail.com", "ksenia@gmail.com");
+
         deleteAll(entityManager);
-
     }
-
-
 }
 
 

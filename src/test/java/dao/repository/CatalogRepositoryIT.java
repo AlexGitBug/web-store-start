@@ -4,10 +4,7 @@ import com.dmdev.webStore.dao.repository.CatalogRepository;
 import com.dmdev.webStore.entity.Catalog;
 import dao.repository.initProxy.ProxySessionTestBase;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import util.TestCreateObjectForRepository;
-
-import javax.persistence.EntityManager;
+import dao.repository.util.TestCreateObjectForRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

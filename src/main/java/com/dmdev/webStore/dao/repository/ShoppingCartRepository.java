@@ -1,7 +1,7 @@
 package com.dmdev.webStore.dao.repository;
 
 import com.dmdev.webStore.entity.ShoppingCart;
-import com.dmdev.webStore.query.QPredicate;
+import com.dmdev.webStore.queryExample.QPredicate;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.dmdev.webStore.dao.repository.filter.ProductFilter;

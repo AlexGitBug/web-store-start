@@ -1,4 +1,4 @@
-package com.dmdev.webStore.query;
+package com.dmdev.webStore.queryExample;
 
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;

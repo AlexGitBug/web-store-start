@@ -10,8 +10,8 @@ import com.dmdev.webStore.entity.Product;
 import com.dmdev.webStore.entity.enums.Brand;
 
 import org.junit.jupiter.api.Test;
-import util.TestCreateObjectForRepository;
-import util.TestDataImporter;
+import dao.repository.util.TestCreateObjectForRepository;
+import dao.repository.util.TestDataImporter;
 
 import java.util.List;
 

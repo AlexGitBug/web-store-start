@@ -1,4 +1,4 @@
-package util;
+package dao.repository.util;
 
 import com.dmdev.webStore.entity.Catalog;
 import com.dmdev.webStore.entity.Order;

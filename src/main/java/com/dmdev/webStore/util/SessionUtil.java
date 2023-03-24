@@ -16,7 +16,7 @@ public class SessionUtil {
 
     public Session openTransactionSession() {
         session = HibernateUtil.buildSessionFactory().openSession();
-        transaction = session.beginTransaction();
+        session.beginTransaction();
         return session;
     }
 
