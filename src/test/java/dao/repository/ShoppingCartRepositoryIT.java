@@ -27,6 +27,7 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
     @Test
     void deleteShoppingCart() {
+        entityManager.getTransaction().begin();
         var user = TestCreateObjectForRepository.getUser();
         userRepository.save(user);
         var order = TestCreateObjectForRepository.getOrder(user);
@@ -46,6 +47,8 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
     @Test
     void saveShoppingCart() {
+        entityManager.getTransaction().begin();
+
         var user = TestCreateObjectForRepository.getUser();
         userRepository.save(user);
         var order = TestCreateObjectForRepository.getOrder(user);
@@ -64,6 +67,7 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
     @Test
     void updateShoppingCart() {
+        entityManager.getTransaction().begin();
         var user = TestCreateObjectForRepository.getUser();
         userRepository.save(user);
         var order = TestCreateObjectForRepository.getOrder(user);
@@ -79,13 +83,13 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
         result.setCreatedAt(LocalDate.now());
         shoppingCartRepository.update(shoppingCart);
 
-
         var actualResult = entityManager.find(ShoppingCart.class, shoppingCart.getId());
         assertThat(actualResult).isEqualTo(shoppingCart);
     }
 
     @Test
     void findByIdShoppingCart() {
+        entityManager.getTransaction().begin();
         var user = TestCreateObjectForRepository.getUser();
         userRepository.save(user);
         var order = TestCreateObjectForRepository.getOrder(user);
@@ -105,6 +109,7 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
     @Test
     void findAllOrdersWithProductsOfOneUser() {
         TestDataImporter.importData(sessionFactory);
+        entityManager.getTransaction().begin();
 
         var userFilter = UserFilter.builder()
                 .personalInformation(PersonalInformation.builder()
@@ -120,12 +125,12 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         var categoryResult = results.stream().map(it -> it.getProduct().getCatalog().getCategory()).collect(toList());
         assertThat(categoryResult).contains("TV", "Smartphone", "Headphones");
-        deleteAll(entityManager);
     }
 
     @Test
     void findUsersWhoMadeAnOrderAtSpecificTime() {
         TestDataImporter.importData(sessionFactory);
+        entityManager.getTransaction().begin();
 
         var results = shoppingCartRepository.findUsersWhoMadeOrderSpecificTime(LocalDate.of(2022, 10, 10), LocalDate.of(2023, 12, 12));
         assertThat(results).hasSize(4);
@@ -135,12 +140,12 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         var email = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getEmail()).collect(toList());
         assertThat(email).contains("ivan@gmail.com", "sveta@gmail.com", "vasia@gmail.com", "vasia@gmail.com");
-        deleteAll(entityManager);
     }
 
     @Test
     void getStatisticOfEachOrdersWithSum() {
         TestDataImporter.importData(sessionFactory);
+        entityManager.getTransaction().begin();
 
         var result = shoppingCartRepository.getStatisticOfEachOrdersWithSum();
         assertThat(result).hasSize(8);
@@ -150,12 +155,12 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         var orderSum = result.stream().map(it -> it.get(1, Integer.class)).collect(toList());
         assertThat(orderSum).contains(1000, 1100, 3400, 2000, 1450, 1450, 4000, 3350);
-        deleteAll(entityManager);
     }
 
     @Test
     void findUsersWhoMadeAnOrderOfSpecificProduct() {
         TestDataImporter.importData(sessionFactory);
+        entityManager.getTransaction().begin();
 
         var productFilter = ProductFilter.builder()
                 .brand(Brand.SONY)
@@ -177,7 +182,6 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
         var emailResult = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getEmail()).collect(toList());
         assertThat(emailResult).contains("dima@gmail.com", "ksenia@gmail.com");
 
-        deleteAll(entityManager);
     }
 }
 

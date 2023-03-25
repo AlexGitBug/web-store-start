@@ -31,12 +31,13 @@ public abstract class ProxySessionTestBase extends TestDelete {
 
     @BeforeEach
     void beginSession() {
-        entityManager.getTransaction().begin();
+        deleteAll(entityManager);
     }
 
     @AfterEach
     void closeSession() {
-        entityManager.close();
+        entityManager.getTransaction().commit();
+//        entityManager.close();
     }
 
     @AfterAll

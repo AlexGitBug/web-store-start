@@ -38,10 +38,10 @@ public class ApplicationConfiguration {
                 (proxy, method, args) -> method.invoke(sessionFactory.getCurrentSession(), args));
     }
 
-    @PreDestroy
-    void closeSessionFactory() {
-        sessionFactory(configuration()).close();
-    }
+//    @PreDestroy
+//    void closeSessionFactory(SessionFactory sessionFactory) {
+//        sessionFactory.close();
+//    }
 }
 
 

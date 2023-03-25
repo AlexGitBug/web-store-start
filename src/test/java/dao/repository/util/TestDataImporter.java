@@ -23,6 +23,7 @@ import java.util.Arrays;
 public class TestDataImporter extends ProxySessionTestBase {
     public void importData(SessionFactory sessionFactory) {
 
+        entityManager.getTransaction().begin();
 
         var smartphone = saveCatalog(entityManager, "Smartphone");
         var tv = saveCatalog(entityManager, "TV");
@@ -76,6 +77,8 @@ public class TestDataImporter extends ProxySessionTestBase {
         addToShoppingCart(entityManager, LocalDate.of(2021, 12, 4), orderVlad, apple13);
         addToShoppingCart(entityManager, LocalDate.of(2021, 12, 4), orderVlad, samsungS21);
         addToShoppingCart(entityManager, LocalDate.of(2021, 12, 4), orderVlad, samsungS20);
+
+        entityManager.getTransaction().commit();
     }
 
     private void addToShoppingCart(EntityManager entityManager, LocalDate instant, Order order, Product... products) {

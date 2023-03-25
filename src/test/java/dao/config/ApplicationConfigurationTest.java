@@ -1,7 +1,6 @@
 package dao.config;
 
 
-
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -29,6 +28,7 @@ public class ApplicationConfigurationTest {
     @Bean
     SessionFactory sessionFactory(org.hibernate.cfg.Configuration configuration) {
         configuration.configure();
+//        configuration.setProperty()
         return configuration.buildSessionFactory();
     }
 
@@ -38,11 +38,10 @@ public class ApplicationConfigurationTest {
                 (proxy, method, args) -> method.invoke(sessionFactory.getCurrentSession(), args));
     }
 
-    @PreDestroy
-    void closeSessionFactory() {
-        sessionFactory(configuration()).close();
-    }
+//    @PreDestroy
+//    void closeSessionFactory(SessionFactory sessionFactory) {
+//        sessionFactory.close();
+//    }
 }
-
 
 
