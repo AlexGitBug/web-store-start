@@ -13,6 +13,7 @@ import com.dmdev.webStore.entity.enums.Color;
 import com.dmdev.webStore.entity.enums.PaymentCondition;
 import com.dmdev.webStore.entity.enums.Role;
 import lombok.experimental.UtilityClass;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import javax.persistence.EntityManager;
@@ -22,7 +23,7 @@ import java.util.Arrays;
 @UtilityClass
 public class TestDataImporter extends ProxySessionTestBase {
     public void importData(SessionFactory sessionFactory) {
-
+        var entityManager = sessionFactory.openSession();
         entityManager.getTransaction().begin();
 
         var smartphone = saveCatalog(entityManager, "Smartphone");

@@ -1,7 +1,7 @@
 package com.dmdev.webStore.dao.repository;
 
 import com.dmdev.webStore.entity.Product;
-import com.dmdev.webStore.queryExample.QPredicate;
+import unUsedCode.dao.queryExample.QPredicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.hibernate.graph.GraphSemantic;
 import com.dmdev.webStore.dao.repository.filter.OrderFilter;

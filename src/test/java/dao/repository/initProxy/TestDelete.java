@@ -1,5 +1,6 @@
 package dao.repository.initProxy;
 
+
 import javax.persistence.EntityManager;
 
 public abstract class TestDelete {

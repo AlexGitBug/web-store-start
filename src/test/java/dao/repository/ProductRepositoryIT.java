@@ -94,7 +94,6 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
 
         var brandResult = results.stream().map(Product::getBrand).collect(toList());
         assertThat(brandResult).contains(productFilter.getBrand());
-        deleteAll(entityManager);
     }
 
     @Test
@@ -116,7 +115,6 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
 
         var price = results.stream().map(Product::getPrice).toList();
         assertThat(price).contains(350, 400);
-        deleteAll(entityManager);
     }
 
     @Test
@@ -135,7 +133,6 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
 
         var categoryResult = results.stream().map(it -> it.getCatalog().getCategory()).collect(toList());
         assertThat(categoryResult).contains(productFilter.getCatalog().getCategory());
-        deleteAll(entityManager);
     }
 
     @Test
@@ -154,7 +151,6 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
 
         var categoryResult = results.stream().map(it -> it.getCatalog().getCategory()).collect(toList());
         assertThat(categoryResult).contains(productFilter.getCatalog().getCategory());
-        deleteAll(entityManager);
     }
 
     @Test
@@ -173,7 +169,6 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
 
         var categoryResult = results.stream().map(it -> it.getCatalog().getCategory()).collect(toList());
         assertThat(categoryResult).contains(productFilter.getCatalog().getCategory());
-        deleteAll(entityManager);
     }
 
     @Test
@@ -188,7 +183,6 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
 
         var brands = results.stream().map(Product::getBrand).toList();
         assertThat(brands).contains(productFilter.getBrand());
-        deleteAll(entityManager);
     }
 
     @Test
@@ -207,7 +201,6 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
 
         var modelResult = results.stream().map(Product::getModel).collect(toList());
         assertThat(modelResult).contains("A80J", "S22", "XM3");
-        deleteAll(entityManager);
     }
 
     @Test
@@ -217,7 +210,6 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
         var result = productRepository.findMinPriceOfProduct();
 
         assertThat(result.getPrice()).isEqualTo(150);
-        deleteAll(entityManager);
     }
 
 }

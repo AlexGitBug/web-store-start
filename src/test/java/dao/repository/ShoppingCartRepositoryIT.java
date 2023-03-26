@@ -129,8 +129,11 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
     @Test
     void findUsersWhoMadeAnOrderAtSpecificTime() {
+        System.out.println("successful delete");
         TestDataImporter.importData(sessionFactory);
+        System.out.println("successful insert");
         entityManager.getTransaction().begin();
+        System.out.println("successful begin transaction");
 
         var results = shoppingCartRepository.findUsersWhoMadeOrderSpecificTime(LocalDate.of(2022, 10, 10), LocalDate.of(2023, 12, 12));
         assertThat(results).hasSize(4);
@@ -140,6 +143,7 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         var email = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getEmail()).collect(toList());
         assertThat(email).contains("ivan@gmail.com", "sveta@gmail.com", "vasia@gmail.com", "vasia@gmail.com");
+        System.out.println("successful test");
     }
 
     @Test
@@ -159,8 +163,11 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
     @Test
     void findUsersWhoMadeAnOrderOfSpecificProduct() {
+        System.out.println("successful delete");
         TestDataImporter.importData(sessionFactory);
+        System.out.println("successful insert");
         entityManager.getTransaction().begin();
+        System.out.println("successful begin transaction");
 
         var productFilter = ProductFilter.builder()
                 .brand(Brand.SONY)
@@ -181,6 +188,7 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         var emailResult = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getEmail()).collect(toList());
         assertThat(emailResult).contains("dima@gmail.com", "ksenia@gmail.com");
+        System.out.println("successful test");
 
     }
 }
