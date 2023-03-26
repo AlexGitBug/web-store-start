@@ -1,7 +1,6 @@
 package dao.repository.initProxy;
 
-import com.dmdev.webStore.config.ApplicationConfiguration;
-import dao.config.ApplicationConfigurationTest;
+import dao.repository.initProxy.config.ApplicationConfigurationTest;
 import lombok.RequiredArgsConstructor;
 
 import org.hibernate.SessionFactory;
@@ -35,7 +34,7 @@ public abstract class ProxySessionTestBase extends TestDelete {
     }
 
     @AfterEach
-    void closeSession() {
+    void commitSession() {
         entityManager.getTransaction().commit();
 //        entityManager.close();
     }
@@ -49,4 +48,5 @@ public abstract class ProxySessionTestBase extends TestDelete {
     public void deleteAll(EntityManager entityManager) {
         super.deleteAll(entityManager);
     }
+
 }
