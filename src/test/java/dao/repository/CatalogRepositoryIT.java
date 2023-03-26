@@ -13,6 +13,7 @@ class CatalogRepositoryIT extends ProxySessionTestBase {
     private final CatalogRepository catalogRepository = applicationContext.getBean(CatalogRepository.class);
     @Test
     void deleteCatalog() {
+        entityManager.getTransaction().begin();
         var catalog = TestCreateObjectForRepository.getCatalog();
         //сохраняем, присваиваем id
         catalogRepository.save(catalog);
@@ -26,6 +27,7 @@ class CatalogRepositoryIT extends ProxySessionTestBase {
 
     @Test
     void saveCatalog() {
+        entityManager.getTransaction().begin();
         var catalog = TestCreateObjectForRepository.getCatalog();
 
         catalogRepository.save(catalog);
@@ -36,6 +38,7 @@ class CatalogRepositoryIT extends ProxySessionTestBase {
 
     @Test
     void updateCatalog() {
+        entityManager.getTransaction().begin();
         var catalog = TestCreateObjectForRepository.getCatalog();
         catalogRepository.save(catalog);
 
@@ -49,6 +52,7 @@ class CatalogRepositoryIT extends ProxySessionTestBase {
 
     @Test
     void findByIdCatalog() {
+        entityManager.getTransaction().begin();
         var catalog = TestCreateObjectForRepository.getCatalog();
         catalogRepository.save(catalog);
 

@@ -17,6 +17,7 @@ public class OrderRepositoryIT extends ProxySessionTestBase {
 
     @Test
     void deleteOrder() {
+        entityManager.getTransaction().begin();
         var user = TestCreateObjectForRepository.getUser();
         userRepository.save(user);
         var order = TestCreateObjectForRepository.getOrder(user);
@@ -30,6 +31,7 @@ public class OrderRepositoryIT extends ProxySessionTestBase {
 
     @Test
     void saveOrder() {
+        entityManager.getTransaction().begin();
         var user = TestCreateObjectForRepository.getUser();
         userRepository.save(user);
         var order = TestCreateObjectForRepository.getOrder(user);
@@ -42,6 +44,7 @@ public class OrderRepositoryIT extends ProxySessionTestBase {
 
     @Test
     void updateOder() {
+        entityManager.getTransaction().begin();
         var user = TestCreateObjectForRepository.getUser();
         userRepository.save(user);
         var order = TestCreateObjectForRepository.getOrder(user);
@@ -58,6 +61,7 @@ public class OrderRepositoryIT extends ProxySessionTestBase {
 
     @Test
     void findByIdOrder() {
+        entityManager.getTransaction().begin();
         var user = TestCreateObjectForRepository.getUser();
         userRepository.save(user);
         var order = TestCreateObjectForRepository.getOrder(user);

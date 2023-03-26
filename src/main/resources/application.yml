@@ -1,0 +1,15 @@
+connection:
+  url: jdbc:postgresql://localhost:5432/web-store
+  username: postgres
+  password: postgres
+  driverClass: org.postgresql.Driver
+showSql: true
+formatSql: true
+hibernate:
+  dialect: org.hibernate.dialect.PostgreSQL10Dialect
+  hbm2ddlAuto: create
+  currentSessionContextClass: thread
+  cache:
+  useSecondLevelCache: true
+  regionFactoryClass: org.hibernate.cache.jcache.internal.JCacheRegionFactory
+  useQueryCache: true

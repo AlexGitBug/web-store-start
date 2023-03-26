@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+    id "io.freefair.lombok" version "6.3.0"
 }
 group 'org.example'
 version '1.0-SNAPSHOT'
@@ -47,12 +48,12 @@ dependencies {
 
 //    annotationProcessor 'org.hibernate:hibernate-jpamodelgen:5.5.7.Final'
 
-    compileOnly 'org.projectlombok:lombok:1.18.20'
-    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+//    compileOnly 'org.projectlombok:lombok:1.18.20'
+//    annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
     testImplementation 'org.assertj:assertj-core:3.23.1'
-    testCompileOnly 'org.projectlombok:lombok:1.18.20'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
+//    testCompileOnly 'org.projectlombok:lombok:1.18.20'
+//    testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
     testImplementation 'org.mockito:mockito-junit-jupiter:4.11.0'

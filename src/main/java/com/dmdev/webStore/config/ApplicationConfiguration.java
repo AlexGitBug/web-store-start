@@ -46,26 +46,6 @@ public class ApplicationConfiguration extends AppConfigProperties{
                 (proxy, method, args) -> method.invoke(sessionFactory.getCurrentSession(), args));
     }
 
-//    private org.hibernate.cfg.Configuration getNewConfiguration() {
-//        return new org.hibernate.cfg.Configuration()
-//                .setProperty(Environment.URL, url)
-//                .setProperty(Environment.DRIVER, driver)
-//                .setProperty(Environment.DIALECT, dialect)
-//                .setProperty(Environment.SHOW_SQL, showSQL)
-//                .setProperty(Environment.FORMAT_SQL, formatSQL)
-//                .setProperty(Environment.HBM2DDL_AUTO, createTable)
-//                .setProperty(Environment.CURRENT_SESSION_CONTEXT_CLASS, thread)
-//                .setProperty(Environment.USER, username)
-//                .setProperty(Environment.PASS, password)
-//                .setProperty(Environment.USE_SECOND_LEVEL_CACHE, secondLevelCache)
-//                .setProperty(Environment.CACHE_REGION_FACTORY, region)
-//                .setProperty(Environment.USE_QUERY_CACHE, cache)
-//                .addAnnotatedClass(Order.class)
-//                .addAnnotatedClass(Catalog.class)
-//                .addAnnotatedClass(ShoppingCart.class)
-//                .addAnnotatedClass(Product.class)
-//                .addAnnotatedClass(User.class);
-//    }
 }
 
 

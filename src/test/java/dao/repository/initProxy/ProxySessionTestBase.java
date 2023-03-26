@@ -34,8 +34,8 @@ public abstract class ProxySessionTestBase extends TestDelete {
 
     @AfterEach
     void commitSession() {
-        entityManager.getTransaction().commit();
-        entityManager.close();
+//        entityManager.getTransaction().commit();
+        entityManager.getTransaction().rollback();
     }
 
     @AfterAll

@@ -25,6 +25,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
 
     @Test
     void deleteProduct() {
+        entityManager.getTransaction().begin();
         var catalog = TestCreateObjectForRepository.getCatalog();
         catalogRepository.save(catalog);
         var product = TestCreateObjectForRepository.getProduct(catalog);
@@ -38,6 +39,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
 
     @Test
     void saveProduct() {
+        entityManager.getTransaction().begin();
         var catalog = TestCreateObjectForRepository.getCatalog();
         catalogRepository.save(catalog);
         var product = TestCreateObjectForRepository.getProduct(catalog);
@@ -50,6 +52,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
 
     @Test
     void updateProduct() {
+        entityManager.getTransaction().begin();
         var catalog = TestCreateObjectForRepository.getCatalog();
         catalogRepository.save(catalog);
         var product = TestCreateObjectForRepository.getProduct(catalog);
@@ -66,6 +69,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
 
     @Test
     void findByIdProduct() {
+        entityManager.getTransaction().begin();
         var catalog = TestCreateObjectForRepository.getCatalog();
         catalogRepository.save(catalog);
         var product = TestCreateObjectForRepository.getProduct(catalog);
@@ -80,6 +84,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
     @Test
     void findListOfProductsEq() {
         TestDataImporter.importData(sessionFactory);
+        entityManager.getTransaction().begin();
 
         var productFilter = ProductFilter.builder()
                 .catalog(TestCreateObjectForRepository.getCatalog())
@@ -99,6 +104,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
     @Test
     void findListOfProductOfOneCategoryAndBrandBetweenTwoPrice() {
         TestDataImporter.importData(sessionFactory);
+        entityManager.getTransaction().begin();
 
         var productFilter = ProductFilter.builder()
                 .catalog(Catalog.builder()
@@ -120,6 +126,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
     @Test
     void findListOfProductGtPrice() {
         TestDataImporter.importData(sessionFactory);
+        entityManager.getTransaction().begin();
 
         var productFilter = ProductFilter.builder()
                 .catalog(Catalog.builder()
@@ -138,6 +145,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
     @Test
     void findListOfProductLtPrice() {
         TestDataImporter.importData(sessionFactory);
+        entityManager.getTransaction().begin();
 
         var productFilter = ProductFilter.builder()
                 .catalog(Catalog.builder()
@@ -156,6 +164,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
     @Test
     void findProductsGtPriceAndBrand() {
         TestDataImporter.importData(sessionFactory);
+        entityManager.getTransaction().begin();
 
         var productFilter = ProductFilter.builder()
                 .catalog(Catalog.builder()
@@ -174,6 +183,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
     @Test
     void findAllProductOfBrand() {
         TestDataImporter.importData(sessionFactory);
+        entityManager.getTransaction().begin();
         var productFilter = ProductFilter.builder()
                 .brand(Brand.SAMSUNG)
                 .build();
@@ -188,6 +198,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
     @Test
     void findAllProductsFromOrder() {
         TestDataImporter.importData(sessionFactory);
+        entityManager.getTransaction().begin();
 
         var orderFilter = OrderFilter.builder()
                 .id(3)
@@ -206,6 +217,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase{
     @Test
     void findMinPriceOfProduct() {
         TestDataImporter.importData(sessionFactory);
+        entityManager.getTransaction().begin();
 
         var result = productRepository.findMinPriceOfProduct();
 

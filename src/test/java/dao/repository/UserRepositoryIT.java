@@ -15,6 +15,7 @@ public class UserRepositoryIT extends ProxySessionTestBase {
 
     @Test
     void deleteUser() {
+        entityManager.getTransaction().begin();
         var user = TestCreateObjectForRepository.getUser();
         userRepository.save(user);
 
@@ -26,6 +27,7 @@ public class UserRepositoryIT extends ProxySessionTestBase {
 
     @Test
     void saveUser() {
+        entityManager.getTransaction().begin();
         var user = TestCreateObjectForRepository.getUser();
 
         userRepository.save(user);
@@ -37,6 +39,7 @@ public class UserRepositoryIT extends ProxySessionTestBase {
 
     @Test
     void updateUser() {
+        entityManager.getTransaction().begin();
         var user = TestCreateObjectForRepository.getUser();
         userRepository.save(user);
 
@@ -50,6 +53,7 @@ public class UserRepositoryIT extends ProxySessionTestBase {
 
     @Test
     void findByIdUser() {
+        entityManager.getTransaction().begin();
         var user = TestCreateObjectForRepository.getUser();
         userRepository.save(user);
 
