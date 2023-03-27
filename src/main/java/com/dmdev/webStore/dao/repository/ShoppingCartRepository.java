@@ -26,43 +26,26 @@ public class ShoppingCartRepository extends RepositoryBase<Integer, ShoppingCart
         super(ShoppingCart.class, entityManager);
     }
 
-    public List<ShoppingCart> findAllOrdersWithProductsOfOneUser(UserFilter userFilter) {
+//    public List<ShoppingCart> findAllOrdersWithProductsOfOneUser(UserFilter userFilter) {
+//
+//        var predicate = QPredicate.builder()
+//                .add(userFilter.getPersonalInformation().getEmail(), user.personalInformation.email::eq)
+//                .buildAnd();
+//
+//        return new JPAQuery<ShoppingCart>(getEntityManager())
+//                .select(shoppingCart)
+//                .from(shoppingCart)
+//                .join(shoppingCart.order, order)
+//                .join(order.user, user)
+//                .join(shoppingCart.product, product)
+//                .join(product.catalog)
+//                .setHint(GraphSemantic.LOAD.getJpaHintName(), getEntityManager().getEntityGraph("findAllOrdersOfUsers"))
+//                .where(predicate)
+//                .fetch();
+//    }
 
-        var predicate = QPredicate.builder()
-                .add(userFilter.getPersonalInformation().getEmail(), user.personalInformation.email::eq)
-                .buildAnd();
-
-        return new JPAQuery<ShoppingCart>(getEntityManager())
-                .select(shoppingCart)
-                .from(shoppingCart)
-                .join(shoppingCart.order, order)
-                .join(order.user, user)
-                .join(shoppingCart.product, product)
-                .join(product.catalog)
-                .setHint(GraphSemantic.LOAD.getJpaHintName(), getEntityManager().getEntityGraph("findAllOrdersOfUsers"))
-                .where(predicate)
-                .fetch();
-    }
-
-    public List<ShoppingCart> findUsersWhoMadeOrderSpecificTime(LocalDate startDate, LocalDate endDate) {
-
-        var predicate = QPredicate.builder()
-                .add(startDate, order.deliveryDate::gt)
-                .add(endDate, order.deliveryDate::lt)
-                .buildAnd();
-
-        return new JPAQuery<ShoppingCart>(getEntityManager())
-                .select(shoppingCart)
-                .from(shoppingCart)
-                .join(shoppingCart.order, order)
-                .join(order.user, user)
-                .where(predicate)
-                .setHint(GraphSemantic.LOAD.getJpaHintName(), getEntityManager().getEntityGraph("findAllOrdersOfUsers"))
-                .fetch();
-    }
 
     public List<Tuple> getStatisticOfEachOrdersWithSum() {
-
         return new JPAQuery<Tuple>(getEntityManager())
                 .select(shoppingCart)
                 .from(shoppingCart)
@@ -74,7 +57,6 @@ public class ShoppingCartRepository extends RepositoryBase<Integer, ShoppingCart
     }
 
     public List<ShoppingCart> findUsersWhoMadeOrderOfSpecificProduct(ProductFilter productFilter) {
-
 
         var predicate = QPredicate.builder()
                 .add(productFilter.getBrand(), product.brand::eq)

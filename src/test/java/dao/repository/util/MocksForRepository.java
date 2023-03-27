@@ -16,7 +16,7 @@ import lombok.experimental.UtilityClass;
 import java.time.LocalDate;
 
 @UtilityClass
-public class TestCreateObjectForRepository {
+public class MocksForRepository {
 
     public static Product getProduct(Catalog catalog) {
         return Product.builder()

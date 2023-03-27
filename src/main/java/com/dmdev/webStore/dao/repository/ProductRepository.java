@@ -15,15 +15,12 @@ import static com.dmdev.webStore.entity.QCatalog.catalog;
 import static com.dmdev.webStore.entity.QOrder.order;
 import static com.dmdev.webStore.entity.QProduct.product;
 import static com.dmdev.webStore.entity.QShoppingCart.shoppingCart;
-import static com.dmdev.webStore.entity.QUser.user;
 
 @Repository
 public class ProductRepository extends RepositoryBase<Integer, Product> {
-
     public ProductRepository(EntityManager entityManager) {
         super(Product.class, entityManager);
     }
-
     public List<Product> findListOfProductsEq(ProductFilter filter) {
 
         var predicate = QPredicate.builder()
@@ -40,7 +37,7 @@ public class ProductRepository extends RepositoryBase<Integer, Product> {
                 .fetch();
     }
 
-    public List<Product> findListOfProductOfOneCategoryAndBrandBetweenTwoPrice(ProductFilter filter, Integer sumA, Integer sumB) {
+    public List<Product> findProductOfOneCategoryAndBrandBetweenTwoPrice(ProductFilter filter, Integer sumA, Integer sumB) {
 
         var predicate = QPredicate.builder()
                 .add(filter.getCatalog().getCategory(), catalog.category::eq)
@@ -57,25 +54,7 @@ public class ProductRepository extends RepositoryBase<Integer, Product> {
                 .setHint(GraphSemantic.LOAD.getJpaHintName(), getEntityManager().getEntityGraph("withCatalog"))
                 .fetch();
     }
-
-    public List<Product> findListOfProductGtPrice(ProductFilter filter, Integer price) {
-
-        var predicate = QPredicate.builder()
-                .add(filter.getCatalog().getCategory(), catalog.category::eq)
-                .add(filter.getBrand(), product.brand::eq)
-                .add(price, product.price::gt)
-                .buildAnd();
-
-        return new JPAQuery<Product>(getEntityManager())
-                .select(product)
-                .from(product)
-                .join(product.catalog, catalog)
-                .where(predicate)
-                .setHint(GraphSemantic.LOAD.getJpaHintName(), getEntityManager().getEntityGraph("withCatalog"))
-                .fetch();
-    }
-
-    public List<Product> findListOfProductLtPrice(ProductFilter filter, Integer price) {
+    public List<Product> findProductsOfBrandAndCategoryAndLtPrice(ProductFilter filter, Integer price) {
 
         var predicate = QPredicate.builder()
                 .add(filter.getCatalog().getCategory(), catalog.category::eq)
@@ -91,8 +70,7 @@ public class ProductRepository extends RepositoryBase<Integer, Product> {
                 .setHint(GraphSemantic.LOAD.getJpaHintName(), getEntityManager().getEntityGraph("withCatalog"))
                 .fetch();
     }
-
-    public List<Product> findProductsGtPriceAndBrand(ProductFilter filter) {
+    public List<Product> findProductsOfBrandAndCategoryAndGtPrice(ProductFilter filter) {
 
         var predicate = QPredicate.builder()
                 .add(filter.getCatalog().getCategory(), catalog.category::eq)
@@ -105,7 +83,7 @@ public class ProductRepository extends RepositoryBase<Integer, Product> {
                 .from(product)
                 .join(product.catalog, catalog)
                 .where(predicate)
-                .orderBy(product.price.asc())
+                .orderBy(product.price.desc())
                 .setHint(GraphSemantic.LOAD.getJpaHintName(), getEntityManager().getEntityGraph("withCatalog"))
                 .fetch();
     }
@@ -126,7 +104,7 @@ public class ProductRepository extends RepositoryBase<Integer, Product> {
     public List<Product> findAllProductsFromOrder(OrderFilter orderFilter) {
 
         var predicate = QPredicate.builder()
-                .add(orderFilter.getId(), order.id::eq)
+                .add(orderFilter.getDeliveryDate(), order.deliveryDate::eq)
                 .buildAnd();
 
         return new JPAQuery<Product>(getEntityManager())
@@ -134,7 +112,6 @@ public class ProductRepository extends RepositoryBase<Integer, Product> {
                 .from(product)
                 .join(product.shoppingCarts, shoppingCart)
                 .join(shoppingCart.order, order)
-                .join(order.user, user)
                 .setHint(GraphSemantic.LOAD.getJpaHintName(), getEntityManager().getEntityGraph("withCatalog"))
                 .where(predicate)
                 .fetch();

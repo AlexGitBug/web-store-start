@@ -4,42 +4,43 @@ import com.dmdev.webStore.dao.repository.CatalogRepository;
 import com.dmdev.webStore.entity.Catalog;
 import dao.repository.initProxy.ProxySessionTestBase;
 import org.junit.jupiter.api.Test;
-import dao.repository.util.TestCreateObjectForRepository;
+import dao.repository.util.MocksForRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class CatalogRepositoryIT extends ProxySessionTestBase {
+public class CatalogRepositoryIT extends ProxySessionTestBase {
 
     private final CatalogRepository catalogRepository = applicationContext.getBean(CatalogRepository.class);
     @Test
     void deleteCatalog() {
         entityManager.getTransaction().begin();
-        var catalog = TestCreateObjectForRepository.getCatalog();
-        //сохраняем, присваиваем id
+        var catalog = MocksForRepository.getCatalog();
         catalogRepository.save(catalog);
-        //удаляем товар по id
+
         catalogRepository.delete(catalog);
-        //через сессию достаем сохраненный каталог
+
         var actualResult = entityManager.find(Catalog.class, catalog.getId());
         assertThat(actualResult).isNull();
+        entityManager.getTransaction().commit();
     }
 
 
     @Test
     void saveCatalog() {
         entityManager.getTransaction().begin();
-        var catalog = TestCreateObjectForRepository.getCatalog();
+        var catalog = MocksForRepository.getCatalog();
 
         catalogRepository.save(catalog);
 
         Catalog actualResult = entityManager.find(Catalog.class, catalog.getId());
         assertThat(actualResult).isEqualTo(catalog);
+        entityManager.getTransaction().commit();
     }
 
     @Test
     void updateCatalog() {
         entityManager.getTransaction().begin();
-        var catalog = TestCreateObjectForRepository.getCatalog();
+        var catalog = MocksForRepository.getCatalog();
         catalogRepository.save(catalog);
 
         Catalog result = entityManager.find(Catalog.class, catalog.getId());
@@ -48,16 +49,18 @@ class CatalogRepositoryIT extends ProxySessionTestBase {
 
         Catalog actualResult = entityManager.find(Catalog.class, catalog.getId());
         assertThat(actualResult).isEqualTo(catalog);
+        entityManager.getTransaction().commit();
     }
 
     @Test
     void findByIdCatalog() {
         entityManager.getTransaction().begin();
-        var catalog = TestCreateObjectForRepository.getCatalog();
+        var catalog = MocksForRepository.getCatalog();
         catalogRepository.save(catalog);
 
         var actualResult =  entityManager.find(Catalog.class, catalog.getId());
 
         assertThat(actualResult).isEqualTo(catalog);
+        entityManager.getTransaction().commit();
     }
 }

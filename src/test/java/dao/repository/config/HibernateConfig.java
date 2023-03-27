@@ -7,13 +7,14 @@ import com.dmdev.webStore.entity.ShoppingCart;
 import com.dmdev.webStore.entity.User;
 import org.hibernate.cfg.Environment;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 
 @Configuration
 @PropertySource("classpath:app.properties")
-public class AppConfigPropertiesTest {
+public class HibernateConfig {
 
     @Value("${connection.url}")
     private String url;
@@ -32,6 +33,7 @@ public class AppConfigPropertiesTest {
     @Value("${hibernate.current_session_context_class}")
     private String thread;
 
+    @Bean("configuration")
     public org.hibernate.cfg.Configuration getNewConfiguration() {
         return new org.hibernate.cfg.Configuration()
                 .setProperty(Environment.URL, url)

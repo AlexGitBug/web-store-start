@@ -9,5 +9,4 @@ import lombok.Value;
 public class UserFilter {
 
     PersonalInformation personalInformation;
-
 }

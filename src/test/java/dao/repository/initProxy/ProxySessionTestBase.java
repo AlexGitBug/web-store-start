@@ -13,8 +13,10 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 
+import static dao.repository.initProxy.TestDelete.deleteAll;
+
 @RequiredArgsConstructor
-public abstract class ProxySessionTestBase extends TestDelete {
+public abstract class ProxySessionTestBase {
 
     protected static AnnotationConfigApplicationContext applicationContext;
     protected static EntityManager entityManager;
@@ -34,8 +36,7 @@ public abstract class ProxySessionTestBase extends TestDelete {
 
     @AfterEach
     void commitSession() {
-//        entityManager.getTransaction().commit();
-        entityManager.getTransaction().rollback();
+        entityManager.close();
     }
 
     @AfterAll

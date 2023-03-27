@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
-    id "io.freefair.lombok" version "6.3.0"
+//    id "io.freefair.lombok" version "6.3.0"
 }
 group 'org.example'
 version '1.0-SNAPSHOT'
@@ -28,37 +28,60 @@ configurations {
     querydsl.extendsFrom implementation, runtimeOnly, compileOnly
 }
 
+ext{
+    hibernateCoreVersion = '5.5.6.Final'
+    postgresqlVersion = '42.5.4'
+    hibernateTypesVersion = '2.12.1'
+    hibernateJcacheVersion = '5.5.7.Final'
+    slf4jApiVersion = '1.7.32'
+    slf4jLog4j12Version = '1.7.32'
+    projectLombokVersion = '1.18.26'
+    junitJupiterVersion = '5.8.1'
+    junitJupiterParams = '5.8.2'
+    assertjCoreVersion = '3.23.1'
+    javaxAnnotationApiVersion = '1.3.2'
+    querydslJpaVersion = '5.0.0'
+    querydslAptVersion = '5.0.0'
+    jakartaAnnotationApiVersion = '1.3.5'
+    springCoreVersion = '5.3.13'
+    springContextVersion = '5.3.13'
+    javaxInjectVersion = '1'
+    ehcache = '3.9.7'
+    h2database = '1.4.200'
+}
+
 dependencies {
-    implementation 'org.springframework:spring-core:5.3.13'
-    implementation 'org.springframework:spring-context:5.3.13'
-    implementation 'jakarta.annotation:jakarta.annotation-api:1.3.5'
-    implementation 'javax.inject:javax.inject:1'
+    implementation "org.hibernate:hibernate-core:${hibernateCoreVersion}"
+    runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
+    implementation "com.vladmihalcea:hibernate-types-52:${hibernateTypesVersion}"
+    implementation "org.slf4j:slf4j-api:${slf4jApiVersion}"
+    implementation "org.slf4j:slf4j-log4j12:${slf4jLog4j12Version}"
 
-    implementation 'org.hibernate:hibernate-core:5.5.7.Final'
-    runtimeOnly 'org.postgresql:postgresql:42.2.23.jre7'
-    implementation 'com.vladmihalcea:hibernate-types-52:2.12.1'
-    implementation 'org.slf4j:slf4j-api:1.7.32'
+    implementation "org.springframework:spring-core:${springCoreVersion}"
+    implementation "org.springframework:spring-context:${springContextVersion}"
+    implementation "jakarta.annotation:jakarta.annotation-api:${jakartaAnnotationApiVersion}"
+    implementation "javax.inject:javax.inject:${javaxInjectVersion}"
 
-    implementation 'javax.annotation:javax.annotation-api:1.3.2'
-    implementation 'com.querydsl:querydsl-jpa:5.0.0'
-    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0'
 
-    implementation 'org.hibernate:hibernate-jcache:5.5.7.Final'
-    implementation 'org.ehcache:ehcache:3.9.7'
+    implementation "javax.annotation:javax.annotation-api:${javaxAnnotationApiVersion}"
+    implementation "com.querydsl:querydsl-jpa:${querydslJpaVersion}"
+    annotationProcessor "com.querydsl:querydsl-apt:${querydslAptVersion}"
 
-//    annotationProcessor 'org.hibernate:hibernate-jpamodelgen:5.5.7.Final'
+    compileOnly "org.projectlombok:lombok:${projectLombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${projectLombokVersion}"
 
-//    compileOnly 'org.projectlombok:lombok:1.18.20'
-//    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    implementation "org.hibernate:hibernate-jcache:${hibernateJcacheVersion}"
+    implementation "org.ehcache:ehcache:${ehcache}"
 
-    testImplementation 'org.assertj:assertj-core:3.23.1'
-//    testCompileOnly 'org.projectlombok:lombok:1.18.20'
-//    testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
-    testImplementation 'org.mockito:mockito-junit-jupiter:4.11.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
-    testImplementation 'com.h2database:h2:1.4.200'
+    testCompileOnly "org.projectlombok:lombok:${projectLombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${projectLombokVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}"
+    testImplementation "org.assertj:assertj-core:${assertjCoreVersion}"
+
+//    testImplementation 'org.mockito:mockito-junit-jupiter:4.11.0'
+    testImplementation "com.h2database:h2:${h2database}"
 }
 
 querydsl {
