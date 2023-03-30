@@ -20,6 +20,6 @@ public abstract class TestDelete {
         entityManager.createNativeQuery(CLEAN_SQL4).executeUpdate();
 
         entityManager.getTransaction().commit();
-        entityManager.close();
+//        entityManager.close();
     }
 }

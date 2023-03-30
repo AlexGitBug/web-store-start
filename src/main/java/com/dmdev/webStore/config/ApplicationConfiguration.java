@@ -15,7 +15,7 @@ import java.lang.reflect.Proxy;
 @Configuration
 @PropertySource("classpath:application.properties") //информация из property
 @ComponentScan(basePackages = "com.dmdev.webStore")
-public class ApplicationConfiguration extends Context{
+public class ApplicationConfiguration {
     @Bean
     public SessionFactory sessionFactory(org.hibernate.cfg.Configuration configuration) {
         configuration.configure();

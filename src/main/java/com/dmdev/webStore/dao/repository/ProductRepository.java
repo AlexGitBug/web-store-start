@@ -1,7 +1,7 @@
 package com.dmdev.webStore.dao.repository;
 
 import com.dmdev.webStore.entity.Product;
-import unUsedCode.dao.queryExample.QPredicate;
+import com.dmdev.webStore.dao.repository.filter.QPredicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.hibernate.graph.GraphSemantic;
 import com.dmdev.webStore.dao.repository.filter.OrderFilter;
@@ -50,22 +50,26 @@ public class ProductRepository extends RepositoryBase<Integer, Product> {
                 .select(product)
                 .from(product)
                 .join(product.catalog, catalog)
+                .join(product.shoppingCarts, shoppingCart)
+                .join(shoppingCart.order, order)
                 .where(predicate)
                 .setHint(GraphSemantic.LOAD.getJpaHintName(), getEntityManager().getEntityGraph("withCatalog"))
                 .fetch();
     }
-    public List<Product> findProductsOfBrandAndCategoryAndLtPrice(ProductFilter filter, Integer price) {
+    public List<Product> findProductsOfBrandAndCategoryAndLtPrice(ProductFilter filter) {
 
         var predicate = QPredicate.builder()
                 .add(filter.getCatalog().getCategory(), catalog.category::eq)
                 .add(filter.getBrand(), product.brand::eq)
-                .add(price, product.price::lt)
+                .add(filter.getPrice(), product.price::lt)
                 .buildAnd();
 
         return new JPAQuery<Product>(getEntityManager())
                 .select(product)
                 .from(product)
                 .join(product.catalog, catalog)
+                .join(product.shoppingCarts, shoppingCart)
+                .join(shoppingCart.order, order)
                 .where(predicate)
                 .setHint(GraphSemantic.LOAD.getJpaHintName(), getEntityManager().getEntityGraph("withCatalog"))
                 .fetch();
@@ -82,9 +86,12 @@ public class ProductRepository extends RepositoryBase<Integer, Product> {
                 .select(product)
                 .from(product)
                 .join(product.catalog, catalog)
+                .join(product.shoppingCarts, shoppingCart)
+                .join(shoppingCart.order, order)
                 .where(predicate)
-                .orderBy(product.price.desc())
+//                .orderBy(product.price.asc())
                 .setHint(GraphSemantic.LOAD.getJpaHintName(), getEntityManager().getEntityGraph("withCatalog"))
+                .distinct()
                 .fetch();
     }
 
@@ -97,7 +104,11 @@ public class ProductRepository extends RepositoryBase<Integer, Product> {
         return new JPAQuery<Product>(getEntityManager())
                 .select(product)
                 .from(product)
+                .join(product.catalog, catalog)
+//                .join(product.shoppingCarts, shoppingCart)
+//                .join(shoppingCart.order, order)
                 .where(predicate)
+                .distinct()
                 .fetch();
     }
 
@@ -110,10 +121,11 @@ public class ProductRepository extends RepositoryBase<Integer, Product> {
         return new JPAQuery<Product>(getEntityManager())
                 .select(product)
                 .from(product)
+                .join(product.catalog, catalog)
                 .join(product.shoppingCarts, shoppingCart)
                 .join(shoppingCart.order, order)
-                .setHint(GraphSemantic.LOAD.getJpaHintName(), getEntityManager().getEntityGraph("withCatalog"))
                 .where(predicate)
+                .setHint(GraphSemantic.LOAD.getJpaHintName(), getEntityManager().getEntityGraph("withCatalog"))
                 .fetch();
     }
 

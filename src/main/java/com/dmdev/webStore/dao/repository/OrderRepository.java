@@ -2,11 +2,10 @@ package com.dmdev.webStore.dao.repository;
 
 import com.dmdev.webStore.dao.repository.filter.UserFilter;
 import com.dmdev.webStore.entity.Order;
-import com.dmdev.webStore.entity.User;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.hibernate.graph.GraphSemantic;
 import org.springframework.stereotype.Repository;
-import unUsedCode.dao.queryExample.QPredicate;
+import com.dmdev.webStore.dao.repository.filter.QPredicate;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -38,4 +37,5 @@ public class OrderRepository extends  RepositoryBase<Integer, Order>{
                 .where(predicate)
                 .fetch();
     }
+
 }

@@ -9,15 +9,17 @@ import com.dmdev.webStore.entity.Catalog;
 import com.dmdev.webStore.entity.Product;
 import com.dmdev.webStore.entity.enums.Brand;
 
+
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import dao.repository.util.MocksForRepository;
 import dao.repository.util.TestDataImporter;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.time.LocalDate;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-
 public class ProductRepositoryIT extends ProxySessionTestBase {
     private final ProductRepository productRepository = applicationContext.getBean(ProductRepository.class);
     private final CatalogRepository catalogRepository = applicationContext.getBean(CatalogRepository.class);
@@ -117,35 +119,13 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
 
         var results = productRepository.findProductOfOneCategoryAndBrandBetweenTwoPrice(productFilter, 100, 5000);
         entityManager.getTransaction().commit();
-        assertThat(results).hasSize(3);
+        assertThat(results).hasSize(4);
 
-//        var brands = results.stream().map(Product::getBrand).collect(toList());
-//        assertThat(brands).contains(productFilter.getBrand());
-//
-//        var price = results.stream().map(Product::getPrice).toList();
-//        assertThat(price).contains(350, 400);
-    }
+        var brands = results.stream().map(Product::getBrand).collect(toList());
+        assertThat(brands).contains(productFilter.getBrand());
 
-
-    @Test
-    void findProductsOfBrandAndCategoryAndLtPrice() {
-        TestDataImporter.importData(sessionFactory);
-        entityManager.getTransaction().begin();
-
-        var productFilter = ProductFilter.builder()
-                .catalog(Catalog.builder()
-                        .category("Smartphone")
-                        .build())
-                .brand(Brand.APPLE)
-                .build();
-
-        var results = productRepository.findProductsOfBrandAndCategoryAndLtPrice(productFilter, 1050);
-        entityManager.getTransaction().commit();
-        assertThat(results).hasSize(2);
-
-//        var brands = results.stream().map(Product::getBrand).collect(toList());
-//        assertThat(brands).contains(Brand.APPLE);
-
+        var price = results.stream().map(Product::getPrice).toList();
+        assertThat(price).contains(300, 350, 350, 400);
     }
 
     @Test
@@ -157,32 +137,56 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
                 .catalog(Catalog.builder()
                         .category("Smartphone")
                         .build())
-                .brand(Brand.SAMSUNG)
+                .brand(Brand.APPLE)
+                .price(999)
                 .build();
 
         var results = productRepository.findProductsOfBrandAndCategoryAndGtPrice(productFilter);
+        assertThat(results).hasSize(2);
+
+        var model = results.stream().map(Product::getModel).collect(toList());
+        assertThat(model).contains("13", "14");
+
+        var brands = results.stream().map(Product::getBrand).collect(toList());
+        assertThat(brands).contains(Brand.APPLE);
         entityManager.getTransaction().commit();
-        assertThat(results).hasSize(3);
-
-//        var brands = results.stream().map(Product::getBrand).collect(toList());
-//        assertThat(brands).contains(Brand.SAMSUNG);
-
     }
 
     @Test
-    void findAllProductOfBrand() {
+    void findProductsOfBrandAndCategoryAndLtPrice() {
         TestDataImporter.importData(sessionFactory);
         entityManager.getTransaction().begin();
+
         var productFilter = ProductFilter.builder()
+                .catalog(MocksForRepository.getCatalog())
+                .brand(Brand.APPLE)
+                .price(1050)
+                .build();
+
+        var results = productRepository.findProductsOfBrandAndCategoryAndLtPrice(productFilter);
+        entityManager.getTransaction().commit();
+        assertThat(results).hasSize(2);
+
+        var brands = results.stream().map(Product::getBrand).collect(toList());
+        assertThat(brands).contains(Brand.APPLE);
+
+    }
+
+
+    @Test
+    void findAllProductOfBrandTest() {
+        TestDataImporter.importData(sessionFactory);
+        entityManager.getTransaction().begin();
+        var productFilter1 = ProductFilter.builder()
                 .brand(Brand.SAMSUNG)
                 .build();
 
-        var results = productRepository.findAllProductOfBrand(productFilter);
-        entityManager.getTransaction().commit();
+        var results = productRepository.findAllProductOfBrand(productFilter1);
         assertThat(results).hasSize(5);
 
-//        var brands = results.stream().map(Product::getBrand).toList();
-//        assertThat(brands).contains(Brand.SAMSUNG);
+        var brands = results.stream().map(Product::getBrand).toList();
+        assertThat(brands).contains(Brand.SAMSUNG);
+        entityManager.getTransaction().commit();
     }
 
     @Test
@@ -192,7 +196,7 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
 
         var result = productRepository.findMinPriceOfProduct();
         entityManager.getTransaction().commit();
-//        assertThat(result.getPrice()).isEqualTo(150);
+        assertThat(result.getPrice()).isEqualTo(150);
     }
 
     @Test
@@ -202,13 +206,13 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
         entityManager.getTransaction().begin();
 
         var orderFilter = OrderFilter.builder()
-                .deliveryDate(LocalDate.of(2022, 12, 10))
+                .deliveryDate( LocalDate.of(2022, 12, 10))
                 .build();
         var results = productRepository.findAllProductsFromOrder(orderFilter);
         entityManager.getTransaction().commit();
         assertThat(results).hasSize(1);
-//        var model = results.stream().map(Product::getModel).collect(toList());
-//        assertThat(model).contains("13");
+        var model = results.stream().map(Product::getModel).collect(toList());
+        assertThat(model).contains("13");
     }
 
 }

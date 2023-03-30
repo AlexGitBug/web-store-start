@@ -34,10 +34,10 @@ public abstract class ProxySessionTestBase {
         deleteAll(entityManager);
     }
 
-    @AfterEach
-    void commitSession() {
-        entityManager.close();
-    }
+//    @AfterEach
+//    void commitSession() {
+////        entityManager.close();
+//    }
 
     @AfterAll
     static void closeSessionFactory() {

@@ -98,4 +98,5 @@ public class OrderRepositoryIT extends ProxySessionTestBase {
         var orderId = results.stream().map(Order::getId).collect(toList());
         assertThat(orderId).contains(7,7,7);
     }
+
 }

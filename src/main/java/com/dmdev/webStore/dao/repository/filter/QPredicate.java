@@ -1,4 +1,4 @@
-package unUsedCode.dao.queryExample;
+package com.dmdev.webStore.dao.repository.filter;
 
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
@@ -12,7 +12,7 @@ import java.util.function.Function;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class QPredicate {
 
-    private static final List<Predicate> predicates = new ArrayList<>();
+    private final List<Predicate> predicates = new ArrayList<>();
 
     //инициализировать вместо конструктора
     public static QPredicate builder() {
