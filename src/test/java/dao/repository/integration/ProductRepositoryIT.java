@@ -1,32 +1,38 @@
-package dao.repository;
+package dao.repository.integration;
 
 import com.dmdev.webStore.dao.repository.CatalogRepository;
 import com.dmdev.webStore.dao.repository.ProductRepository;
 import com.dmdev.webStore.dao.repository.filter.OrderFilter;
 import com.dmdev.webStore.dao.repository.filter.ProductFilter;
-import dao.repository.initProxy.ProxySessionTestBase;
 import com.dmdev.webStore.entity.Catalog;
 import com.dmdev.webStore.entity.Product;
 import com.dmdev.webStore.entity.enums.Brand;
 
 
-import org.junit.jupiter.api.MethodOrderer;
+import dao.repository.initProxy.TestDelete;
+import dao.repository.integration.annotation.IT;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import dao.repository.util.MocksForRepository;
 import dao.repository.util.TestDataImporter;
-import org.junit.jupiter.api.TestMethodOrder;
+
+import javax.persistence.EntityManager;
 
 import java.time.LocalDate;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-public class ProductRepositoryIT extends ProxySessionTestBase {
-    private final ProductRepository productRepository = applicationContext.getBean(ProductRepository.class);
-    private final CatalogRepository catalogRepository = applicationContext.getBean(CatalogRepository.class);
+@IT
+@RequiredArgsConstructor
+public class ProductRepositoryIT {
+    private final ProductRepository productRepository;
+    private final CatalogRepository catalogRepository;
+
+    private final EntityManager entityManager;
+
 
     @Test
-    void deleteProduct() {
-        entityManager.getTransaction().begin();
+    void deleteProductIT() {
         var catalog = MocksForRepository.getCatalog();
         catalogRepository.save(catalog);
         var product = MocksForRepository.getProduct(catalog);
@@ -34,60 +40,59 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
 
         productRepository.delete(product);
 
-        var actualResult = entityManager.find(Product.class, product.getId());
-        entityManager.getTransaction().commit();
-        assertThat(actualResult).isNull();
+        assertThat(productRepository.findById(product.getId())).isEmpty();
     }
 
     @Test
-    void saveProduct() {
-        entityManager.getTransaction().begin();
+    void saveProductIT() {
         var catalog = MocksForRepository.getCatalog();
         catalogRepository.save(catalog);
         var product = MocksForRepository.getProduct(catalog);
 
         productRepository.save(product);
 
-        var actualResult = entityManager.find(Product.class, product.getId());
-        entityManager.getTransaction().commit();
-        assertThat(actualResult).isEqualTo(product);
+        assertThat(productRepository.findById(product.getId())).contains(product);
+
+//        var actualResult = entityManager.find(Product.class, product.getId());
+//        entityManager.getTransaction().commit();
+//        assertThat(actualResult).isEqualTo(product);
     }
 
     @Test
-    void updateProduct() {
-        entityManager.getTransaction().begin();
+    void updateProductIT() {
         var catalog = MocksForRepository.getCatalog();
         catalogRepository.save(catalog);
         var product = MocksForRepository.getProduct(catalog);
         productRepository.save(product);
 
-        Product result = entityManager.find(Product.class, product.getId());
+        var result = entityManager.find(Product.class, product.getId());
         product.setModel("test-update");
         productRepository.update(product);
 
         var actualResult = entityManager.find(Product.class, result.getId());
-        entityManager.getTransaction().commit();
         assertThat(actualResult).isEqualTo(product);
 
     }
 
     @Test
-    void findByIdProduct() {
-        entityManager.getTransaction().begin();
+    void findByIdProductIT() {
         var catalog = MocksForRepository.getCatalog();
         catalogRepository.save(catalog);
         var product = MocksForRepository.getProduct(catalog);
         productRepository.save(product);
 
-        var actualResult = entityManager.find(Product.class, product.getId());
-        entityManager.getTransaction().commit();
-        assertThat(actualResult).isEqualTo(product);
+        var actualResult = productRepository.findById(product.getId());
+
+        assertThat(actualResult).contains(product);
+//        var actualResult = entityManager.find(Product.class, product.getId());
+//        assertThat(actualResult).isEqualTo(product);
     }
 
     @Test
-    void findListOfProductsEq() {
-        TestDataImporter.importData(sessionFactory);
-        entityManager.getTransaction().begin();
+    void findListOfProductsEqIT() {
+        entityManager.clear();
+        TestDelete.deleteAll(entityManager);
+        TestDataImporter.importData(entityManager);
 
         var productFilter = ProductFilter.builder()
                 .catalog(MocksForRepository.getCatalog())
@@ -95,7 +100,6 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
                 .build();
 
         var results = productRepository.findListOfProductsEq(productFilter);
-        entityManager.getTransaction().commit();
         assertThat(results).hasSize(3);
 
         var categoryResult = results.stream().map(it -> it.getCatalog().getCategory()).collect(toList());
@@ -106,9 +110,10 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
     }
 
     @Test
-    void findProductOfOneCategoryAndBrandBetweenTwoPrice() {
-        TestDataImporter.importData(sessionFactory);
-        entityManager.getTransaction().begin();
+    void findProductOfOneCategoryAndBrandBetweenTwoPriceIT() {
+        entityManager.clear();
+        TestDelete.deleteAll(entityManager);
+        TestDataImporter.importData(entityManager);
 
         var productFilter = ProductFilter.builder()
                 .catalog(Catalog.builder()
@@ -118,7 +123,6 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
                 .build();
 
         var results = productRepository.findProductOfOneCategoryAndBrandBetweenTwoPrice(productFilter, 100, 5000);
-        entityManager.getTransaction().commit();
         assertThat(results).hasSize(4);
 
         var brands = results.stream().map(Product::getBrand).collect(toList());
@@ -129,9 +133,10 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
     }
 
     @Test
-    void findProductsOfBrandAndCategoryAndGtPrice() {
-        TestDataImporter.importData(sessionFactory);
-        entityManager.getTransaction().begin();
+    void findProductsOfBrandAndCategoryAndGtPriceIT() {
+        entityManager.clear();
+        TestDelete.deleteAll(entityManager);
+        TestDataImporter.importData(entityManager);
 
         var productFilter = ProductFilter.builder()
                 .catalog(Catalog.builder()
@@ -149,13 +154,13 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
 
         var brands = results.stream().map(Product::getBrand).collect(toList());
         assertThat(brands).contains(Brand.APPLE);
-        entityManager.getTransaction().commit();
     }
 
     @Test
-    void findProductsOfBrandAndCategoryAndLtPrice() {
-        TestDataImporter.importData(sessionFactory);
-        entityManager.getTransaction().begin();
+    void findProductsOfBrandAndCategoryAndLtPriceIT() {
+        entityManager.clear();
+        TestDelete.deleteAll(entityManager);
+        TestDataImporter.importData(entityManager);
 
         var productFilter = ProductFilter.builder()
                 .catalog(MocksForRepository.getCatalog())
@@ -164,7 +169,6 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
                 .build();
 
         var results = productRepository.findProductsOfBrandAndCategoryAndLtPrice(productFilter);
-        entityManager.getTransaction().commit();
         assertThat(results).hasSize(2);
 
         var brands = results.stream().map(Product::getBrand).collect(toList());
@@ -174,9 +178,11 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
 
 
     @Test
-    void findAllProductOfBrandTest() {
-        TestDataImporter.importData(sessionFactory);
-        entityManager.getTransaction().begin();
+    void findAllProductOfBrandIT() {
+        entityManager.clear();
+        TestDelete.deleteAll(entityManager);
+        TestDataImporter.importData(entityManager);
+
         var productFilter1 = ProductFilter.builder()
                 .brand(Brand.SAMSUNG)
                 .build();
@@ -186,30 +192,28 @@ public class ProductRepositoryIT extends ProxySessionTestBase {
 
         var brands = results.stream().map(Product::getBrand).toList();
         assertThat(brands).contains(Brand.SAMSUNG);
-        entityManager.getTransaction().commit();
     }
 
     @Test
-    void findMinPriceOfProduct() {
-        TestDataImporter.importData(sessionFactory);
-        entityManager.getTransaction().begin();
+    void findMinPriceOfProductIT() {
+        entityManager.clear();
+        TestDelete.deleteAll(entityManager);
+        TestDataImporter.importData(entityManager);
 
         var result = productRepository.findMinPriceOfProduct();
-        entityManager.getTransaction().commit();
         assertThat(result.getPrice()).isEqualTo(150);
     }
 
     @Test
-    void findAllProductsFromOrder() {
-        TestDataImporter.importData(sessionFactory);
-
-        entityManager.getTransaction().begin();
+    void findAllProductsFromOrderIT() {
+        entityManager.clear();
+        TestDelete.deleteAll(entityManager);
+        TestDataImporter.importData(entityManager);
 
         var orderFilter = OrderFilter.builder()
                 .deliveryDate( LocalDate.of(2022, 12, 10))
                 .build();
         var results = productRepository.findAllProductsFromOrder(orderFilter);
-        entityManager.getTransaction().commit();
         assertThat(results).hasSize(1);
         var model = results.stream().map(Product::getModel).collect(toList());
         assertThat(model).contains("13");

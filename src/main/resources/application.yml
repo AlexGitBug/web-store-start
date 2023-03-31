@@ -1,15 +1,26 @@
-connection:
-  url: jdbc:postgresql://localhost:5432/web-store
-  username: postgres
-  password: postgres
-  driverClass: org.postgresql.Driver
-showSql: true
-formatSql: true
-hibernate:
-  dialect: org.hibernate.dialect.PostgreSQL10Dialect
-  hbm2ddlAuto: create
-  currentSessionContextClass: thread
-  cache:
-  useSecondLevelCache: true
-  regionFactoryClass: org.hibernate.cache.jcache.internal.JCacheRegionFactory
-  useQueryCache: true
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/web-store
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        show_sql: true
+        format_sql: true
+        hbm2ddl:
+        auto: validate
+        current_session_context_class: thread
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+          cache:
+            region:
+              factory_class: org.hibernate.cache.jcache.internal.JCacheRegionFactory
+
+logging:
+  level:
+    root: INFO
+

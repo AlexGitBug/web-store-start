@@ -1,6 +1,6 @@
 package dao.repository.util;
 
-import dao.repository.initProxy.ProxySessionTestBase;
+
 import com.dmdev.webStore.entity.Catalog;
 import com.dmdev.webStore.entity.Order;
 import com.dmdev.webStore.entity.Product;
@@ -21,10 +21,8 @@ import java.time.LocalDate;
 import java.util.Arrays;
 
 @UtilityClass
-public class TestDataImporter extends ProxySessionTestBase {
-    public void importData(SessionFactory sessionFactory) {
-        var entityManager = sessionFactory.openSession();
-        entityManager.getTransaction().begin();
+public class TestDataImporter {
+    public void importData(EntityManager entityManager) {
 
         var smartphone = saveCatalog(entityManager, "Smartphone");
         var tv = saveCatalog(entityManager, "TV");
@@ -79,7 +77,6 @@ public class TestDataImporter extends ProxySessionTestBase {
         addToShoppingCart(entityManager, LocalDate.of(2021, 12, 4), orderVlad, samsungS21);
         addToShoppingCart(entityManager, LocalDate.of(2021, 12, 4), orderVlad, samsungS20);
 
-        entityManager.getTransaction().commit();
     }
 
     private void addToShoppingCart(EntityManager entityManager, LocalDate instant, Order order, Product... products) {

@@ -1,33 +1,41 @@
-package dao.repository;
+package dao.repository.integration;
 
-import com.dmdev.webStore.dao.repository.*;
+
+import com.dmdev.webStore.dao.repository.CatalogRepository;
+import com.dmdev.webStore.dao.repository.OrderRepository;
+import com.dmdev.webStore.dao.repository.ProductRepository;
+import com.dmdev.webStore.dao.repository.ShoppingCartRepository;
+import com.dmdev.webStore.dao.repository.UserRepository;
 import com.dmdev.webStore.dao.repository.filter.ProductFilter;
-import com.dmdev.webStore.dao.repository.filter.UserFilter;
-import dao.repository.initProxy.ProxySessionTestBase;
 import com.dmdev.webStore.entity.Catalog;
 import com.dmdev.webStore.entity.ShoppingCart;
-import com.dmdev.webStore.entity.embeddable.PersonalInformation;
 import com.dmdev.webStore.entity.enums.Brand;
 
+import dao.repository.initProxy.TestDelete;
+import dao.repository.integration.annotation.IT;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import dao.repository.util.MocksForRepository;
 import dao.repository.util.TestDataImporter;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDate;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
-    private final ShoppingCartRepository shoppingCartRepository = applicationContext.getBean(ShoppingCartRepository.class);
-    private final ProductRepository productRepository = applicationContext.getBean(ProductRepository.class);
-    private final OrderRepository orderRepository = applicationContext.getBean(OrderRepository.class);
-    private final UserRepository userRepository = applicationContext.getBean(UserRepository.class);
-    private final CatalogRepository catalogRepository = applicationContext.getBean(CatalogRepository.class);
+@IT
+@RequiredArgsConstructor
+public class ShoppingCartRepositoryIT {
+    private final ShoppingCartRepository shoppingCartRepository;
+    private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
+    private final CatalogRepository catalogRepository;
+    private final EntityManager entityManager;
 
     @Test
-    void deleteShoppingCart() {
-        entityManager.getTransaction().begin();
+    void deleteShoppingCartIT() {
         var user = MocksForRepository.getUser();
         userRepository.save(user);
         var order = MocksForRepository.getOrder(user);
@@ -41,16 +49,16 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         shoppingCartRepository.delete(shoppingCart);
 
-        var actualResult = entityManager.find(ShoppingCart.class, shoppingCart.getId());
-        entityManager.getTransaction().commit();
-        assertThat(actualResult).isNull();
+        assertThat(shoppingCartRepository.findById(shoppingCart.getId())).isEmpty();
+
+//        var actualResult = entityManager.find(ShoppingCart.class, shoppingCart.getId());
+//        entityManager.getTransaction().commit();
+//        assertThat(actualResult).isNull();
 
     }
 
     @Test
-    void saveShoppingCart() {
-        entityManager.getTransaction().begin();
-
+    void saveShoppingCartIT() {
         var user = MocksForRepository.getUser();
         userRepository.save(user);
         var order = MocksForRepository.getOrder(user);
@@ -63,15 +71,17 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
 
         shoppingCartRepository.save(shoppingCart);
 
-        var actualResult = entityManager.find(ShoppingCart.class, shoppingCart.getId());
-        entityManager.getTransaction().commit();
-        assertThat(actualResult).isNotNull();
+        assertThat(shoppingCartRepository.findById(shoppingCart.getId())).contains(shoppingCart);
+
+//        var actualResult = entityManager.find(ShoppingCart.class, shoppingCart.getId());
+//        entityManager.getTransaction().commit();
+//        assertThat(actualResult).isNotNull();
 
     }
 
     @Test
-    void updateShoppingCart() {
-        entityManager.getTransaction().begin();
+    void updateShoppingCartIT() {
+        entityManager.clear();
         var user = MocksForRepository.getUser();
         userRepository.save(user);
         var order = MocksForRepository.getOrder(user);
@@ -88,14 +98,12 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
         shoppingCartRepository.update(shoppingCart);
 
         var actualResult = entityManager.find(ShoppingCart.class, shoppingCart.getId());
-        entityManager.getTransaction().commit();
         assertThat(actualResult).isEqualTo(shoppingCart);
 
     }
 
     @Test
-    void findByIdShoppingCart() {
-        entityManager.getTransaction().begin();
+    void findByIdShoppingCartIT() {
         var user = MocksForRepository.getUser();
         userRepository.save(user);
         var order = MocksForRepository.getOrder(user);
@@ -108,18 +116,17 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
         shoppingCartRepository.save(shoppingCart);
 
         var actualResult = entityManager.find(ShoppingCart.class, shoppingCart.getId());
-        entityManager.getTransaction().commit();
 
         assertThat(actualResult).isEqualTo(shoppingCart);
 
     }
     @Test
-    void getStatisticOfEachOrdersWithSum() {
-        TestDataImporter.importData(sessionFactory);
-        entityManager.getTransaction().begin();
+    void getStatisticOfEachOrdersWithSumIT() {
+        entityManager.clear();
+        TestDelete.deleteAll(entityManager);
+        TestDataImporter.importData(entityManager);
 
         var result = shoppingCartRepository.getStatisticOfEachOrdersWithSum();
-        entityManager.getTransaction().commit();
         assertThat(result).hasSize(8);
 
         var orderSum = result.stream().map(it -> it.get(1, Integer.class)).collect(toList());
@@ -128,9 +135,10 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
     }
 
     @Test
-    void findUsersWhoMadeAnOrderOfSpecificProduct() {
-        TestDataImporter.importData(sessionFactory);
-        entityManager.getTransaction().begin();
+    void findUsersWhoMadeAnOrderOfSpecificProductIT() {
+        entityManager.clear();
+        TestDelete.deleteAll(entityManager);
+        TestDataImporter.importData(entityManager);
 
         var productFilter = ProductFilter.builder()
                 .brand(Brand.SONY)
@@ -141,7 +149,6 @@ public class ShoppingCartRepositoryIT extends ProxySessionTestBase {
                 .build();
 
         var results = shoppingCartRepository.findUsersWhoMadeOrderOfSpecificProduct(productFilter);
-        entityManager.getTransaction().commit();
         assertThat(results).hasSize(2);
 
         var firstName = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getFirstName()).collect(toList());

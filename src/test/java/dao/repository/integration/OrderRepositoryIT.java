@@ -1,4 +1,4 @@
-package dao.repository;
+package dao.repository.integration;
 
 import com.dmdev.webStore.dao.repository.OrderRepository;
 import com.dmdev.webStore.dao.repository.UserRepository;
@@ -6,22 +6,28 @@ import com.dmdev.webStore.dao.repository.filter.UserFilter;
 import com.dmdev.webStore.entity.Order;
 import com.dmdev.webStore.entity.embeddable.PersonalInformation;
 import com.dmdev.webStore.entity.enums.PaymentCondition;
-import dao.repository.initProxy.ProxySessionTestBase;
+import dao.repository.initProxy.TestDelete;
+import dao.repository.integration.annotation.IT;
 import dao.repository.util.TestDataImporter;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import dao.repository.util.MocksForRepository;
+
+import javax.persistence.EntityManager;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class OrderRepositoryIT extends ProxySessionTestBase {
+@IT
+@RequiredArgsConstructor
+public class OrderRepositoryIT {
 
-    private final OrderRepository orderRepository = applicationContext.getBean(OrderRepository.class);
-    private final UserRepository userRepository = applicationContext.getBean(UserRepository.class);
+    private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
+    private final EntityManager entityManager;
 
     @Test
-    void deleteOrder() {
-        entityManager.getTransaction().begin();
+    void deleteOrderIT() {
         var user = MocksForRepository.getUser();
         userRepository.save(user);
         var order = MocksForRepository.getOrder(user);
@@ -29,33 +35,26 @@ public class OrderRepositoryIT extends ProxySessionTestBase {
 
         orderRepository.delete(order);
 
-        var actualResult = entityManager.find(Order.class, order.getId());
-        assertThat(actualResult).isNull();
-        entityManager.getTransaction().commit();
+        assertThat(orderRepository.findById(order.getId())).isEmpty();
     }
 
     @Test
-    void saveOrder() {
-        entityManager.getTransaction().begin();
+    void saveOrderIT() {
         var user = MocksForRepository.getUser();
         userRepository.save(user);
         var order = MocksForRepository.getOrder(user);
 
         orderRepository.save(order);
 
-        var actualResult = entityManager.find(Order.class, order.getId());
-        assertThat(actualResult.getId()).isEqualTo(order.getId());
-        entityManager.getTransaction().commit();
+        assertThat(orderRepository.findById(order.getId())).contains(order);
     }
 
     @Test
-    void updateOder() {
-        entityManager.getTransaction().begin();
+    void updateOderIT() {
         var user = MocksForRepository.getUser();
         userRepository.save(user);
         var order = MocksForRepository.getOrder(user);
         orderRepository.save(order);
-
 
         var result = entityManager.find(Order.class, order.getId());
         order.setPaymentCondition(PaymentCondition.CARD);
@@ -63,27 +62,26 @@ public class OrderRepositoryIT extends ProxySessionTestBase {
 
         var actualResult = entityManager.find(Order.class, result.getId());
         assertThat(actualResult).isEqualTo(order);
-        entityManager.getTransaction().commit();
     }
 
     @Test
-    void findByIdOrder() {
-        entityManager.getTransaction().begin();
+    void findByIdOrderIT() {
         var user = MocksForRepository.getUser();
         userRepository.save(user);
         var order = MocksForRepository.getOrder(user);
         orderRepository.save(order);
 
-        var actualResult = entityManager.find(Order.class, order.getId());
+        var actualResult = orderRepository.findById(order.getId());
 
-        assertThat(actualResult).isEqualTo(order);
-        entityManager.getTransaction().commit();
+        assertThat(actualResult).contains(order);
+
     }
 
     @Test
-    void findAllOrdersWithProductsOfOneUser() {
-        TestDataImporter.importData(sessionFactory);
-        entityManager.getTransaction().begin();
+    void findAllOrdersWithProductsOfOneUserIT() {
+        entityManager.clear();
+        TestDelete.deleteAll(entityManager);
+        TestDataImporter.importData(entityManager);
 
         var userFilter = UserFilter.builder()
                 .personalInformation(PersonalInformation.builder()
@@ -92,11 +90,10 @@ public class OrderRepositoryIT extends ProxySessionTestBase {
                 .build();
 
         var results = orderRepository.findAllOrdersWithProductsOfOneUser(userFilter);
-        entityManager.getTransaction().commit();
         assertThat(results).hasSize(3);
 
         var orderId = results.stream().map(Order::getId).collect(toList());
-        assertThat(orderId).contains(7,7,7);
+        assertThat(orderId).contains(7, 7, 7);
     }
 
 }
