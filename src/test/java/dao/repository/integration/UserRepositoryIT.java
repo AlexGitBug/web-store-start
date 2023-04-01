@@ -73,7 +73,6 @@ public class UserRepositoryIT {
 
     @Test
     void findUsersWhoMadeAnOrderAtSpecificTime() {
-        TestDelete.deleteAll(entityManager);
         TestDataImporter.importData(entityManager);
 
         var results = userRepository.findUsersWhoMadeOrderSpecificTime(LocalDate.of(2022, 10, 10), LocalDate.of(2023, 12, 12));
