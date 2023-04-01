@@ -1,4 +1,4 @@
-package dao.repository.initProxy;
+package dao.repository.util;
 
 
 import javax.persistence.EntityManager;

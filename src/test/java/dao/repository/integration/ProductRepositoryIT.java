@@ -9,9 +9,10 @@ import com.dmdev.webStore.entity.Product;
 import com.dmdev.webStore.entity.enums.Brand;
 
 
-import dao.repository.initProxy.TestDelete;
+import dao.repository.util.TestDelete;
 import dao.repository.integration.annotation.IT;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import dao.repository.util.MocksForRepository;
 import dao.repository.util.TestDataImporter;
@@ -30,6 +31,10 @@ public class ProductRepositoryIT {
 
     private final EntityManager entityManager;
 
+    @BeforeEach
+    void deleteAllData() {
+        TestDelete.deleteAll(entityManager);
+    }
 
     @Test
     void deleteProductIT() {
@@ -90,8 +95,6 @@ public class ProductRepositoryIT {
 
     @Test
     void findListOfProductsEqIT() {
-        entityManager.clear();
-        TestDelete.deleteAll(entityManager);
         TestDataImporter.importData(entityManager);
 
         var productFilter = ProductFilter.builder()
@@ -111,8 +114,6 @@ public class ProductRepositoryIT {
 
     @Test
     void findProductOfOneCategoryAndBrandBetweenTwoPriceIT() {
-        entityManager.clear();
-        TestDelete.deleteAll(entityManager);
         TestDataImporter.importData(entityManager);
 
         var productFilter = ProductFilter.builder()
@@ -134,8 +135,7 @@ public class ProductRepositoryIT {
 
     @Test
     void findProductsOfBrandAndCategoryAndGtPriceIT() {
-        entityManager.clear();
-        TestDelete.deleteAll(entityManager);
+
         TestDataImporter.importData(entityManager);
 
         var productFilter = ProductFilter.builder()
@@ -158,8 +158,6 @@ public class ProductRepositoryIT {
 
     @Test
     void findProductsOfBrandAndCategoryAndLtPriceIT() {
-        entityManager.clear();
-        TestDelete.deleteAll(entityManager);
         TestDataImporter.importData(entityManager);
 
         var productFilter = ProductFilter.builder()
@@ -179,8 +177,6 @@ public class ProductRepositoryIT {
 
     @Test
     void findAllProductOfBrandIT() {
-        entityManager.clear();
-        TestDelete.deleteAll(entityManager);
         TestDataImporter.importData(entityManager);
 
         var productFilter1 = ProductFilter.builder()
@@ -196,18 +192,15 @@ public class ProductRepositoryIT {
 
     @Test
     void findMinPriceOfProductIT() {
-        entityManager.clear();
-        TestDelete.deleteAll(entityManager);
         TestDataImporter.importData(entityManager);
 
         var result = productRepository.findMinPriceOfProduct();
+
         assertThat(result.getPrice()).isEqualTo(150);
     }
 
     @Test
     void findAllProductsFromOrderIT() {
-        entityManager.clear();
-        TestDelete.deleteAll(entityManager);
         TestDataImporter.importData(entityManager);
 
         var orderFilter = OrderFilter.builder()
@@ -218,5 +211,4 @@ public class ProductRepositoryIT {
         var model = results.stream().map(Product::getModel).collect(toList());
         assertThat(model).contains("13");
     }
-
 }

@@ -6,10 +6,11 @@ import com.dmdev.webStore.dao.repository.filter.UserFilter;
 import com.dmdev.webStore.entity.Order;
 import com.dmdev.webStore.entity.embeddable.PersonalInformation;
 import com.dmdev.webStore.entity.enums.PaymentCondition;
-import dao.repository.initProxy.TestDelete;
+import dao.repository.util.TestDelete;
 import dao.repository.integration.annotation.IT;
 import dao.repository.util.TestDataImporter;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import dao.repository.util.MocksForRepository;
 
@@ -25,6 +26,11 @@ public class OrderRepositoryIT {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final EntityManager entityManager;
+
+    @BeforeEach
+    void deleteAllData() {
+        TestDelete.deleteAll(entityManager);
+    }
 
     @Test
     void deleteOrderIT() {
@@ -80,7 +86,6 @@ public class OrderRepositoryIT {
     @Test
     void findAllOrdersWithProductsOfOneUserIT() {
         entityManager.clear();
-        TestDelete.deleteAll(entityManager);
         TestDataImporter.importData(entityManager);
 
         var userFilter = UserFilter.builder()

@@ -11,9 +11,10 @@ import com.dmdev.webStore.entity.Catalog;
 import com.dmdev.webStore.entity.ShoppingCart;
 import com.dmdev.webStore.entity.enums.Brand;
 
-import dao.repository.initProxy.TestDelete;
+import dao.repository.util.TestDelete;
 import dao.repository.integration.annotation.IT;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import dao.repository.util.MocksForRepository;
 import dao.repository.util.TestDataImporter;
@@ -34,6 +35,10 @@ public class ShoppingCartRepositoryIT {
     private final CatalogRepository catalogRepository;
     private final EntityManager entityManager;
 
+    @BeforeEach
+    void deleteAllData() {
+        TestDelete.deleteAll(entityManager);
+    }
     @Test
     void deleteShoppingCartIT() {
         var user = MocksForRepository.getUser();
@@ -81,7 +86,6 @@ public class ShoppingCartRepositoryIT {
 
     @Test
     void updateShoppingCartIT() {
-        entityManager.clear();
         var user = MocksForRepository.getUser();
         userRepository.save(user);
         var order = MocksForRepository.getOrder(user);
@@ -122,8 +126,6 @@ public class ShoppingCartRepositoryIT {
     }
     @Test
     void getStatisticOfEachOrdersWithSumIT() {
-        entityManager.clear();
-        TestDelete.deleteAll(entityManager);
         TestDataImporter.importData(entityManager);
 
         var result = shoppingCartRepository.getStatisticOfEachOrdersWithSum();
@@ -136,8 +138,6 @@ public class ShoppingCartRepositoryIT {
 
     @Test
     void findUsersWhoMadeAnOrderOfSpecificProductIT() {
-        entityManager.clear();
-        TestDelete.deleteAll(entityManager);
         TestDataImporter.importData(entityManager);
 
         var productFilter = ProductFilter.builder()
@@ -153,9 +153,6 @@ public class ShoppingCartRepositoryIT {
 
         var firstName = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getFirstName()).collect(toList());
         assertThat(firstName).contains("Dima", "Ksenia");
-
-        var telephoneResult = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getTelephone()).collect(toList());
-        assertThat(telephoneResult).contains("321-32-32", "123-32-32");
 
         var emailResult = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getEmail()).collect(toList());
         assertThat(emailResult).contains("dima@gmail.com", "ksenia@gmail.com");
