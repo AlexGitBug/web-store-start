@@ -47,8 +47,6 @@ public class CatalogRepositoryIT {
         var catalog = MocksForRepository.getCatalog();
         catalogRepository.save(catalog);
 
-        Optional<Catalog> id = catalogRepository.findById(catalog.getId());
-
         Catalog result = entityManager.find(Catalog.class, catalog.getId());
         result.setCategory("update-category");
         catalogRepository.update(catalog);

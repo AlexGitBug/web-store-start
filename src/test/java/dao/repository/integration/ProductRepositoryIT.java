@@ -135,7 +135,6 @@ public class ProductRepositoryIT {
 
     @Test
     void findProductsOfBrandAndCategoryAndGtPriceIT() {
-
         TestDataImporter.importData(entityManager);
 
         var productFilter = ProductFilter.builder()

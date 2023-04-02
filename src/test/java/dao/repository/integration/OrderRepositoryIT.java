@@ -66,8 +66,8 @@ public class OrderRepositoryIT {
         order.setPaymentCondition(PaymentCondition.CARD);
         orderRepository.update(result);
 
-        var actualResult = entityManager.find(Order.class, result.getId());
-        assertThat(actualResult).isEqualTo(order);
+        var actualResult = orderRepository.findById(order.getId());
+        assertThat(actualResult).contains(order);
     }
 
     @Test
@@ -85,7 +85,6 @@ public class OrderRepositoryIT {
 
     @Test
     void findAllOrdersWithProductsOfOneUserIT() {
-        entityManager.clear();
         TestDataImporter.importData(entityManager);
 
         var userFilter = UserFilter.builder()

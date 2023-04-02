@@ -101,9 +101,9 @@ public class ShoppingCartRepositoryIT {
         result.setCreatedAt(LocalDate.now());
         shoppingCartRepository.update(shoppingCart);
 
-        var actualResult = entityManager.find(ShoppingCart.class, shoppingCart.getId());
-        assertThat(actualResult).isEqualTo(shoppingCart);
 
+        var actualResult = shoppingCartRepository.findById(shoppingCart.getId());
+        assertThat(actualResult).contains(shoppingCart);
     }
 
     @Test
@@ -119,9 +119,8 @@ public class ShoppingCartRepositoryIT {
         var shoppingCart = MocksForRepository.shoppingCart(order, product);
         shoppingCartRepository.save(shoppingCart);
 
-        var actualResult = entityManager.find(ShoppingCart.class, shoppingCart.getId());
-
-        assertThat(actualResult).isEqualTo(shoppingCart);
+        var actualResult = shoppingCartRepository.findById(shoppingCart.getId());
+        assertThat(actualResult).contains(shoppingCart);
 
     }
     @Test
