@@ -78,7 +78,7 @@ public class OrderRepositoryIT {
         orderRepository.save(order);
 
         var actualResult = orderRepository.findById(order.getId());
-
+        assertThat(actualResult).isPresent();
         assertThat(actualResult).contains(order);
 
     }

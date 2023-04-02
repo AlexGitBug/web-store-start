@@ -15,6 +15,7 @@ import java.time.LocalDate;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @IT
 @RequiredArgsConstructor
@@ -66,7 +67,7 @@ public class UserRepositoryIT {
         userRepository.save(user);
 
         var actualResult = userRepository.findById(user.getId());
-
+        assertThat(actualResult).isPresent();
         assertThat(actualResult).contains(user);
     }
 

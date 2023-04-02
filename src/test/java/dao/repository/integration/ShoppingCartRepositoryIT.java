@@ -120,6 +120,7 @@ public class ShoppingCartRepositoryIT {
         shoppingCartRepository.save(shoppingCart);
 
         var actualResult = shoppingCartRepository.findById(shoppingCart.getId());
+        assertThat(actualResult).isPresent();
         assertThat(actualResult).contains(shoppingCart);
 
     }

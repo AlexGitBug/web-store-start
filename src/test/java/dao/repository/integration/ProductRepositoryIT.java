@@ -87,7 +87,7 @@ public class ProductRepositoryIT {
         productRepository.save(product);
 
         var actualResult = productRepository.findById(product.getId());
-
+        assertThat(actualResult).isPresent();
         assertThat(actualResult).contains(product);
 //        var actualResult = entityManager.find(Product.class, product.getId());
 //        assertThat(actualResult).isEqualTo(product);
