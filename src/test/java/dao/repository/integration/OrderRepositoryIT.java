@@ -63,7 +63,7 @@ public class OrderRepositoryIT {
         orderRepository.save(order);
 
         var result = entityManager.find(Order.class, order.getId());
-        order.setPaymentCondition(PaymentCondition.CARD);
+        result.setPaymentCondition(PaymentCondition.CARD);
         orderRepository.update(result);
 
         var actualResult = orderRepository.findById(order.getId());

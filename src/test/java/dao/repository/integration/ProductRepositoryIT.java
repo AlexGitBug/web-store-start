@@ -71,8 +71,8 @@ public class ProductRepositoryIT {
         productRepository.save(product);
 
         var result = entityManager.find(Product.class, product.getId());
-        product.setModel("test-update");
-        productRepository.update(product);
+        result.setModel("test-update");
+        productRepository.update(result);
 
         var actualResult = entityManager.find(Product.class, result.getId());
         assertThat(actualResult).isEqualTo(product);

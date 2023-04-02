@@ -55,7 +55,7 @@ public class UserRepositoryIT {
 
         var result = entityManager.find(User.class, user.getId());
         result.setRole(Role.ADMIN);
-        userRepository.update(user);
+        userRepository.update(result);
 
         var actualResult = userRepository.findById(user.getId());
         assertThat(actualResult).contains(user);

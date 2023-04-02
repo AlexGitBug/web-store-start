@@ -49,7 +49,7 @@ public class CatalogRepositoryIT {
 
         Catalog result = entityManager.find(Catalog.class, catalog.getId());
         result.setCategory("update-category");
-        catalogRepository.update(catalog);
+        catalogRepository.update(result);
 
         var actualResult = catalogRepository.findById(catalog.getId());
         assertThat(actualResult).contains(catalog);

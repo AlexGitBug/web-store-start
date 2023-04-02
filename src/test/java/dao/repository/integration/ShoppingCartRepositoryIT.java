@@ -99,7 +99,7 @@ public class ShoppingCartRepositoryIT {
 
         var result = entityManager.find(ShoppingCart.class, shoppingCart.getId());
         result.setCreatedAt(LocalDate.now());
-        shoppingCartRepository.update(shoppingCart);
+        shoppingCartRepository.update(result);
 
 
         var actualResult = shoppingCartRepository.findById(shoppingCart.getId());
