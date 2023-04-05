@@ -1,7 +1,6 @@
 package dao.repository.integration;
 
 import com.dmdev.webStore.dao.repository.CatalogRepository;
-import com.dmdev.webStore.entity.Catalog;
 import dao.repository.integration.annotation.IT;
 import dao.repository.util.TestDelete;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +23,7 @@ public class CatalogRepositoryIT {
     void deleteAllData() {
         TestDelete.deleteAll(entityManager);
     }
+
     @Test
     void deleteCatalogIT() {
         var catalog = MocksForRepository.getCatalog();
@@ -47,9 +47,9 @@ public class CatalogRepositoryIT {
         var catalog = MocksForRepository.getCatalog();
         catalogRepository.save(catalog);
 
-        Catalog result = entityManager.find(Catalog.class, catalog.getId());
-        result.setCategory("update-category");
-        catalogRepository.update(result);
+        var updatedCatalog = catalogRepository.findById(catalog.getId());
+        updatedCatalog.ifPresent(it -> it.setCategory("update-category"));
+        catalogRepository.update(updatedCatalog.get());
 
         var actualResult = catalogRepository.findById(catalog.getId());
         assertThat(actualResult).contains(catalog);
@@ -61,7 +61,7 @@ public class CatalogRepositoryIT {
         catalogRepository.save(catalog);
 
         var actualResult =  catalogRepository.findById(catalog.getId());
-        assertThat(actualResult).isPresent();
+
         assertThat(actualResult).contains(catalog);
     }
 }

@@ -6,9 +6,9 @@ import com.dmdev.webStore.dao.repository.filter.UserFilter;
 import com.dmdev.webStore.entity.Order;
 import com.dmdev.webStore.entity.embeddable.PersonalInformation;
 import com.dmdev.webStore.entity.enums.PaymentCondition;
-import dao.repository.util.TestDelete;
 import dao.repository.integration.annotation.IT;
 import dao.repository.util.TestDataImporter;
+import dao.repository.util.TestDelete;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,12 +16,16 @@ import dao.repository.util.MocksForRepository;
 
 import javax.persistence.EntityManager;
 
+import java.util.Optional;
+
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @IT
 @RequiredArgsConstructor
 public class OrderRepositoryIT {
+
+    private static final String MAIL_PETR = "petr@gmail.com";
 
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
@@ -62,9 +66,9 @@ public class OrderRepositoryIT {
         var order = MocksForRepository.getOrder(user);
         orderRepository.save(order);
 
-        var result = entityManager.find(Order.class, order.getId());
-        result.setPaymentCondition(PaymentCondition.CARD);
-        orderRepository.update(result);
+        var updatedOrder = orderRepository.findById(order.getId());
+        updatedOrder.ifPresent(it -> it.setPaymentCondition(PaymentCondition.CARD));
+        orderRepository.update(updatedOrder.get());
 
         var actualResult = orderRepository.findById(order.getId());
         assertThat(actualResult).contains(order);
@@ -78,6 +82,7 @@ public class OrderRepositoryIT {
         orderRepository.save(order);
 
         var actualResult = orderRepository.findById(order.getId());
+
         assertThat(actualResult).isPresent();
         assertThat(actualResult).contains(order);
 
@@ -89,7 +94,7 @@ public class OrderRepositoryIT {
 
         var userFilter = UserFilter.builder()
                 .personalInformation(PersonalInformation.builder()
-                        .email("petr@gmail.com")
+                        .email(MAIL_PETR)
                         .build())
                 .build();
 

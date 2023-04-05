@@ -21,6 +21,7 @@ import dao.repository.util.TestDataImporter;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,6 +29,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @IT
 @RequiredArgsConstructor
 public class ShoppingCartRepositoryIT {
+
+    private final String MAIL_DIMA = "dima@gmail.com";
+    private final String MAIL_KSENIA = "ksenia@gmail.com";
+    private final String USER_DIMA = "Dima";
+    private final String USER_KSENIA = "Ksenia";
     private final ShoppingCartRepository shoppingCartRepository;
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
@@ -55,11 +61,6 @@ public class ShoppingCartRepositoryIT {
         shoppingCartRepository.delete(shoppingCart);
 
         assertThat(shoppingCartRepository.findById(shoppingCart.getId())).isEmpty();
-
-//        var actualResult = entityManager.find(ShoppingCart.class, shoppingCart.getId());
-//        entityManager.getTransaction().commit();
-//        assertThat(actualResult).isNull();
-
     }
 
     @Test
@@ -77,11 +78,6 @@ public class ShoppingCartRepositoryIT {
         shoppingCartRepository.save(shoppingCart);
 
         assertThat(shoppingCartRepository.findById(shoppingCart.getId())).contains(shoppingCart);
-
-//        var actualResult = entityManager.find(ShoppingCart.class, shoppingCart.getId());
-//        entityManager.getTransaction().commit();
-//        assertThat(actualResult).isNotNull();
-
     }
 
     @Test
@@ -97,10 +93,9 @@ public class ShoppingCartRepositoryIT {
         var shoppingCart = MocksForRepository.shoppingCart(order, product);
         shoppingCartRepository.save(shoppingCart);
 
-        var result = entityManager.find(ShoppingCart.class, shoppingCart.getId());
-        result.setCreatedAt(LocalDate.now());
-        shoppingCartRepository.update(result);
-
+        var updatedShoppingCart = shoppingCartRepository.findById(shoppingCart.getId());
+        updatedShoppingCart.ifPresent(it -> it.setCreatedAt(LocalDate.now()));
+        shoppingCartRepository.update(updatedShoppingCart.get());
 
         var actualResult = shoppingCartRepository.findById(shoppingCart.getId());
         assertThat(actualResult).contains(shoppingCart);
@@ -152,12 +147,10 @@ public class ShoppingCartRepositoryIT {
         assertThat(results).hasSize(2);
 
         var firstName = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getFirstName()).collect(toList());
-        assertThat(firstName).contains("Dima", "Ksenia");
+        assertThat(firstName).contains(USER_DIMA, USER_KSENIA);
 
         var emailResult = results.stream().map(it -> it.getOrder().getUser().getPersonalInformation().getEmail()).collect(toList());
-        assertThat(emailResult).contains("dima@gmail.com", "ksenia@gmail.com");
-
-
+        assertThat(emailResult).contains(MAIL_DIMA, MAIL_KSENIA);
     }
 }
 

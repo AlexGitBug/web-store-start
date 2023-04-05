@@ -89,7 +89,7 @@ public class ProductRepository extends RepositoryBase<Integer, Product> {
                 .join(product.shoppingCarts, shoppingCart)
                 .join(shoppingCart.order, order)
                 .where(predicate)
-//                .orderBy(product.price.asc())
+                .orderBy(product.price.asc())
                 .setHint(GraphSemantic.LOAD.getJpaHintName(), getEntityManager().getEntityGraph("withCatalog"))
                 .distinct()
                 .fetch();

@@ -20,12 +20,18 @@ import dao.repository.util.TestDataImporter;
 import javax.persistence.EntityManager;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 @IT
 @RequiredArgsConstructor
 public class ProductRepositoryIT {
+
+    private final static String MODEL_13 = "13";
+    private final static String MODEL_14 = "14";
+    private final static String PRODUCT_CATEGORY_HEADPHONES = "Headphones";
+    private final static String PRODUCT_CATEGORY_SMARTPHONE = "Smartphone";
     private final ProductRepository productRepository;
     private final CatalogRepository catalogRepository;
 
@@ -57,10 +63,6 @@ public class ProductRepositoryIT {
         productRepository.save(product);
 
         assertThat(productRepository.findById(product.getId())).contains(product);
-
-//        var actualResult = entityManager.find(Product.class, product.getId());
-//        entityManager.getTransaction().commit();
-//        assertThat(actualResult).isEqualTo(product);
     }
 
     @Test
@@ -70,11 +72,11 @@ public class ProductRepositoryIT {
         var product = MocksForRepository.getProduct(catalog);
         productRepository.save(product);
 
-        var result = entityManager.find(Product.class, product.getId());
-        result.setModel("test-update");
-        productRepository.update(result);
+        var updatedProduct = productRepository.findById(product.getId());
+        updatedProduct.ifPresent(it -> it.setModel("test-update"));
+        productRepository.update(updatedProduct.get());
 
-        var actualResult = entityManager.find(Product.class, result.getId());
+        var actualResult = entityManager.find(Product.class, product.getId());
         assertThat(actualResult).isEqualTo(product);
 
     }
@@ -89,8 +91,6 @@ public class ProductRepositoryIT {
         var actualResult = productRepository.findById(product.getId());
         assertThat(actualResult).isPresent();
         assertThat(actualResult).contains(product);
-//        var actualResult = entityManager.find(Product.class, product.getId());
-//        assertThat(actualResult).isEqualTo(product);
     }
 
     @Test
@@ -118,7 +118,7 @@ public class ProductRepositoryIT {
 
         var productFilter = ProductFilter.builder()
                 .catalog(Catalog.builder()
-                        .category("Headphones")
+                        .category(PRODUCT_CATEGORY_HEADPHONES)
                         .build())
                 .brand(Brand.SONY)
                 .build();
@@ -139,7 +139,7 @@ public class ProductRepositoryIT {
 
         var productFilter = ProductFilter.builder()
                 .catalog(Catalog.builder()
-                        .category("Smartphone")
+                        .category(PRODUCT_CATEGORY_SMARTPHONE)
                         .build())
                 .brand(Brand.APPLE)
                 .price(999)
@@ -149,7 +149,7 @@ public class ProductRepositoryIT {
         assertThat(results).hasSize(2);
 
         var model = results.stream().map(Product::getModel).collect(toList());
-        assertThat(model).contains("13", "14");
+        assertThat(model).contains(MODEL_13, MODEL_14);
 
         var brands = results.stream().map(Product::getBrand).collect(toList());
         assertThat(brands).contains(Brand.APPLE);
@@ -172,7 +172,6 @@ public class ProductRepositoryIT {
         assertThat(brands).contains(Brand.APPLE);
 
     }
-
 
     @Test
     void findAllProductOfBrandIT() {
@@ -200,14 +199,17 @@ public class ProductRepositoryIT {
 
     @Test
     void findAllProductsFromOrderIT() {
+
         TestDataImporter.importData(entityManager);
 
         var orderFilter = OrderFilter.builder()
                 .deliveryDate( LocalDate.of(2022, 12, 10))
                 .build();
+
         var results = productRepository.findAllProductsFromOrder(orderFilter);
         assertThat(results).hasSize(1);
+
         var model = results.stream().map(Product::getModel).collect(toList());
-        assertThat(model).contains("13");
+        assertThat(model).contains(MODEL_13);
     }
 }

@@ -21,8 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @RequiredArgsConstructor
 public class UserRepositoryIT {
 
+    private final String MAIL_SVETA = "ivan@gmail.com";
+    private final String MAIL_IVAN = "sveta@gmail.com";
+    private final String MAIL_VASIA = "vasia@gmail.com";
     private final UserRepository userRepository;
-
     private final EntityManager entityManager;
 
     @Test
@@ -33,9 +35,6 @@ public class UserRepositoryIT {
         userRepository.delete(user);
 
         assertThat(userRepository.findById(user.getId())).isEmpty();
-
-//        var actualResult = entityManager.find(User.class, user.getId());
-//        assertThat(actualResult).isNull();
     }
 
     @Test
@@ -45,7 +44,6 @@ public class UserRepositoryIT {
         userRepository.save(user);
 
         assertThat(userRepository.findById(user.getId())).isNotEmpty();
-
     }
 
     @Test
@@ -67,6 +65,7 @@ public class UserRepositoryIT {
         userRepository.save(user);
 
         var actualResult = userRepository.findById(user.getId());
+
         assertThat(actualResult).isPresent();
         assertThat(actualResult).contains(user);
     }
@@ -80,6 +79,6 @@ public class UserRepositoryIT {
         assertThat(results).hasSize(3);
 
         var actualResult = results.stream().map(user -> user.getPersonalInformation().getEmail()).collect(toList());
-        assertThat(actualResult).contains("ivan@gmail.com", "sveta@gmail.com", "vasia@gmail.com");
+        assertThat(actualResult).containsExactlyInAnyOrder(MAIL_IVAN, MAIL_SVETA, MAIL_VASIA);
     }
 }
