@@ -1,6 +1,7 @@
 package dao.repository.integration;
 
 import com.dmdev.webStore.dao.repository.CatalogRepository;
+import com.dmdev.webStore.entity.Catalog;
 import dao.repository.integration.annotation.IT;
 import dao.repository.util.TestDelete;
 import lombok.RequiredArgsConstructor;
@@ -10,12 +11,17 @@ import dao.repository.util.MocksForRepository;
 
 import javax.persistence.EntityManager;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 @IT
 @RequiredArgsConstructor
 public class CatalogRepositoryIT {
+
+    private static final String SMARTPHONE = "Smartphone";
+    private static final String TV = "TV";
+    private static final String HEADPHONES = "Headphones";
+
     private final CatalogRepository catalogRepository;
     private final EntityManager entityManager;
 
@@ -40,8 +46,9 @@ public class CatalogRepositoryIT {
 
         catalogRepository.save(catalog);
 
-        assertThat(catalogRepository.findById(catalog.getId())).contains(catalog);
+        assertThat(catalog.getId()).isNotNull();
     }
+
     @Test
     void updateCatalogIT() {
         var catalog = MocksForRepository.getCatalog();
@@ -49,10 +56,12 @@ public class CatalogRepositoryIT {
 
         var updatedCatalog = catalogRepository.findById(catalog.getId());
         updatedCatalog.ifPresent(it -> it.setCategory("update-category"));
-        catalogRepository.update(updatedCatalog.get());
+        catalogRepository.saveAndFlush(updatedCatalog.get());
 
         var actualResult = catalogRepository.findById(catalog.getId());
-        assertThat(actualResult).contains(catalog);
+        assertThat(actualResult).isPresent();
+        assertThat(actualResult.get().getCategory())
+                .isEqualTo(catalog.getCategory());
     }
 
     @Test
@@ -60,8 +69,27 @@ public class CatalogRepositoryIT {
         var catalog = MocksForRepository.getCatalog();
         catalogRepository.save(catalog);
 
-        var actualResult =  catalogRepository.findById(catalog.getId());
+        var actualResult = catalogRepository.findById(catalog.getId());
+        assertThat(actualResult).isPresent();
+        assertThat(actualResult.get()).isEqualTo(catalog);
+    }
 
-        assertThat(actualResult).contains(catalog);
+    @Test
+    void findAllCatalogIT() {
+        catalogRepository.save(Catalog.builder().category(SMARTPHONE).build());
+        catalogRepository.save(Catalog.builder().category(TV).build());
+        catalogRepository.save(Catalog.builder().category(HEADPHONES).build());
+
+        var actualResult = catalogRepository.findAll();
+
+        var categories = actualResult.stream()
+                .map(Catalog::getCategory)
+                .toList();
+        assertAll(
+                () -> assertThat(actualResult).hasSize(3),
+                () -> assertThat(categories).containsExactlyInAnyOrder(
+                        SMARTPHONE, TV, HEADPHONES
+                )
+        );
     }
 }

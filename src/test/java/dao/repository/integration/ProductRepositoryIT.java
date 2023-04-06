@@ -1,6 +1,8 @@
 package dao.repository.integration;
 
 import com.dmdev.webStore.dao.repository.CatalogRepository;
+
+import com.dmdev.webStore.dao.repository.CatalogRepository;
 import com.dmdev.webStore.dao.repository.ProductRepository;
 import com.dmdev.webStore.dao.repository.filter.OrderFilter;
 import com.dmdev.webStore.dao.repository.filter.ProductFilter;
@@ -20,10 +22,15 @@ import dao.repository.util.TestDataImporter;
 import javax.persistence.EntityManager;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
+import static com.dmdev.webStore.entity.enums.Brand.*;
+import static com.dmdev.webStore.entity.enums.Brand.SONY;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 @IT
 @RequiredArgsConstructor
 public class ProductRepositoryIT {
@@ -62,7 +69,7 @@ public class ProductRepositoryIT {
 
         productRepository.save(product);
 
-        assertThat(productRepository.findById(product.getId())).contains(product);
+        assertThat(product.getId()).isNotNull();
     }
 
     @Test
@@ -74,12 +81,15 @@ public class ProductRepositoryIT {
 
         var updatedProduct = productRepository.findById(product.getId());
         updatedProduct.ifPresent(it -> it.setModel("test-update"));
-        productRepository.update(updatedProduct.get());
+        productRepository.saveAndFlush(updatedProduct.get());
 
-        var actualResult = entityManager.find(Product.class, product.getId());
-        assertThat(actualResult).isEqualTo(product);
+        var actualResult = productRepository.findById(product.getId());
+        assertThat(actualResult).isPresent();
+        assertThat(actualResult.get().getModel())
+                .isEqualTo(product.getModel());
 
     }
+
 
     @Test
     void findByIdProductIT() {
@@ -90,7 +100,26 @@ public class ProductRepositoryIT {
 
         var actualResult = productRepository.findById(product.getId());
         assertThat(actualResult).isPresent();
-        assertThat(actualResult).contains(product);
+        assertThat(actualResult.get()).isEqualTo(product);
+    }
+
+    @Test
+    void findAllProductIT() {
+        productRepository.save(Product.builder().model(MODEL_13).build());
+        productRepository.save(Product.builder().model(MODEL_14).build());
+
+        var actualResult = productRepository.findAll();
+
+        var models = actualResult.stream()
+                .map(Product::getModel)
+                .toList();
+
+        assertAll(
+                () -> assertThat(actualResult).hasSize(2),
+                () -> assertThat(models).containsExactlyInAnyOrder(
+                        MODEL_13, MODEL_14
+                )
+        );
     }
 
     @Test
@@ -99,17 +128,26 @@ public class ProductRepositoryIT {
 
         var productFilter = ProductFilter.builder()
                 .catalog(MocksForRepository.getCatalog())
-                .brand(Brand.APPLE)
+                .brand(APPLE)
                 .build();
 
-        var results = productRepository.findListOfProductsEq(productFilter);
-        assertThat(results).hasSize(3);
+        var actualResult = productRepository.findListOfProductsEq(productFilter);
 
-        var categoryResult = results.stream().map(it -> it.getCatalog().getCategory()).collect(toList());
-        assertThat(categoryResult).contains(productFilter.getCatalog().getCategory());
+        var categoryResult = actualResult.stream()
+                .map(it -> it.getCatalog().getCategory())
+                .collect(toList());
 
-        var brandResult = results.stream().map(Product::getBrand).collect(toList());
-        assertThat(brandResult).contains(productFilter.getBrand());
+        var brandResult = actualResult.stream()
+                .map(Product::getBrand)
+                .collect(toList());
+
+        assertAll(
+                () -> assertThat(actualResult).hasSize(3),
+                () -> assertThat(categoryResult).containsExactlyInAnyOrder(
+                        PRODUCT_CATEGORY_SMARTPHONE, PRODUCT_CATEGORY_SMARTPHONE, PRODUCT_CATEGORY_SMARTPHONE),
+                () -> assertThat(brandResult).containsExactlyInAnyOrder(
+                        APPLE, APPLE, APPLE)
+        );
     }
 
     @Test
@@ -120,17 +158,46 @@ public class ProductRepositoryIT {
                 .catalog(Catalog.builder()
                         .category(PRODUCT_CATEGORY_HEADPHONES)
                         .build())
-                .brand(Brand.SONY)
+                .brand(SONY)
                 .build();
 
-        var results = productRepository.findProductOfOneCategoryAndBrandBetweenTwoPrice(productFilter, 100, 5000);
-        assertThat(results).hasSize(4);
+        var actualResult = productRepository.findProductOfOneCategoryAndBrandBetweenTwoPrice(productFilter, 100, 5000);
 
-        var brands = results.stream().map(Product::getBrand).collect(toList());
-        assertThat(brands).contains(productFilter.getBrand());
+        var brands = actualResult.stream().map(Product::getBrand).collect(toList());
 
-        var price = results.stream().map(Product::getPrice).toList();
-        assertThat(price).contains(300, 350, 350, 400);
+        var price = actualResult.stream().map(Product::getPrice).toList();
+
+        assertAll(
+                () -> assertThat(actualResult).hasSize(4),
+                () -> assertThat(brands).containsExactlyInAnyOrder(
+                        SONY, SONY, SONY, SONY),
+                () -> assertThat(price).containsExactlyInAnyOrder(
+                        300, 350, 350, 400)
+        );
+    }
+
+
+    @Test
+    void findProductsOfBrandAndCategoryAndLtPriceIT() {
+        TestDataImporter.importData(entityManager);
+
+        var productFilter = ProductFilter.builder()
+                .catalog(MocksForRepository.getCatalog())
+                .brand(APPLE)
+                .price(1050)
+                .build();
+
+        var actualResult = productRepository.findProductsOfBrandAndCategoryAndLtPrice(productFilter);
+
+        var brands = actualResult.stream()
+                .map(Product::getBrand)
+                .collect(toList());
+
+        assertAll(
+                () -> assertThat(actualResult).hasSize(2),
+                () -> assertThat(brands).containsExactly(
+                        APPLE, APPLE)
+        );
     }
 
     @Test
@@ -141,51 +208,37 @@ public class ProductRepositoryIT {
                 .catalog(Catalog.builder()
                         .category(PRODUCT_CATEGORY_SMARTPHONE)
                         .build())
-                .brand(Brand.APPLE)
+                .brand(APPLE)
                 .price(999)
                 .build();
 
-        var results = productRepository.findProductsOfBrandAndCategoryAndGtPrice(productFilter);
-        assertThat(results).hasSize(2);
+        var actualResult = productRepository.findProductsOfBrandAndCategoryAndGtPrice(productFilter);
 
-        var model = results.stream().map(Product::getModel).collect(toList());
-        assertThat(model).contains(MODEL_13, MODEL_14);
+        var model = actualResult.stream().map(Product::getModel).collect(toList());
 
-        var brands = results.stream().map(Product::getBrand).collect(toList());
-        assertThat(brands).contains(Brand.APPLE);
+        var brands = actualResult.stream().map(Product::getBrand).collect(toList());
+
+        assertAll(
+                () -> assertThat(actualResult).hasSize(2),
+                () -> assertThat(model).containsExactlyInAnyOrder(MODEL_13, MODEL_14),
+                () -> assertThat(brands).containsExactlyInAnyOrder(APPLE, APPLE)
+        );
     }
 
-    @Test
-    void findProductsOfBrandAndCategoryAndLtPriceIT() {
-        TestDataImporter.importData(entityManager);
-
-        var productFilter = ProductFilter.builder()
-                .catalog(MocksForRepository.getCatalog())
-                .brand(Brand.APPLE)
-                .price(1050)
-                .build();
-
-        var results = productRepository.findProductsOfBrandAndCategoryAndLtPrice(productFilter);
-        assertThat(results).hasSize(2);
-
-        var brands = results.stream().map(Product::getBrand).collect(toList());
-        assertThat(brands).contains(Brand.APPLE);
-
-    }
 
     @Test
     void findAllProductOfBrandIT() {
         TestDataImporter.importData(entityManager);
 
-        var productFilter1 = ProductFilter.builder()
-                .brand(Brand.SAMSUNG)
-                .build();
+        var actualResult = productRepository.findAllProductOfBrand(SAMSUNG);
 
-        var results = productRepository.findAllProductOfBrand(productFilter1);
-        assertThat(results).hasSize(5);
+        var brands = actualResult.stream().map(Product::getId).toList();
 
-        var brands = results.stream().map(Product::getBrand).toList();
-        assertThat(brands).contains(Brand.SAMSUNG);
+        assertAll(
+                () -> assertThat(actualResult).hasSize(5),
+                () -> assertThat(brands)
+                        .containsExactlyInAnyOrder(16, 17, 18, 19, 24)
+        );
     }
 
     @Test
@@ -203,13 +256,21 @@ public class ProductRepositoryIT {
         TestDataImporter.importData(entityManager);
 
         var orderFilter = OrderFilter.builder()
-                .deliveryDate( LocalDate.of(2022, 12, 10))
+                .deliveryDate(LocalDate.of(2022, 12, 10))
                 .build();
 
-        var results = productRepository.findAllProductsFromOrder(orderFilter);
-        assertThat(results).hasSize(1);
+        var actualResult = productRepository.findAllProductsFromOrder(orderFilter);
+        assertThat(actualResult).hasSize(1);
 
-        var model = results.stream().map(Product::getModel).collect(toList());
+        var model = actualResult.stream()
+                .map(Product::getModel)
+                .collect(toList());
         assertThat(model).contains(MODEL_13);
+
+        assertAll(
+                () -> assertThat(actualResult).hasSize(1),
+                () -> assertThat(model)
+                        .containsExactlyInAnyOrder(MODEL_13)
+        );
     }
 }

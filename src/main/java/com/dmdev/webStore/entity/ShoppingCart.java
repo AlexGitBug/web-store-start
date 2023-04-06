@@ -33,7 +33,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(name = "shopping_cart")
+@Table(name = "shopping_cart", schema = "public")
 public class ShoppingCart implements BaseEntity<Integer>{
 
     @Id

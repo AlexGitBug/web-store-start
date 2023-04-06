@@ -30,12 +30,13 @@ configurations {
     querydsl.extendsFrom implementation, runtimeOnly, compileOnly, annotationProcessor
 }
 
-ext{
+ext {
     postgresqlVersion = '42.5.4'
-    hibernateJcacheVersion = '5.5.7.Final'
     ehcache = '3.9.7'
     h2database = '1.4.200'
     querydslApt = '5.0.0'
+    hibernateJcacheVersion = '5.5.7.Final'
+    testcontainers = '1.16.3'
 }
 
 dependencies {
@@ -49,7 +50,7 @@ dependencies {
     implementation "org.ehcache:ehcache:${ehcache}"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
+//    testImplementation "org.testcontainers:postgresql:${testcontainers}"
     testImplementation "com.h2database:h2:${h2database}"
 }
 
