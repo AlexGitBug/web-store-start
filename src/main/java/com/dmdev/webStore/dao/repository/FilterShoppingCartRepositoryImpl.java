@@ -49,6 +49,7 @@ public class FilterShoppingCartRepositoryImpl implements FilterShoppingCartRepos
                 .join(order.user, user)
                 .join(shoppingCart.product, product)
                 .join(product.catalog, catalog)
+                .setHint(GraphSemantic.LOAD.getJpaHintName(), entityManager.getEntityGraph("findAllOrdersOfUsers"))
                 .where(predicate)
                 .fetch();
     }
