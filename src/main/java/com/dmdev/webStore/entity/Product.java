@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -17,9 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@NamedEntityGraph(name = "withCatalog", attributeNodes = {
-        @NamedAttributeNode(value = "catalog")
-})
+//@NamedEntityGraph(name = "withCatalog", attributeNodes = {
+//        @NamedAttributeNode(value = "catalog")
+//})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

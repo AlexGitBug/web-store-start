@@ -38,18 +38,18 @@ VALUES
     ('Minsk', 'Vasheva', 10, '2021-12-04', 'CASH', (SELECT id FROM users WHERE email = 'vlad@gmail.com'));
 
 INSERT INTO shopping_cart (created_at, order_id, product_id)
-VALUES ('2022-12-10', (SELECT id FROM orders WHERE user_id = (SELECT id FROM users WHERE email = 'ivan@gmail.com')), (SELECT id FROM product WHERE model = '13')),
-       ('2022-11-05', (SELECT id FROM orders WHERE user_id = (SELECT id FROM users WHERE email = 'sveta@gmail.com')), (SELECT id FROM product WHERE model = '14')),
-       ('2022-10-04', (SELECT id FROM orders WHERE user_id = (SELECT id FROM users WHERE email = 'petr@gmail.com')), (SELECT id FROM product WHERE model = 'A80J')),
-       ('2022-10-04', (SELECT id FROM orders WHERE user_id = (SELECT id FROM users WHERE email = 'petr@gmail.com')), (SELECT id FROM product WHERE model = 'S22')),
-       ('2022-10-04', (SELECT id FROM orders WHERE user_id = (SELECT id FROM users WHERE email = 'petr@gmail.com')), (SELECT id FROM product WHERE model = 'XM3')),
-       ('2019-08-04', (SELECT id FROM orders WHERE user_id = (SELECT id FROM users WHERE email = 'sasha@gmail.com')), (SELECT id FROM product WHERE model = 'A80J')),
-       ('2022-07-04', (SELECT id FROM orders WHERE user_id = (SELECT id FROM users WHERE email = 'dima@gmail.com')), (SELECT id FROM product WHERE model = 'XM4')),
-       ('2022-07-04', (SELECT id FROM orders WHERE user_id = (SELECT id FROM users WHERE email = 'dima@gmail.com')), (SELECT id FROM product WHERE model = 'S22')),
-       ('2019-10-04',(SELECT id FROM orders WHERE user_id = (SELECT id FROM users WHERE email = 'ksenia@gmail.com')), (SELECT id FROM product WHERE model = '14')),
-       ('2019-10-04', (SELECT id FROM orders WHERE user_id = (SELECT id FROM users WHERE email = 'ksenia@gmail.com')), (SELECT id FROM product WHERE model = 'XM4')),
-       ('2022-11-05',  (SELECT id FROM orders WHERE user_id = (SELECT id FROM users WHERE email = 'vasia@gmail.com')), (SELECT id FROM product WHERE model = 'A80J')),
-       ('2021-12-04', (SELECT id FROM orders WHERE user_id = (SELECT id FROM users WHERE email = 'vlad@gmail.com')), (SELECT id FROM product WHERE model = 'XM5')),
-        ('2021-12-04',(SELECT id FROM orders WHERE user_id = (SELECT id FROM users WHERE email = 'vlad@gmail.com')), (SELECT id FROM product WHERE model = '13')),
-        ('2021-12-04', (SELECT id FROM orders WHERE user_id = (SELECT id FROM users WHERE email = 'vlad@gmail.com')), (SELECT id FROM product WHERE model = 'S21')),
-        ('2021-12-04', (SELECT id FROM orders WHERE user_id = (SELECT id FROM users WHERE email = 'vlad@gmail.com')), (SELECT id FROM product WHERE model = 'S20'));
+VALUES ('2022-12-10', (SELECT id FROM orders WHERE delivery_date = '2022-12-10'), (SELECT id FROM product WHERE model = '13')),
+       ('2022-11-05', (SELECT id FROM orders WHERE delivery_date = '2022-11-05'), (SELECT id FROM product WHERE model = '14')),
+       ('2022-10-04', (SELECT id FROM orders WHERE delivery_date = '2022-10-04'), (SELECT id FROM product WHERE model = 'A80J')),
+       ('2022-10-04', (SELECT id FROM orders WHERE delivery_date = '2022-10-04'), (SELECT id FROM product WHERE model = 'S22')),
+       ('2022-10-04', (SELECT id FROM orders WHERE delivery_date = '2022-10-04'), (SELECT id FROM product WHERE model = 'XM3')),
+       ('2019-08-04', (SELECT id FROM orders WHERE delivery_date = '2019-08-04'), (SELECT id FROM product WHERE model = 'A80J')),
+       ('2022-07-04', (SELECT id FROM orders WHERE delivery_date = '2022-07-04'), (SELECT id FROM product WHERE model = 'XM4')),
+       ('2022-07-04', (SELECT id FROM orders WHERE delivery_date = '2022-07-04'), (SELECT id FROM product WHERE model = 'S22')),
+       ('2019-10-04',(SELECT id FROM orders WHERE delivery_date = '2019-10-04'), (SELECT id FROM product WHERE model = '14')),
+       ('2019-10-04', (SELECT id FROM orders WHERE delivery_date = '2019-10-04'), (SELECT id FROM product WHERE model = 'XM4')),
+       ('2022-11-05',  (SELECT id FROM orders WHERE delivery_date = '2022-11-05'), (SELECT id FROM product WHERE model = 'A80J')),
+       ('2021-12-04', (SELECT id FROM orders WHERE delivery_date = '2021-12-04'), (SELECT id FROM product WHERE model = 'XM5')),
+        ('2021-12-04',(SELECT id FROM orders WHERE delivery_date = '2021-12-04'), (SELECT id FROM product WHERE model = '13')),
+        ('2021-12-04', (SELECT id FROM orders WHERE delivery_date = '2021-12-04'), (SELECT id FROM product WHERE model = 'S21')),
+        ('2021-12-04', (SELECT id FROM orders WHERE delivery_date = '2021-12-04'), (SELECT id FROM product WHERE model = 'S20'));

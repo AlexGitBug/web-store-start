@@ -1,15 +1,11 @@
 package dao.repository.integration;
 
 import com.dmdev.webStore.dao.repository.CatalogRepository;
-
-import com.dmdev.webStore.dao.repository.CatalogRepository;
 import com.dmdev.webStore.dao.repository.ProductRepository;
 import com.dmdev.webStore.dao.repository.filter.OrderFilter;
 import com.dmdev.webStore.dao.repository.filter.ProductFilter;
 import com.dmdev.webStore.entity.Catalog;
 import com.dmdev.webStore.entity.Product;
-import com.dmdev.webStore.entity.enums.Brand;
-
 
 import dao.repository.util.TestDelete;
 import dao.repository.integration.annotation.IT;
@@ -17,13 +13,12 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import dao.repository.util.MocksForRepository;
-import dao.repository.util.TestDataImporter;
+import org.springframework.test.context.jdbc.Sql;
 
 import javax.persistence.EntityManager;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import static com.dmdev.webStore.entity.enums.Brand.*;
 import static com.dmdev.webStore.entity.enums.Brand.SONY;
@@ -34,27 +29,22 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @IT
 @RequiredArgsConstructor
 public class ProductRepositoryIT {
-
     private final static String MODEL_13 = "13";
     private final static String MODEL_14 = "14";
     private final static String PRODUCT_CATEGORY_HEADPHONES = "Headphones";
     private final static String PRODUCT_CATEGORY_SMARTPHONE = "Smartphone";
     private final ProductRepository productRepository;
     private final CatalogRepository catalogRepository;
-
     private final EntityManager entityManager;
 
-    @BeforeEach
-    void deleteAllData() {
-        TestDelete.deleteAll(entityManager);
-    }
+//    @BeforeEach
+//    void deleteAllData() {
+//        TestDelete.deleteAll(entityManager);
+//    }
 
     @Test
     void deleteProductIT() {
-        var catalog = MocksForRepository.getCatalog();
-        catalogRepository.save(catalog);
-        var product = MocksForRepository.getProduct(catalog);
-        productRepository.save(product);
+        Product product = getProduct();
 
         productRepository.delete(product);
 
@@ -63,21 +53,14 @@ public class ProductRepositoryIT {
 
     @Test
     void saveProductIT() {
-        var catalog = MocksForRepository.getCatalog();
-        catalogRepository.save(catalog);
-        var product = MocksForRepository.getProduct(catalog);
-
-        productRepository.save(product);
+        Product product = getProduct();
 
         assertThat(product.getId()).isNotNull();
     }
 
     @Test
     void updateProductIT() {
-        var catalog = MocksForRepository.getCatalog();
-        catalogRepository.save(catalog);
-        var product = MocksForRepository.getProduct(catalog);
-        productRepository.save(product);
+        Product product = getProduct();
 
         var updatedProduct = productRepository.findById(product.getId());
         updatedProduct.ifPresent(it -> it.setModel("test-update"));
@@ -90,15 +73,12 @@ public class ProductRepositoryIT {
 
     }
 
-
     @Test
     void findByIdProductIT() {
-        var catalog = MocksForRepository.getCatalog();
-        catalogRepository.save(catalog);
-        var product = MocksForRepository.getProduct(catalog);
-        productRepository.save(product);
+        Product product = getProduct();
 
         var actualResult = productRepository.findById(product.getId());
+
         assertThat(actualResult).isPresent();
         assertThat(actualResult.get()).isEqualTo(product);
     }
@@ -124,7 +104,7 @@ public class ProductRepositoryIT {
 
     @Test
     void findListOfProductsEqIT() {
-        TestDataImporter.importData(entityManager);
+//        TestDataImporter.importData(entityManager);
 
         var productFilter = ProductFilter.builder()
                 .catalog(MocksForRepository.getCatalog())
@@ -151,8 +131,11 @@ public class ProductRepositoryIT {
     }
 
     @Test
+    @Sql({
+            "classpath:sql/data.sql"
+    })
     void findProductOfOneCategoryAndBrandBetweenTwoPriceIT() {
-        TestDataImporter.importData(entityManager);
+//        TestDataImporter.importData(entityManager);
 
         var productFilter = ProductFilter.builder()
                 .catalog(Catalog.builder()
@@ -163,9 +146,11 @@ public class ProductRepositoryIT {
 
         var actualResult = productRepository.findProductOfOneCategoryAndBrandBetweenTwoPrice(productFilter, 100, 5000);
 
-        var brands = actualResult.stream().map(Product::getBrand).collect(toList());
+        var brands = actualResult.stream()
+                .map(Product::getBrand).collect(toList());
 
-        var price = actualResult.stream().map(Product::getPrice).toList();
+        var price = actualResult.stream()
+                .map(Product::getPrice).toList();
 
         assertAll(
                 () -> assertThat(actualResult).hasSize(4),
@@ -179,7 +164,7 @@ public class ProductRepositoryIT {
 
     @Test
     void findProductsOfBrandAndCategoryAndLtPriceIT() {
-        TestDataImporter.importData(entityManager);
+//        TestDataImporter.importData(entityManager);
 
         var productFilter = ProductFilter.builder()
                 .catalog(MocksForRepository.getCatalog())
@@ -202,7 +187,7 @@ public class ProductRepositoryIT {
 
     @Test
     void findProductsOfBrandAndCategoryAndGtPriceIT() {
-        TestDataImporter.importData(entityManager);
+//        TestDataImporter.importData(entityManager);
 
         var productFilter = ProductFilter.builder()
                 .catalog(Catalog.builder()
@@ -214,9 +199,13 @@ public class ProductRepositoryIT {
 
         var actualResult = productRepository.findProductsOfBrandAndCategoryAndGtPrice(productFilter);
 
-        var model = actualResult.stream().map(Product::getModel).collect(toList());
+        var model = actualResult.stream()
+                .map(Product::getModel)
+                .collect(toList());
 
-        var brands = actualResult.stream().map(Product::getBrand).collect(toList());
+        var brands = actualResult.stream()
+                .map(Product::getBrand)
+                .collect(toList());
 
         assertAll(
                 () -> assertThat(actualResult).hasSize(2),
@@ -228,11 +217,12 @@ public class ProductRepositoryIT {
 
     @Test
     void findAllProductOfBrandIT() {
-        TestDataImporter.importData(entityManager);
+//        TestDataImporter.importData(entityManager);
 
-        var actualResult = productRepository.findAllProductOfBrand(SAMSUNG);
+        var actualResult = productRepository.findAllByBrand(SAMSUNG);
 
-        var brands = actualResult.stream().map(Product::getId).toList();
+        var brands = actualResult.stream()
+                .map(Product::getId).toList();
 
         assertAll(
                 () -> assertThat(actualResult).hasSize(5),
@@ -242,18 +232,26 @@ public class ProductRepositoryIT {
     }
 
     @Test
-    void findMinPriceOfProductIT() {
-        TestDataImporter.importData(entityManager);
+    void findProductWithMinPriceIT() {
+//        TestDataImporter.importData(entityManager);
 
-        var result = productRepository.findMinPriceOfProduct();
+        var actualResult = productRepository.findProductWithMinPrice();
 
-        assertThat(result.getPrice()).isEqualTo(150);
+        assertThat(actualResult.getPrice()).isEqualTo(150);
+    }
+
+    @Test
+    void findProductWithMaxPriceIT() {
+//        TestDataImporter.importData(entityManager);
+
+        var actualResult = productRepository.findProductWithMaxPrice();
+
+        assertThat(actualResult.getPrice()).isEqualTo(2000);
     }
 
     @Test
     void findAllProductsFromOrderIT() {
-
-        TestDataImporter.importData(entityManager);
+//        TestDataImporter.importData(entityManager);
 
         var orderFilter = OrderFilter.builder()
                 .deliveryDate(LocalDate.of(2022, 12, 10))
@@ -265,12 +263,36 @@ public class ProductRepositoryIT {
         var model = actualResult.stream()
                 .map(Product::getModel)
                 .collect(toList());
-        assertThat(model).contains(MODEL_13);
 
         assertAll(
                 () -> assertThat(actualResult).hasSize(1),
                 () -> assertThat(model)
                         .containsExactlyInAnyOrder(MODEL_13)
         );
+    }
+
+    @Test
+    void findAllByCatalog(){
+//        TestDataImporter.importData(entityManager);
+
+        List<Product> actualResult = productRepository.findAllByCatalogCategory(PRODUCT_CATEGORY_HEADPHONES);
+
+        List<Integer> products = actualResult.stream()
+                .map(Product::getId).toList();
+
+
+        assertAll(
+                () -> assertThat(actualResult).hasSize(5),
+                () -> assertThat(products)
+                        .containsExactlyInAnyOrder(8, 9, 10, 11, 12)
+        );
+    }
+
+    private Product getProduct() {
+        var catalog = MocksForRepository.getCatalog();
+        catalogRepository.save(catalog);
+        var product = MocksForRepository.getProduct(catalog);
+        productRepository.save(product);
+        return product;
     }
 }

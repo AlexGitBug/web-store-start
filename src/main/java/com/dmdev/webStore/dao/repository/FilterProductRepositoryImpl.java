@@ -18,6 +18,7 @@ import static com.dmdev.webStore.entity.QOrder.order;
 import static com.dmdev.webStore.entity.QProduct.product;
 import static com.dmdev.webStore.entity.QShoppingCart.shoppingCart;
 
+
 public class FilterProductRepositoryImpl implements FilterProductRepository {
     @Autowired
     private EntityManager entityManager;
@@ -93,24 +94,29 @@ public class FilterProductRepositoryImpl implements FilterProductRepository {
                 .join(shoppingCart.order, order)
                 .where(predicate)
                 .orderBy(product.price.asc())
-//                .setHint(GraphSemantic.LOAD.getJpaHintName(), entityManager.getEntityGraph("withCatalog"))
                 .distinct()
                 .fetch();
     }
 
     @Override
-    public List<Product> findAllProductOfBrand(Brand brand) {
+    public Product findProductWithMinPrice() {
         return new JPAQuery<Product>(entityManager)
                 .select(product)
                 .from(product)
-                .where(product.brand.eq(brand))
-                .fetch();
+                .orderBy(product.price.asc())
+                .limit(1)
+                .fetchOne();
+
     }
 
     @Override
-    @Query(value = "SELECT p FROM Product p ORDER BY p.price ASC LIMIT 1", nativeQuery = true)
-    public Product findMinPriceOfProduct() {
-        return null;
+    public Product findProductWithMaxPrice() {
+        return new JPAQuery<Product>(entityManager)
+                .select(product)
+                .from(product)
+                .orderBy(product.price.desc())
+                .limit(1)
+                .fetchOne();
     }
 
     @Override
@@ -128,7 +134,5 @@ public class FilterProductRepositoryImpl implements FilterProductRepository {
                 .where(predicate)
                 .fetch();
     }
-
-
 }
 

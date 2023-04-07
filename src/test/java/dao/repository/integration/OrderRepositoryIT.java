@@ -16,7 +16,6 @@ import dao.repository.util.MocksForRepository;
 import javax.persistence.EntityManager;
 
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,10 +36,7 @@ public class OrderRepositoryIT {
 
     @Test
     void deleteOrderIT() {
-        var user = MocksForRepository.getUser();
-        userRepository.save(user);
-        var order = MocksForRepository.getOrder(user);
-        orderRepository.save(order);
+        Order order = getOrder();
 
         orderRepository.delete(order);
 
@@ -49,21 +45,14 @@ public class OrderRepositoryIT {
 
     @Test
     void saveOrderIT() {
-        var user = MocksForRepository.getUser();
-        userRepository.save(user);
-        var order = MocksForRepository.getOrder(user);
-
-        orderRepository.save(order);
+        Order order = getOrder();
 
         assertThat(order.getId()).isNotNull();
     }
 
     @Test
     void updateOderIT() {
-        var user = MocksForRepository.getUser();
-        userRepository.save(user);
-        var order = MocksForRepository.getOrder(user);
-        orderRepository.save(order);
+        Order order = getOrder();
 
         var updatedOrder = orderRepository.findById(order.getId());
         updatedOrder.ifPresent(it -> it.setPaymentCondition(PaymentCondition.CARD));
@@ -77,10 +66,7 @@ public class OrderRepositoryIT {
 
     @Test
     void findByIdOrderIT() {
-        var user = MocksForRepository.getUser();
-        userRepository.save(user);
-        var order = MocksForRepository.getOrder(user);
-        orderRepository.save(order);
+        Order order = getOrder();
 
         var actualResult = orderRepository.findById(order.getId());
 
@@ -111,7 +97,7 @@ public class OrderRepositoryIT {
 
     @Test
     void findAllOrdersWithProductsOfOneUserIT() {
-        TestDataImporter.importData(entityManager);
+//        TestDataImporter.importData(entityManager);
 
         var filter = PersonalInformationFilter.builder()
                 .email(MAIL_PETR)
@@ -127,6 +113,14 @@ public class OrderRepositoryIT {
                         9, 9, 9
                 )
         );
+    }
+
+    private Order getOrder() {
+        var user = MocksForRepository.getUser();
+        userRepository.save(user);
+        var order = MocksForRepository.getOrder(user);
+        orderRepository.save(order);
+        return order;
     }
 
 }
