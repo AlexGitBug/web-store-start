@@ -6,21 +6,13 @@ import com.dmdev.webStore.dao.repository.ProductRepository;
 import com.dmdev.webStore.dao.repository.ShoppingCartRepository;
 import com.dmdev.webStore.dao.repository.UserRepository;
 import com.dmdev.webStore.dao.repository.filter.ProductFilter;
-import com.dmdev.webStore.dao.repository.filter.QPredicate;
-import com.dmdev.webStore.dao.repository.filter.ShoppingCartFilter;
 import com.dmdev.webStore.entity.Catalog;
 import com.dmdev.webStore.entity.ShoppingCart;
 import com.dmdev.webStore.entity.enums.Brand;
 
-import dao.repository.util.TestDelete;
-import dao.repository.integration.annotation.IT;
-import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
+import lombok.RequiredArgsConstructor;;
 import org.junit.jupiter.api.Test;
 import dao.repository.util.MocksForRepository;
-import dao.repository.util.TestDataImporter;
-
-import javax.persistence.EntityManager;
 import java.time.LocalDate;
 
 import static java.util.stream.Collectors.toList;

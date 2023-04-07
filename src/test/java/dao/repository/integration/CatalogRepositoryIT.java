@@ -2,14 +2,9 @@ package dao.repository.integration;
 
 import com.dmdev.webStore.dao.repository.CatalogRepository;
 import com.dmdev.webStore.entity.Catalog;
-import dao.repository.integration.annotation.IT;
-import dao.repository.util.TestDelete;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import dao.repository.util.MocksForRepository;
-
-import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;

@@ -7,15 +7,9 @@ import com.dmdev.webStore.dao.repository.filter.ProductFilter;
 import com.dmdev.webStore.entity.Catalog;
 import com.dmdev.webStore.entity.Product;
 
-import dao.repository.util.TestDelete;
-import dao.repository.integration.annotation.IT;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import dao.repository.util.MocksForRepository;
-import org.springframework.test.context.jdbc.Sql;
-
-import javax.persistence.EntityManager;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -128,7 +122,8 @@ public class ProductRepositoryIT extends IntegrationTestBase {
                 .brand(SONY)
                 .build();
 
-        var actualResult = productRepository.findProductOfOneCategoryAndBrandBetweenTwoPrice(productFilter, 100, 5000);
+        var actualResult = productRepository
+                .findProductOfOneCategoryAndBrandBetweenTwoPrice(productFilter, 100, 5000);
 
         var brands = actualResult.stream()
                 .map(Product::getBrand).collect(toList());
@@ -144,7 +139,6 @@ public class ProductRepositoryIT extends IntegrationTestBase {
                         300, 350, 350, 400)
         );
     }
-
 
     @Test
     void findProductsOfBrandAndCategoryAndLtPriceIT() {

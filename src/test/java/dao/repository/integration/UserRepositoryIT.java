@@ -1,18 +1,11 @@
 package dao.repository.integration;
 
 import com.dmdev.webStore.dao.repository.UserRepository;
-import com.dmdev.webStore.entity.User;
-import com.dmdev.webStore.entity.embeddable.PersonalInformation;
 import com.dmdev.webStore.entity.enums.Role;
-import dao.repository.util.TestDelete;
-import dao.repository.integration.annotation.IT;
-import dao.repository.util.TestDataImporter;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import dao.repository.util.MocksForRepository;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDate;
 
 import static java.util.stream.Collectors.toList;
