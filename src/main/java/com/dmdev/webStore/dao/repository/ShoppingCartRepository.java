@@ -7,6 +7,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.dmdev.webStore.dao.repository.filter.ProductFilter;
 import org.hibernate.graph.GraphSemantic;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -21,6 +22,7 @@ import static com.dmdev.webStore.entity.QUser.user;
 @Repository
 public interface ShoppingCartRepository extends
         JpaRepository<ShoppingCart, Integer>,
-        FilterShoppingCartRepository {
+        FilterShoppingCartRepository,
+        QuerydslPredicateExecutor<ShoppingCart> {
 
 }

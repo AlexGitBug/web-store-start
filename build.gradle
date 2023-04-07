@@ -8,6 +8,8 @@ plugins {
 group 'org.example'
 version '1.0-SNAPSHOT'
 
+apply from: 'version.gradle'
+
 repositories {
     mavenCentral()
 }
@@ -46,13 +48,17 @@ dependencies {
     implementation 'com.querydsl:querydsl-jpa'
     annotationProcessor 'com.querydsl:querydsl-apt'
 
+    implementation 'org.liquibase:liquibase-core'
+
     implementation "org.hibernate:hibernate-jcache:${hibernateJcacheVersion}"
     implementation "org.ehcache:ehcache:${ehcache}"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//    testImplementation "org.testcontainers:postgresql:${testcontainers}"
-    testImplementation "com.h2database:h2:${h2database}"
+
+//    testImplementation 'com.h2database:h2'
+    testImplementation "org.testcontainers:postgresql:${testcontainers}"
 }
+
 
 querydsl {
     jpa = true

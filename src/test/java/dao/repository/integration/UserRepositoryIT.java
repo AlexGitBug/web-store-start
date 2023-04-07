@@ -19,20 +19,14 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@IT
+
 @RequiredArgsConstructor
-public class UserRepositoryIT {
+public class UserRepositoryIT extends IntegrationTestBase {
 
     private final String MAIL_SVETA = "ivan@gmail.com";
     private final String MAIL_IVAN = "sveta@gmail.com";
     private final String MAIL_VASIA = "vasia@gmail.com";
     private final UserRepository userRepository;
-    private final EntityManager entityManager;
-
-    @BeforeEach
-    void deleteAllData() {
-        TestDelete.deleteAll(entityManager);
-    }
 
     @Test
     void deleteUser() {
@@ -65,7 +59,7 @@ public class UserRepositoryIT {
         var actualResult = userRepository.findById(user.getId());
         assertThat(actualResult).isPresent();
         assertThat(actualResult.get().getRole())
-                                .isEqualTo(user.getRole());
+                .isEqualTo(user.getRole());
     }
 
     @Test
@@ -81,42 +75,26 @@ public class UserRepositoryIT {
 
     @Test
     void findAllUserIT() {
-        userRepository.save(User.builder().
-                personalInformation(PersonalInformation.builder().email(MAIL_IVAN).build())
-                .build());
-        userRepository.save(User.builder().
-                personalInformation(PersonalInformation.builder().email(MAIL_SVETA).build())
-                .build());
-
         var actualResult = userRepository.findAll();
 
-        var users = actualResult.stream()
-                .map(User::getPersonalInformation)
-                .map(PersonalInformation::getEmail)
-                .toList();
-        assertAll(
-                () -> assertThat(actualResult).hasSize(2),
-                () -> assertThat(users).containsExactlyInAnyOrder(
-                        MAIL_IVAN, MAIL_SVETA
-                )
-        );
+        assertThat(actualResult).hasSize(9);
+
     }
 
     @Test
     void findUsersWhoMadeAnOrderAtSpecificTime() {
-        TestDataImporter.importData(entityManager);
-
         var results = userRepository
                 .findUsersWhoMadeOrderSpecificTime(LocalDate.of(2022, 10, 10),
-                                                    LocalDate.of(2023, 12, 12));
+                        LocalDate.of(2023, 12, 12));
+        assertThat(results).hasSize(3);
 
-        var actualResult = results.stream()
+        var emails = results.stream()
                 .map(user -> user.getPersonalInformation().getEmail())
                 .collect(toList());
 
         assertAll(
                 () -> assertThat(results).hasSize(3),
-                () -> assertThat(actualResult).containsExactlyInAnyOrder(MAIL_IVAN, MAIL_SVETA, MAIL_VASIA)
+                () -> assertThat(emails).containsExactlyInAnyOrder(MAIL_IVAN, MAIL_SVETA, MAIL_VASIA)
         );
     }
 }

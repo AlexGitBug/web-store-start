@@ -14,21 +14,14 @@ import javax.persistence.EntityManager;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@IT
 @RequiredArgsConstructor
-public class CatalogRepositoryIT {
+public class CatalogRepositoryIT extends IntegrationTestBase {
 
     private static final String SMARTPHONE = "Smartphone";
     private static final String TV = "TV";
     private static final String HEADPHONES = "Headphones";
 
     private final CatalogRepository catalogRepository;
-    private final EntityManager entityManager;
-
-    @BeforeEach
-    void deleteAllData() {
-        TestDelete.deleteAll(entityManager);
-    }
 
     @Test
     void deleteCatalogIT() {
@@ -76,10 +69,6 @@ public class CatalogRepositoryIT {
 
     @Test
     void findAllCatalogIT() {
-        catalogRepository.save(Catalog.builder().category(SMARTPHONE).build());
-        catalogRepository.save(Catalog.builder().category(TV).build());
-        catalogRepository.save(Catalog.builder().category(HEADPHONES).build());
-
         var actualResult = catalogRepository.findAll();
 
         var categories = actualResult.stream()

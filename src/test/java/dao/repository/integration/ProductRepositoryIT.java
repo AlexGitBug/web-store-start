@@ -26,21 +26,15 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@IT
 @RequiredArgsConstructor
-public class ProductRepositoryIT {
+public class ProductRepositoryIT extends IntegrationTestBase {
     private final static String MODEL_13 = "13";
     private final static String MODEL_14 = "14";
     private final static String PRODUCT_CATEGORY_HEADPHONES = "Headphones";
     private final static String PRODUCT_CATEGORY_SMARTPHONE = "Smartphone";
     private final ProductRepository productRepository;
     private final CatalogRepository catalogRepository;
-    private final EntityManager entityManager;
 
-//    @BeforeEach
-//    void deleteAllData() {
-//        TestDelete.deleteAll(entityManager);
-//    }
 
     @Test
     void deleteProductIT() {
@@ -85,27 +79,22 @@ public class ProductRepositoryIT {
 
     @Test
     void findAllProductIT() {
-        productRepository.save(Product.builder().model(MODEL_13).build());
-        productRepository.save(Product.builder().model(MODEL_14).build());
-
         var actualResult = productRepository.findAll();
 
         var models = actualResult.stream()
-                .map(Product::getModel)
+                .map(Product::getId)
                 .toList();
 
         assertAll(
-                () -> assertThat(actualResult).hasSize(2),
+                () -> assertThat(actualResult).hasSize(12),
                 () -> assertThat(models).containsExactlyInAnyOrder(
-                        MODEL_13, MODEL_14
+                        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
                 )
         );
     }
 
     @Test
     void findListOfProductsEqIT() {
-//        TestDataImporter.importData(entityManager);
-
         var productFilter = ProductFilter.builder()
                 .catalog(MocksForRepository.getCatalog())
                 .brand(APPLE)
@@ -131,12 +120,7 @@ public class ProductRepositoryIT {
     }
 
     @Test
-    @Sql({
-            "classpath:sql/data.sql"
-    })
     void findProductOfOneCategoryAndBrandBetweenTwoPriceIT() {
-//        TestDataImporter.importData(entityManager);
-
         var productFilter = ProductFilter.builder()
                 .catalog(Catalog.builder()
                         .category(PRODUCT_CATEGORY_HEADPHONES)
@@ -164,8 +148,6 @@ public class ProductRepositoryIT {
 
     @Test
     void findProductsOfBrandAndCategoryAndLtPriceIT() {
-//        TestDataImporter.importData(entityManager);
-
         var productFilter = ProductFilter.builder()
                 .catalog(MocksForRepository.getCatalog())
                 .brand(APPLE)
@@ -187,8 +169,6 @@ public class ProductRepositoryIT {
 
     @Test
     void findProductsOfBrandAndCategoryAndGtPriceIT() {
-//        TestDataImporter.importData(entityManager);
-
         var productFilter = ProductFilter.builder()
                 .catalog(Catalog.builder()
                         .category(PRODUCT_CATEGORY_SMARTPHONE)
@@ -217,8 +197,6 @@ public class ProductRepositoryIT {
 
     @Test
     void findAllProductOfBrandIT() {
-//        TestDataImporter.importData(entityManager);
-
         var actualResult = productRepository.findAllByBrand(SAMSUNG);
 
         var brands = actualResult.stream()
@@ -227,14 +205,12 @@ public class ProductRepositoryIT {
         assertAll(
                 () -> assertThat(actualResult).hasSize(5),
                 () -> assertThat(brands)
-                        .containsExactlyInAnyOrder(16, 17, 18, 19, 24)
+                        .containsExactlyInAnyOrder(4, 5, 6, 7, 12)
         );
     }
 
     @Test
     void findProductWithMinPriceIT() {
-//        TestDataImporter.importData(entityManager);
-
         var actualResult = productRepository.findProductWithMinPrice();
 
         assertThat(actualResult.getPrice()).isEqualTo(150);
@@ -242,8 +218,6 @@ public class ProductRepositoryIT {
 
     @Test
     void findProductWithMaxPriceIT() {
-//        TestDataImporter.importData(entityManager);
-
         var actualResult = productRepository.findProductWithMaxPrice();
 
         assertThat(actualResult.getPrice()).isEqualTo(2000);
@@ -251,8 +225,6 @@ public class ProductRepositoryIT {
 
     @Test
     void findAllProductsFromOrderIT() {
-//        TestDataImporter.importData(entityManager);
-
         var orderFilter = OrderFilter.builder()
                 .deliveryDate(LocalDate.of(2022, 12, 10))
                 .build();
@@ -272,9 +244,7 @@ public class ProductRepositoryIT {
     }
 
     @Test
-    void findAllByCatalog(){
-//        TestDataImporter.importData(entityManager);
-
+    void findAllByCatalog() {
         List<Product> actualResult = productRepository.findAllByCatalogCategory(PRODUCT_CATEGORY_HEADPHONES);
 
         List<Integer> products = actualResult.stream()

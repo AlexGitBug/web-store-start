@@ -32,18 +32,18 @@ public class MocksForRepository {
 
     public static Catalog getCatalog() {
         return Catalog.builder()
-                .category("Smartphone")
+                .category("test")
                 .build();
     }
 
     public static Order getOrder(User user) {
         return Order.builder()
                 .deliveryAdress(DeliveryAdress.builder()
-                        .city("Minsk")
-                        .street("Pobedi")
-                        .building(10)
+                        .city("test")
+                        .street("test")
+                        .building(1000)
                         .build())
-                .deliveryDate(LocalDate.of(2022, 11, 5))
+                .deliveryDate(LocalDate.of(1111, 11, 1))
                 .paymentCondition(PaymentCondition.CASH)
                 .user(user)
                 .build();
@@ -52,11 +52,11 @@ public class MocksForRepository {
     public static User getUser() {
         return User.builder()
                 .personalInformation(PersonalInformation.builder()
-                        .firstName("Sasha")
-                        .lastName("Sasheva")
-                        .telephone("123-45-78")
-                        .email("sasha@gmail.com")
-                        .birthDate(LocalDate.of(1991, 10, 5))
+                        .firstName("test")
+                        .lastName("test")
+                        .telephone("test")
+                        .email("test@gmail.com")
+                        .birthDate(LocalDate.of(1111, 11, 1))
                         .build())
                 .role(Role.USER)
                 .build();
@@ -64,7 +64,7 @@ public class MocksForRepository {
 
     public static ShoppingCart shoppingCart(Order order,Product product) {
         return ShoppingCart.builder()
-                .createdAt(LocalDate.of(2019, 8, 4))
+                .createdAt(LocalDate.of(2018, 12, 1))
                 .product(product)
                 .order(order)
                 .build();

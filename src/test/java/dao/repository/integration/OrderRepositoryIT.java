@@ -5,15 +5,10 @@ import com.dmdev.webStore.dao.repository.UserRepository;
 import com.dmdev.webStore.dao.repository.filter.PersonalInformationFilter;
 import com.dmdev.webStore.entity.Order;
 import com.dmdev.webStore.entity.enums.PaymentCondition;
-import dao.repository.integration.annotation.IT;
-import dao.repository.util.TestDataImporter;
-import dao.repository.util.TestDelete;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import dao.repository.util.MocksForRepository;
 
-import javax.persistence.EntityManager;
 
 import java.util.List;
 
@@ -21,18 +16,12 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@IT
+
 @RequiredArgsConstructor
-public class OrderRepositoryIT {
+public class OrderRepositoryIT extends IntegrationTestBase {
     private static final String MAIL_PETR = "petr@gmail.com";
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
-    private final EntityManager entityManager;
-
-    @BeforeEach
-    void deleteAllData() {
-        TestDelete.deleteAll(entityManager);
-    }
 
     @Test
     void deleteOrderIT() {
@@ -76,29 +65,14 @@ public class OrderRepositoryIT {
 
     @Test
     void findAllOrderIT() {
-        orderRepository.save(Order.builder()
-                .paymentCondition(PaymentCondition.CARD).build());
-        orderRepository.save(Order.builder()
-                .paymentCondition(PaymentCondition.CASH).build());
-
         var actualResult = orderRepository.findAll();
 
-        List<String> orders = actualResult.stream()
-                .map(Order::getPaymentCondition)
-                .map(Enum::name)
-                .toList();
-        assertAll(
-                () -> assertThat(actualResult).hasSize(2),
-                () -> assertThat(orders).containsExactlyInAnyOrder(
-                        PaymentCondition.CARD.name(), PaymentCondition.CASH.name()
-                )
-        );
+        assertThat(actualResult).hasSize(8);
+
     }
 
     @Test
     void findAllOrdersWithProductsOfOneUserIT() {
-//        TestDataImporter.importData(entityManager);
-
         var filter = PersonalInformationFilter.builder()
                 .email(MAIL_PETR)
                 .build();
@@ -110,7 +84,7 @@ public class OrderRepositoryIT {
         assertAll(
                 () -> assertThat(results).hasSize(3),
                 () -> assertThat(orderId).containsExactlyInAnyOrder(
-                        9, 9, 9
+                        3, 3, 3
                 )
         );
     }

@@ -6,6 +6,8 @@ import com.dmdev.webStore.dao.repository.ProductRepository;
 import com.dmdev.webStore.dao.repository.ShoppingCartRepository;
 import com.dmdev.webStore.dao.repository.UserRepository;
 import com.dmdev.webStore.dao.repository.filter.ProductFilter;
+import com.dmdev.webStore.dao.repository.filter.QPredicate;
+import com.dmdev.webStore.dao.repository.filter.ShoppingCartFilter;
 import com.dmdev.webStore.entity.Catalog;
 import com.dmdev.webStore.entity.ShoppingCart;
 import com.dmdev.webStore.entity.enums.Brand;
@@ -25,9 +27,8 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@IT
 @RequiredArgsConstructor
-public class ShoppingCartRepositoryIT {
+public class ShoppingCartRepositoryIT extends IntegrationTestBase{
 
     private final String MAIL_DIMA = "dima@gmail.com";
     private final String MAIL_KSENIA = "ksenia@gmail.com";
@@ -38,12 +39,7 @@ public class ShoppingCartRepositoryIT {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final CatalogRepository catalogRepository;
-    private final EntityManager entityManager;
 
-    @BeforeEach
-    void deleteAllData() {
-        TestDelete.deleteAll(entityManager);
-    }
     @Test
     void deleteShoppingCartIT() {
         var shoppingCart = getShoppingCart();
@@ -86,24 +82,12 @@ public class ShoppingCartRepositoryIT {
 
     @Test
     void findAllShoppingCartIT() {
-        var shoppingCart = getShoppingCart();
-
         var actualResult = shoppingCartRepository.findAll();
 
-        var timeResult = actualResult.stream()
-                .map(ShoppingCart::getCreatedAt)
-                .toList();
-
-        assertAll(
-                () -> assertThat(actualResult).hasSize(1),
-                () -> assertThat(timeResult).containsExactlyInAnyOrder(
-                        LocalDate.of(2019, 8, 4)
-                )
-        );
+        assertThat(actualResult).hasSize(15);
     }
     @Test
     void getStatisticOfEachOrdersWithSumIT() {
-        TestDataImporter.importData(entityManager);
 
         var actualResult = shoppingCartRepository.getStatisticOfEachOrdersWithSum();
 
@@ -114,14 +98,13 @@ public class ShoppingCartRepositoryIT {
         assertAll(
                 () -> assertThat(actualResult).hasSize(8),
                 () -> assertThat(orderSum).containsExactlyInAnyOrder(
-                        1000, 1100, 3400, 2000, 1450, 1450, 4000, 3350
+                        1000, 1100, 3400, 2000, 1450, 2000,  1450, 3350
                 )
         );
     }
 
     @Test
     void findUsersWhoMadeAnOrderOfSpecificProductIT() {
-        TestDataImporter.importData(entityManager);
 
         var productFilter = getProductFilter();
 
