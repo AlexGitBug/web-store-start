@@ -1,6 +1,7 @@
 package dao.repository.integration;
 
 import com.dmdev.webStore.dao.repository.UserRepository;
+import com.dmdev.webStore.dao.repository.filter.UserFilter;
 import com.dmdev.webStore.entity.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -76,9 +77,11 @@ public class UserRepositoryIT extends IntegrationTestBase {
 
     @Test
     void findUsersWhoMadeAnOrderAtSpecificTime() {
+        var filter = UserFilter.builder().startDate(LocalDate.of(2022, 10, 10))
+                .endDate(LocalDate.of(2023, 12, 12)).build();
+
         var results = userRepository
-                .findUsersWhoMadeOrderSpecificTime(LocalDate.of(2022, 10, 10),
-                        LocalDate.of(2023, 12, 12));
+                .findUsersWhoMadeOrderSpecificTime(filter);
         assertThat(results).hasSize(3);
 
         var emails = results.stream()

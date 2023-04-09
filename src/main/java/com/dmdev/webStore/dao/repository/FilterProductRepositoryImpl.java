@@ -39,13 +39,13 @@ public class FilterProductRepositoryImpl implements FilterProductRepository {
     }
 
     @Override
-    public List<Product> findProductOfOneCategoryAndBrandBetweenTwoPrice(ProductFilter filter, Integer sumA, Integer sumB) {
+    public List<Product> findProductOfOneCategoryAndBrandBetweenTwoPrice(ProductFilter filter) {
 
         var predicate = QPredicate.builder()
                 .add(filter.getCatalog().getCategory(), catalog.category::eq)
                 .add(filter.getBrand(), product.brand::eq)
-                .add(sumA, product.price::gt)
-                .add(sumB, product.price::lt)
+                .add(filter.getPriceA(), product.price::gt)
+                .add(filter.getPriceB(), product.price::lt)
                 .buildAnd();
 
         return new JPAQuery<Product>(entityManager)
@@ -71,9 +71,8 @@ public class FilterProductRepositoryImpl implements FilterProductRepository {
                 .select(product)
                 .from(product)
                 .join(product.catalog, catalog)
-                .join(product.shoppingCarts, shoppingCart)
-                .join(shoppingCart.order, order)
                 .where(predicate)
+                .distinct()
                 .fetch();
     }
 
@@ -90,8 +89,6 @@ public class FilterProductRepositoryImpl implements FilterProductRepository {
                 .select(product)
                 .from(product)
                 .join(product.catalog, catalog)
-                .join(product.shoppingCarts, shoppingCart)
-                .join(shoppingCart.order, order)
                 .where(predicate)
                 .orderBy(product.price.asc())
                 .distinct()

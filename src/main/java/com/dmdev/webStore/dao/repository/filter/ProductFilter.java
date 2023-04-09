@@ -17,6 +17,8 @@ public class ProductFilter {
     String model;
     LocalDate dateOfRelease;
     Integer price;
+    Integer priceA;
+    Integer priceB;
     Color color;
 
 }

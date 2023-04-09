@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.OptimisticLockType;
+import org.hibernate.annotations.OptimisticLocking;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.Column;
@@ -19,6 +21,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +32,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "users", schema = "public")
+@OptimisticLocking(type =  OptimisticLockType.VERSION)
 public class User implements BaseEntity<Integer> {
 
     @Id
@@ -37,6 +41,9 @@ public class User implements BaseEntity<Integer> {
 
     @Embedded
     private PersonalInformation personalInformation;
+
+    @Version
+    private Integer version;
 
     @Column
     @Enumerated(EnumType.STRING)

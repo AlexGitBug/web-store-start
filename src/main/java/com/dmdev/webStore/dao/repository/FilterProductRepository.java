@@ -10,7 +10,7 @@ public interface FilterProductRepository {
 
     List<Product> findListOfProductsEq(ProductFilter filter);
 
-    List<Product> findProductOfOneCategoryAndBrandBetweenTwoPrice(ProductFilter filter, Integer sumA, Integer sumB);
+    List<Product> findProductOfOneCategoryAndBrandBetweenTwoPrice(ProductFilter filter);
 
     List<Product> findProductsOfBrandAndCategoryAndLtPrice(ProductFilter filter);
 

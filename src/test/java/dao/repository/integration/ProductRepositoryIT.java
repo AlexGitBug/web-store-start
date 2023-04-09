@@ -90,7 +90,7 @@ public class ProductRepositoryIT extends IntegrationTestBase {
     @Test
     void findListOfProductsEqIT() {
         var productFilter = ProductFilter.builder()
-                .catalog(MocksForRepository.getCatalog())
+                .catalog(MocksForRepository.getCatalogSmartphone())
                 .brand(APPLE)
                 .build();
 
@@ -120,10 +120,12 @@ public class ProductRepositoryIT extends IntegrationTestBase {
                         .category(PRODUCT_CATEGORY_HEADPHONES)
                         .build())
                 .brand(SONY)
+                .priceA(100)
+                .priceB(5000)
                 .build();
 
         var actualResult = productRepository
-                .findProductOfOneCategoryAndBrandBetweenTwoPrice(productFilter, 100, 5000);
+                .findProductOfOneCategoryAndBrandBetweenTwoPrice(productFilter);
 
         var brands = actualResult.stream()
                 .map(Product::getBrand).collect(toList());
@@ -143,7 +145,7 @@ public class ProductRepositoryIT extends IntegrationTestBase {
     @Test
     void findProductsOfBrandAndCategoryAndLtPriceIT() {
         var productFilter = ProductFilter.builder()
-                .catalog(MocksForRepository.getCatalog())
+                .catalog(MocksForRepository.getCatalogSmartphone())
                 .brand(APPLE)
                 .price(1050)
                 .build();
@@ -164,9 +166,7 @@ public class ProductRepositoryIT extends IntegrationTestBase {
     @Test
     void findProductsOfBrandAndCategoryAndGtPriceIT() {
         var productFilter = ProductFilter.builder()
-                .catalog(Catalog.builder()
-                        .category(PRODUCT_CATEGORY_SMARTPHONE)
-                        .build())
+                .catalog(MocksForRepository.getCatalogSmartphone())
                 .brand(APPLE)
                 .price(999)
                 .build();

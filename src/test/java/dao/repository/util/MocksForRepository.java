@@ -30,7 +30,11 @@ public class MocksForRepository {
                 .build();
     }
 
-    public static Catalog getCatalog() {
+    public static Catalog getCatalogSmartphone() {
+        return Catalog.builder()
+                .category("Smartphone")
+                .build();
+    }  public static Catalog getCatalog() {
         return Catalog.builder()
                 .category("test")
                 .build();
