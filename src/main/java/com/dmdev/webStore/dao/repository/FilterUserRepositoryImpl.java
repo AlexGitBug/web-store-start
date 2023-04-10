@@ -4,19 +4,18 @@ import com.dmdev.webStore.dao.repository.filter.QPredicate;
 import com.dmdev.webStore.dao.repository.filter.UserFilter;
 import com.dmdev.webStore.entity.User;
 import com.querydsl.jpa.impl.JPAQuery;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+
 
 import javax.persistence.EntityManager;
-import java.time.LocalDate;
 import java.util.List;
 
 import static com.dmdev.webStore.entity.QOrder.order;
 import static com.dmdev.webStore.entity.QUser.user;
 
-
+@RequiredArgsConstructor
 public class FilterUserRepositoryImpl implements FilterUserRepository {
-    @Autowired
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
     @Override
     public List<User> findUsersWhoMadeOrderSpecificTime(UserFilter filter) {
 

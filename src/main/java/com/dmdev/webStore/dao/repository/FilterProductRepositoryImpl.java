@@ -6,6 +6,7 @@ import com.dmdev.webStore.dao.repository.filter.QPredicate;
 import com.dmdev.webStore.entity.Product;
 import com.dmdev.webStore.entity.enums.Brand;
 import com.querydsl.jpa.impl.JPAQuery;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.graph.GraphSemantic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
@@ -18,10 +19,9 @@ import static com.dmdev.webStore.entity.QOrder.order;
 import static com.dmdev.webStore.entity.QProduct.product;
 import static com.dmdev.webStore.entity.QShoppingCart.shoppingCart;
 
-
+@RequiredArgsConstructor
 public class FilterProductRepositoryImpl implements FilterProductRepository {
-    @Autowired
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     public List<Product> findListOfProductsEq(ProductFilter filter) {
 

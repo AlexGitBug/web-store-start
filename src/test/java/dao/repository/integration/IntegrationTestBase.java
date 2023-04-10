@@ -1,13 +1,13 @@
 package dao.repository.integration;
 
-import dao.repository.integration.annotation.IT;
+import dao.repository.integration.annotation.IntegrationTest;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-@IT
+@IntegrationTest
 @Sql({
         "classpath:sql/data.sql"
 })

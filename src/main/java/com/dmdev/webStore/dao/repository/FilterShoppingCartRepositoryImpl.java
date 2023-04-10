@@ -18,10 +18,9 @@ import static com.dmdev.webStore.entity.QOrder.order;
 import static com.dmdev.webStore.entity.QProduct.product;
 import static com.dmdev.webStore.entity.QShoppingCart.shoppingCart;
 import static com.dmdev.webStore.entity.QUser.user;
-
+@RequiredArgsConstructor
 public class FilterShoppingCartRepositoryImpl implements FilterShoppingCartRepository {
-    @Autowired
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
     @Override
     public List<Tuple> getStatisticOfEachOrdersWithSum() {
         return new JPAQuery<Tuple>(entityManager)

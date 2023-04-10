@@ -4,6 +4,7 @@ import com.dmdev.webStore.dao.repository.filter.PersonalInformationFilter;
 import com.dmdev.webStore.dao.repository.filter.QPredicate;
 import com.dmdev.webStore.entity.Order;
 import com.querydsl.jpa.impl.JPAQuery;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.graph.GraphSemantic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -16,9 +17,9 @@ import static com.dmdev.webStore.entity.QProduct.product;
 import static com.dmdev.webStore.entity.QShoppingCart.shoppingCart;
 import static com.dmdev.webStore.entity.QUser.user;
 
+@RequiredArgsConstructor
 public class FilterOrderRepositoryImpl implements FilterOrderRepository {
-    @Autowired
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
     @Override
     public List<Order> findAllOrdersWithProductsOfOneUser(PersonalInformationFilter personalInformationFilter) {
         var predicate = QPredicate.builder()
