@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface FilterOrderRepository {
 
-    public List<Order> findAllOrdersWithProductsOfOneUser(PersonalInformationFilter personalInformationFilter);
+    List<Order> findAllOrdersWithProductsOfOneUser(PersonalInformationFilter personalInformationFilter);
 }

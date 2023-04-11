@@ -19,6 +19,8 @@ import static com.dmdev.webStore.entity.enums.Brand.SONY;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RequiredArgsConstructor
 public class ProductRepositoryIT extends IntegrationTestBase {
@@ -204,17 +206,17 @@ public class ProductRepositoryIT extends IntegrationTestBase {
     }
 
     @Test
-    void findProductWithMinPriceIT() {
-        var actualResult = productRepository.findProductWithMinPrice();
-
-        assertThat(actualResult.getPrice()).isEqualTo(150);
+    void findTopByOrderByPriceAsc() {
+        var actualResult = productRepository.findTopByOrderByPriceAsc();
+        assertTrue(actualResult.isPresent());
+        actualResult.ifPresent(product -> assertEquals(12, product.getId()));
     }
 
     @Test
-    void findProductWithMaxPriceIT() {
-        var actualResult = productRepository.findProductWithMaxPrice();
-
-        assertThat(actualResult.getPrice()).isEqualTo(2000);
+    void findTopByOrderByPriceDesc() {
+        var actualResult = productRepository.findTopByOrderByPriceDesc();
+        assertTrue(actualResult.isPresent());
+        actualResult.ifPresent(product -> assertEquals(7, product.getId()));
     }
 
     @Test

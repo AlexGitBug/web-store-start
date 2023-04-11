@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 import static com.dmdev.webStore.entity.QCatalog.catalog;
 import static com.dmdev.webStore.entity.QOrder.order;
@@ -29,5 +30,7 @@ public interface ProductRepository extends
     List<Product> findAllByBrand(Brand brand);
     List<Product> findAllByCatalogCategory(String catalog);
 
+    Optional<Product> findTopByOrderByPriceAsc();
+    Optional<Product> findTopByOrderByPriceDesc();
 }
 

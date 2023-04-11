@@ -5,6 +5,7 @@ import com.dmdev.webStore.dao.repository.filter.ProductFilter;
 import com.dmdev.webStore.entity.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FilterProductRepository {
 
@@ -18,7 +19,5 @@ public interface FilterProductRepository {
 
     List<Product> findAllProductsFromOrder(OrderFilter orderFilter);
 
-    Product findProductWithMinPrice();
-    Product findProductWithMaxPrice();
 
 }

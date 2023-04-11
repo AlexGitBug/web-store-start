@@ -96,27 +96,6 @@ public class FilterProductRepositoryImpl implements FilterProductRepository {
     }
 
     @Override
-    public Product findProductWithMinPrice() {
-        return new JPAQuery<Product>(entityManager)
-                .select(product)
-                .from(product)
-                .orderBy(product.price.asc())
-                .limit(1)
-                .fetchOne();
-
-    }
-
-    @Override
-    public Product findProductWithMaxPrice() {
-        return new JPAQuery<Product>(entityManager)
-                .select(product)
-                .from(product)
-                .orderBy(product.price.desc())
-                .limit(1)
-                .fetchOne();
-    }
-
-    @Override
     public List<Product> findAllProductsFromOrder(OrderFilter orderFilter) {
 
         var predicate = QPredicate.builder()
