@@ -1,11 +1,11 @@
-package dao.repository.integration;
+package com.dmdev.webStore.integration;
 
 import com.dmdev.webStore.dao.repository.UserRepository;
 import com.dmdev.webStore.dao.repository.filter.UserFilter;
 import com.dmdev.webStore.entity.enums.Role;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import dao.repository.util.MocksForRepository;
+import com.dmdev.webStore.util.MocksForRepository;
 
 import java.time.LocalDate;
 

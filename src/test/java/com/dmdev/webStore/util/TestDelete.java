@@ -1,4 +1,4 @@
-package dao.repository.util;
+package com.dmdev.webStore.util;
 
 
 import javax.persistence.EntityManager;

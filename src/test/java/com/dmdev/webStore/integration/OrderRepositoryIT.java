@@ -1,4 +1,4 @@
-package dao.repository.integration;
+package com.dmdev.webStore.integration;
 
 import com.dmdev.webStore.dao.repository.OrderRepository;
 import com.dmdev.webStore.dao.repository.UserRepository;
@@ -7,7 +7,7 @@ import com.dmdev.webStore.entity.Order;
 import com.dmdev.webStore.entity.enums.PaymentCondition;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import dao.repository.util.MocksForRepository;
+import com.dmdev.webStore.util.MocksForRepository;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;

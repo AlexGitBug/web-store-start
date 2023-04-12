@@ -1,4 +1,4 @@
-package dao.repository.integration.annotation;
+package com.dmdev.webStore.annotation;
 
 import com.dmdev.webStore.ApplicationRunner;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package dao.repository.integration;
+package com.dmdev.webStore.integration;
 
 import com.dmdev.webStore.dao.repository.CatalogRepository;
 import com.dmdev.webStore.dao.repository.ProductRepository;
@@ -9,7 +9,7 @@ import com.dmdev.webStore.entity.Product;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import dao.repository.util.MocksForRepository;
+import com.dmdev.webStore.util.MocksForRepository;
 
 import java.time.LocalDate;
 import java.util.List;

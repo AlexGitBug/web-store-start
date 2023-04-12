@@ -19,6 +19,7 @@ spring:
           cache:
             region:
               factory_class: org.hibernate.cache.jcache.internal.JCacheRegionFactory
+    open-in-view: false
 
 logging:
   level:

@@ -15,10 +15,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
-//@NamedEntityGraph(name = "withCatalog", attributeNodes = {
-//        @NamedAttributeNode(value = "catalog")
-//})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,9 +34,7 @@ public class Product implements BaseEntity<Integer> {
 
     @Enumerated(EnumType.STRING)
     private Brand brand;
-
     private String model;
-
     private LocalDate dateOfRelease;
     private Integer price;
 
