@@ -26,7 +26,7 @@ public class FilterProductRepositoryImpl implements FilterProductRepository {
     public List<Product> findListOfProductsEq(ProductFilter filter) {
 
         var predicate = QPredicate.builder()
-                .add(filter.getCatalog().getCategory(), catalog.category::eq)
+                .add(filter.getCatalogId(), catalog.id::eq)
                 .add(filter.getBrand(), product.brand::eq)
                 .buildAnd();
 
@@ -42,7 +42,7 @@ public class FilterProductRepositoryImpl implements FilterProductRepository {
     public List<Product> findProductOfOneCategoryAndBrandBetweenTwoPrice(ProductFilter filter) {
 
         var predicate = QPredicate.builder()
-                .add(filter.getCatalog().getCategory(), catalog.category::eq)
+                .add(filter.getCatalogId(), catalog.id::eq)
                 .add(filter.getBrand(), product.brand::eq)
                 .add(filter.getPriceA(), product.price::gt)
                 .add(filter.getPriceB(), product.price::lt)
@@ -62,7 +62,7 @@ public class FilterProductRepositoryImpl implements FilterProductRepository {
     public List<Product> findProductsOfBrandAndCategoryAndLtPrice(ProductFilter filter) {
 
         var predicate = QPredicate.builder()
-                .add(filter.getCatalog().getCategory(), catalog.category::eq)
+                .add(filter.getCatalogId(), catalog.id::eq)
                 .add(filter.getBrand(), product.brand::eq)
                 .add(filter.getPrice(), product.price::lt)
                 .buildAnd();
@@ -80,7 +80,7 @@ public class FilterProductRepositoryImpl implements FilterProductRepository {
     public List<Product> findProductsOfBrandAndCategoryAndGtPrice(ProductFilter filter) {
 
         var predicate = QPredicate.builder()
-                .add(filter.getCatalog().getCategory(), catalog.category::eq)
+                .add(filter.getCatalogId(), catalog.id::eq)
                 .add(filter.getBrand(), product.brand::eq)
                 .add(filter.getPrice(), product.price::gt)
                 .buildAnd();

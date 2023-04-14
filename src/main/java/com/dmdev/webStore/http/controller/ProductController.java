@@ -2,7 +2,9 @@ package com.dmdev.webStore.http.controller;
 
 
 import com.dmdev.webStore.dao.repository.filter.ProductFilter;
+import com.dmdev.webStore.dto.CatalogReadDto;
 import com.dmdev.webStore.dto.ProductCreateEditDto;
+import com.dmdev.webStore.dto.ProductReadDto;
 import com.dmdev.webStore.entity.enums.Brand;
 import com.dmdev.webStore.entity.enums.Color;
 import com.dmdev.webStore.service.CatalogService;

@@ -37,7 +37,7 @@ public class FilterShoppingCartRepositoryImpl implements FilterShoppingCartRepos
     public List<ShoppingCart> findUsersWhoMadeOrderOfSpecificProduct(ProductFilter productFilter) {
         var predicate = QPredicate.builder()
                 .add(productFilter.getBrand(), product.brand::eq)
-                .add(productFilter.getCatalog().getCategory(), catalog.category::eq)
+                .add(productFilter.getCatalogId(), catalog.id::eq)
                 .add(productFilter.getModel(), product.model::eq)
                 .buildAnd();
 

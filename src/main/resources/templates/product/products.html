@@ -8,19 +8,28 @@
 <form action="/products">
     <div>
         <label for="catalog">Catalog:
-            <select id="catalog" name="catalog">
+            <select id="catalog" name="catalogId">
                 <option th:each="catalog : ${catalogs}"
                         th:value="${catalog.getId()}"
                         th:text="${catalog.getCategory()}">Catalog category
-                    <!--                        th:selected="${catalog.getCategory() == product.catalog.getCategory()}"-->
+                </option>
+            </select>
+        </label>
+    </div>
+    <div>
+        <label for="brand">Brand:
+            <select id="brand" name="brand">
+                <option th:each="brand : ${brands}"
+                        th:value="${brand}"
+                        th:text="${brand.name()}">Catalog category
                 </option>
             </select>
         </label>
     </div>
     <label for="brand">Brand:
         <input id="brand" type="text" name="brand">
-    </label>
-    <button type="submit">Filter</button>
+    </label><br>
+    <button type="submit">Filter</button><br>
 </form>
 <div th:each="product : ${products}">
     <a th:href="@{'/products/' + ${product.id}}"

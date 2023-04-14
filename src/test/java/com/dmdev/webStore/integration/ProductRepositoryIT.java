@@ -93,11 +93,11 @@ public class ProductRepositoryIT extends IntegrationTestBase {
     @Test
     void findListOfProductsEqIT() {
         var productFilter = ProductFilter.builder()
-                .catalog(MocksForRepository.getCatalogSmartphone())
+//                .catalog(MocksForRepository.getCatalogSmartphone())
                 .brand(APPLE)
                 .build();
 
-        var actualResult = productRepository.findListOfProductsEq(productFilter, CatalogFilter.builder().build());
+        var actualResult = productRepository.findListOfProductsEq(productFilter);
 
         var categoryResult = actualResult.stream()
                 .map(it -> it.getCatalog().getCategory())
@@ -119,9 +119,9 @@ public class ProductRepositoryIT extends IntegrationTestBase {
     @Test
     void findProductOfOneCategoryAndBrandBetweenTwoPriceIT() {
         var productFilter = ProductFilter.builder()
-                .catalog(Catalog.builder()
-                        .category(PRODUCT_CATEGORY_HEADPHONES)
-                        .build())
+//                .catalog(Catalog.builder()
+//                        .category(PRODUCT_CATEGORY_HEADPHONES)
+//                        .build())
                 .brand(SONY)
                 .priceA(100)
                 .priceB(5000)
@@ -148,7 +148,7 @@ public class ProductRepositoryIT extends IntegrationTestBase {
     @Test
     void findProductsOfBrandAndCategoryAndLtPriceIT() {
         var productFilter = ProductFilter.builder()
-                .catalog(MocksForRepository.getCatalogSmartphone())
+//                .catalog(MocksForRepository.getCatalogSmartphone())
                 .brand(APPLE)
                 .price(1050)
                 .build();
@@ -169,7 +169,7 @@ public class ProductRepositoryIT extends IntegrationTestBase {
     @Test
     void findProductsOfBrandAndCategoryAndGtPriceIT() {
         var productFilter = ProductFilter.builder()
-                .catalog(MocksForRepository.getCatalogSmartphone())
+//                .catalog(MocksForRepository.getCatalogSmartphone())
                 .brand(APPLE)
                 .price(999)
                 .build();
