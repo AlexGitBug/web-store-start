@@ -2,6 +2,7 @@ package com.dmdev.webStore.integration;
 
 import com.dmdev.webStore.dao.repository.CatalogRepository;
 import com.dmdev.webStore.dao.repository.ProductRepository;
+import com.dmdev.webStore.dao.repository.filter.CatalogFilter;
 import com.dmdev.webStore.dao.repository.filter.OrderFilter;
 import com.dmdev.webStore.dao.repository.filter.ProductFilter;
 import com.dmdev.webStore.entity.Catalog;
@@ -96,7 +97,7 @@ public class ProductRepositoryIT extends IntegrationTestBase {
                 .brand(APPLE)
                 .build();
 
-        var actualResult = productRepository.findListOfProductsEq(productFilter);
+        var actualResult = productRepository.findListOfProductsEq(productFilter, CatalogFilter.builder().build());
 
         var categoryResult = actualResult.stream()
                 .map(it -> it.getCatalog().getCategory())

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Builder
 public class ProductFilter {
 
-    Catalog catalog;
+    Integer catalogId;
     Brand brand;
     String model;
     LocalDate dateOfRelease;

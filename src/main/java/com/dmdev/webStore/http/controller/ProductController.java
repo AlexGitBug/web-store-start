@@ -40,6 +40,7 @@ public class ProductController {
     public String findAll(Model model, ProductFilter filter) {
         model.addAttribute("products", productService.findAll(filter));
         model.addAttribute("brands", Brand.values());
+        model.addAttribute("catalogs", catalogService.findAll());
         return "product/products";
     }
 //    @GetMapping
