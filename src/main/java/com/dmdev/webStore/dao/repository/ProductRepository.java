@@ -29,7 +29,6 @@ public interface ProductRepository extends
         QuerydslPredicateExecutor<Product> {
     List<Product> findAllByBrand(Brand brand);
     List<Product> findAllByCatalogCategory(String catalog);
-
     Optional<Product> findTopByOrderByPriceAsc();
     Optional<Product> findTopByOrderByPriceDesc();
 }

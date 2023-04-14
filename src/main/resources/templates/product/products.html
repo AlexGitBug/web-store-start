@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+</head>
+<body>
+<form action="/products">
+    <label for="category">Category:
+        <input id="category" type="text" name="catalog.get">
+    </label>
+    <label for="brand">Brand:
+        <input id="brand" type="text" name="brand">
+    </label>
+    <button type="submit">Filter</button>
+</form>
+    <div th:each="product : ${products}">
+      <a th:href="@{'/products/' + ${product.id}}" th:text="|id: ${product.id}. price: ${product.price}, brand: ${product.brand.name()}|">Product</a>
+    </div>
+</body>
+</html>

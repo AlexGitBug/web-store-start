@@ -1,6 +1,7 @@
 package com.dmdev.webStore.service;
 
 import com.dmdev.webStore.dao.repository.ProductRepository;
+import com.dmdev.webStore.dao.repository.filter.ProductFilter;
 import com.dmdev.webStore.dto.ProductCreateEditDto;
 import com.dmdev.webStore.dto.ProductReadDto;
 import com.dmdev.webStore.mapper.ProductCreateEditMapper;
@@ -22,7 +23,18 @@ public class ProductService {
     private final ProductReadMapper productReadMapper;
     private final ProductCreateEditMapper productCreateEditMapper;
 
+//    public List<ProductReadDto> findListOfProductsEq(ProductFilter filter) {
+//        return productRepository.findListOfProductsEq(filter).stream()
+//                .map(productReadMapper::map)
+//                .toList();
+//    }
 
+
+    public List<ProductReadDto> findAll(ProductFilter filter) {
+        return productRepository.findListOfProductsEq(filter).stream()
+                .map(productReadMapper::map)
+                .toList();
+    }
     public List<ProductReadDto> findAll() {
         return productRepository.findAll().stream()
                 .map(productReadMapper::map)
