@@ -118,9 +118,9 @@ public class ShoppingCartRepositoryIT extends IntegrationTestBase{
     private static ProductFilter getProductFilter() {
         var productFilter = ProductFilter.builder()
                 .brand(Brand.SONY)
-                .catalog(Catalog.builder()
-                        .category("Headphones")
-                        .build())
+//                .catalog(Catalog.builder()
+//                        .category("Headphones")
+//                        .build())
                 .model("XM4")
                 .build();
         return productFilter;

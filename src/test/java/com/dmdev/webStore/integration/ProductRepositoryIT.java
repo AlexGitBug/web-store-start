@@ -93,7 +93,7 @@ public class ProductRepositoryIT extends IntegrationTestBase {
     @Test
     void findListOfProductsEqIT() {
         var productFilter = ProductFilter.builder()
-//                .catalog(MocksForRepository.getCatalogSmartphone())
+                .catalogId(1)
                 .brand(APPLE)
                 .build();
 
@@ -148,7 +148,7 @@ public class ProductRepositoryIT extends IntegrationTestBase {
     @Test
     void findProductsOfBrandAndCategoryAndLtPriceIT() {
         var productFilter = ProductFilter.builder()
-//                .catalog(MocksForRepository.getCatalogSmartphone())
+                .catalogId(1)
                 .brand(APPLE)
                 .price(1050)
                 .build();

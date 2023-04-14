@@ -28,6 +28,8 @@ public class FilterProductRepositoryImpl implements FilterProductRepository {
         var predicate = QPredicate.builder()
                 .add(filter.getCatalogId(), catalog.id::eq)
                 .add(filter.getBrand(), product.brand::eq)
+                .add(filter.getPriceA(), product.price::gt)
+                .add(filter.getPriceB(), product.price::lt)
                 .buildAnd();
 
         return new JPAQuery<Product>(entityManager)

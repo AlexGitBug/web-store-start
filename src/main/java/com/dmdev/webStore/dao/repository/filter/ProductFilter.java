@@ -1,6 +1,5 @@
 package com.dmdev.webStore.dao.repository.filter;
 
-import com.dmdev.webStore.entity.Catalog;
 import com.dmdev.webStore.entity.enums.Brand;
 import com.dmdev.webStore.entity.enums.Color;
 import lombok.Builder;
