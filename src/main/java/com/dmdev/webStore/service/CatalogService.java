@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional(readOnly = true)
@@ -20,6 +23,6 @@ public class CatalogService {
     public List<CatalogReadDto> findAll() {
         return catalogRepository.findAll().stream()
                 .map(catalogReadMapper::map)
-                .toList();
+                .collect(toList());
     }
 }

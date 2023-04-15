@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/products")
@@ -47,7 +49,8 @@ public class ProductController {
         model.addAttribute("products", PageResponse.of(page));
         model.addAttribute("filter", filter);
         model.addAttribute("brands", Brand.values());
-        model.addAttribute("catalogs", catalogService.findAll());
+        List<CatalogReadDto> list = catalogService.findAll();
+        model.addAttribute("catalogs", list);
         return "product/products";
     }
 

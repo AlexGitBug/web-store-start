@@ -8,7 +8,8 @@
 <form action="/products">
     <div>
         <label for="catalog">Catalog:
-            <select id="catalog" name="catalogId">
+            <select id="catalog" name="catalogId" >
+                <option selected> -- select an option --</option>
                 <option th:each="catalog : ${catalogs}"
                         th:value="${catalog.getId()}"
                         th:text="${catalog.getCategory()}">Catalog category
@@ -19,9 +20,10 @@
     <div>
         <label for="brand">Brand:
             <select id="brand" name="brand">
+                <option selected value> -- select an option --</option>
                 <option th:each="brand : ${brands}"
                         th:value="${brand}"
-                        th:text="${brand.name()}">Catalog category
+                        th:text="${brand.name()}">Brand name
                 </option>
             </select>
         </label>
