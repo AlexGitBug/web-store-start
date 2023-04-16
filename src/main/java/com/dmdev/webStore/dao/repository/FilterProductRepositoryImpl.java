@@ -41,63 +41,6 @@ public class FilterProductRepositoryImpl implements FilterProductRepository {
     }
 
     @Override
-    public List<Product> findProductOfOneCategoryAndBrandBetweenTwoPrice(ProductFilter filter) {
-
-        var predicate = QPredicate.builder()
-                .add(filter.getCatalogId(), catalog.id::eq)
-                .add(filter.getBrand(), product.brand::eq)
-                .add(filter.getPriceA(), product.price::gt)
-                .add(filter.getPriceB(), product.price::lt)
-                .buildAnd();
-
-        return new JPAQuery<Product>(entityManager)
-                .select(product)
-                .from(product)
-                .join(product.catalog, catalog)
-                .join(product.shoppingCarts, shoppingCart)
-                .join(shoppingCart.order, order)
-                .where(predicate)
-                .fetch();
-    }
-
-    @Override
-    public List<Product> findProductsOfBrandAndCategoryAndLtPrice(ProductFilter filter) {
-
-        var predicate = QPredicate.builder()
-                .add(filter.getCatalogId(), catalog.id::eq)
-                .add(filter.getBrand(), product.brand::eq)
-                .add(filter.getPrice(), product.price::lt)
-                .buildAnd();
-
-        return new JPAQuery<Product>(entityManager)
-                .select(product)
-                .from(product)
-                .join(product.catalog, catalog)
-                .where(predicate)
-                .distinct()
-                .fetch();
-    }
-
-    @Override
-    public List<Product> findProductsOfBrandAndCategoryAndGtPrice(ProductFilter filter) {
-
-        var predicate = QPredicate.builder()
-                .add(filter.getCatalogId(), catalog.id::eq)
-                .add(filter.getBrand(), product.brand::eq)
-                .add(filter.getPrice(), product.price::gt)
-                .buildAnd();
-
-        return new JPAQuery<Product>(entityManager)
-                .select(product)
-                .from(product)
-                .join(product.catalog, catalog)
-                .where(predicate)
-                .orderBy(product.price.asc())
-                .distinct()
-                .fetch();
-    }
-
-    @Override
     public List<Product> findAllProductsFromOrder(OrderFilter orderFilter) {
 
         var predicate = QPredicate.builder()

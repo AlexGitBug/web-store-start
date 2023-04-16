@@ -41,7 +41,7 @@ public class ProductCreateEditMapper implements Mapper<ProductCreateEditDto, Pro
 
     private Catalog getCatalog(Integer catalogId) {
         return Optional.ofNullable(catalogId)
-                .flatMap(catalogRepository::findById)
+                .flatMap(id -> catalogRepository.findById(id))
                 .orElse(null);
     }
 }

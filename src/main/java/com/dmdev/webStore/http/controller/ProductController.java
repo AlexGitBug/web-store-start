@@ -49,8 +49,7 @@ public class ProductController {
         model.addAttribute("products", PageResponse.of(page));
         model.addAttribute("filter", filter);
         model.addAttribute("brands", Brand.values());
-        List<CatalogReadDto> list = catalogService.findAll();
-        model.addAttribute("catalogs", list);
+        model.addAttribute("catalogs", catalogService.findAll());
         return "product/products";
     }
 

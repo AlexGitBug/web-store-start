@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.xml.bind.ValidationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -40,10 +41,6 @@ public class ProductService {
        return productRepository.findAll(predicate, pageable)
                 .map(productReadMapper::map);
 
-
-//        return productRepository.findListOfProductsEq(filter).stream()
-//                .map(productReadMapper::map)
-//                .toList();
     }
     public List<ProductReadDto> findAll() {
         return productRepository.findAll().stream()
