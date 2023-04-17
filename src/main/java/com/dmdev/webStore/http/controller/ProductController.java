@@ -45,10 +45,9 @@ public class ProductController {
 
     @GetMapping
     public String findAll(Model model, ProductFilter filter, Pageable pageable) {
-        var page = productService.findListOfProductsEq(filter, pageable);
+        var page = productService.findAllProducts(filter, pageable);
         model.addAttribute("products", PageResponse.of(page));
         model.addAttribute("filter", filter);
-        model.addAttribute("catalog", catalogService.findById(filter.getCatalogId()));
         model.addAttribute("brands", Brand.values());
         model.addAttribute("catalogs", catalogService.findAll());
         return "product/products";

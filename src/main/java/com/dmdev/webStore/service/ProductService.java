@@ -30,7 +30,7 @@ public class ProductService {
     private final ProductReadMapper productReadMapper;
     private final ProductCreateEditMapper productCreateEditMapper;
 
-    public Page<ProductReadDto> findListOfProductsEq(ProductFilter filter, Pageable pageable) {
+    public Page<ProductReadDto> findAllProducts(ProductFilter filter, Pageable pageable) {
         var predicate = QPredicate.builder()
                 .add(filter.getCatalogId(), catalog.id::eq)
                 .add(filter.getBrand(), product.brand::eq)

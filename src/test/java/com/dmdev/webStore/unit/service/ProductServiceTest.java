@@ -2,6 +2,7 @@ package com.dmdev.webStore.unit.service;
 
 import com.dmdev.webStore.dao.repository.ProductRepository;
 import com.dmdev.webStore.dao.repository.filter.ProductFilter;
+import com.dmdev.webStore.dao.repository.filter.QPredicate;
 import com.dmdev.webStore.dto.CatalogReadDto;
 import com.dmdev.webStore.dto.ProductCreateEditDto;
 import com.dmdev.webStore.dto.ProductReadDto;
@@ -26,6 +27,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static com.dmdev.webStore.entity.QCatalog.catalog;
+import static com.dmdev.webStore.entity.QProduct.product;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -96,16 +99,19 @@ class ProductServiceTest {
 
 
     @Test
-    void findListOfProductsEq() {
+    void findAllProducts() {
         var filter = ProductFilter.builder()
                 .brand(Brand.APPLE)
                 .build();
-        List<Product> productList = List.of(getProduct(getCatalog()), getProduct1(getCatalog()));
+        var predicate = QPredicate.builder()
+                .add(filter.getBrand(), product.brand::eq)
+                .buildAnd();
+        List<Product> products = List.of(getProduct(getCatalog()), getProduct1(getCatalog()));
         var pageable = PageRequest.of(0, 3);
-        Page<Product> productPage = new PageImpl<>(productList, pageable, 2L);
-        doReturn(productPage).when(productRepository).findListOfProductsEq(filter);
+        Page<Product> productPage = new PageImpl<>(products, pageable, products.size());
+        doReturn(productPage).when(productRepository).findAll(predicate, pageable);
 
-        var actualResult = productService.findListOfProductsEq(filter, pageable);
+        var actualResult = productService.findAllProducts(filter, pageable);
 
         assertAll(
                 () -> assertThat(actualResult).isNotNull(),

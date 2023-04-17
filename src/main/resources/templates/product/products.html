@@ -9,7 +9,7 @@
     <div>
         <label for="catalog">Catalog:
             <select id="catalog" name="catalogId" >
-                <option selected th:text="${catalog.getCategory()}"> -- select an option --</option>
+                <option selected> -- select an option --</option>
                 <option th:each="catalog : ${catalogs}"
                         th:value="${catalog.getId()}"
                         th:text="${catalog.getCategory()}">Catalog category
