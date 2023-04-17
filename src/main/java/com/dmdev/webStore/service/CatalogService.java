@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -20,6 +20,11 @@ public class CatalogService {
     private final CatalogRepository catalogRepository;
     private final CatalogReadMapper catalogReadMapper;
 
+
+    public Optional<CatalogReadDto> findById(Integer id) {
+        return catalogRepository.findById(id)
+                .map(catalogReadMapper::map);
+    }
     public List<CatalogReadDto> findAll() {
         return catalogRepository.findAll().stream()
                 .map(catalogReadMapper::map)

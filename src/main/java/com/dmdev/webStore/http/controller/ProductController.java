@@ -48,6 +48,7 @@ public class ProductController {
         var page = productService.findListOfProductsEq(filter, pageable);
         model.addAttribute("products", PageResponse.of(page));
         model.addAttribute("filter", filter);
+        model.addAttribute("catalog", catalogService.findById(filter.getCatalogId()));
         model.addAttribute("brands", Brand.values());
         model.addAttribute("catalogs", catalogService.findAll());
         return "product/products";
