@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +36,7 @@ public class ProductController {
     private final CatalogService catalogService;
 
     @GetMapping("/registrationproduct")
-    public String registrationProduct(Model model, @ModelAttribute("product") ProductCreateEditDto product) {
+    public String registrationProduct(Model model, @ModelAttribute("product") @Validated ProductCreateEditDto product) {
         model.addAttribute("product", product);
         model.addAttribute("colors", Color.values());
         model.addAttribute("brands", Brand.values());
