@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Catalog</title>
+</head>
+<body>
+    <p th:text="${catalog.getCategory()}" > Описание каталога </p>
+    <form th:action="@{/products}" method="get">
+        <button type="submit">Перейти в продукты смартфоны</button>
+    </form>
+</body>
+</html>

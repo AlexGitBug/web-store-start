@@ -1,6 +1,6 @@
 package com.dmdev.webStore.integration;
 
-import com.dmdev.webStore.annotation.IntegrationTest;
+import com.dmdev.webStore.integration.annotation.IntegrationTest;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;

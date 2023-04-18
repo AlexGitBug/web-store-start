@@ -1,17 +1,14 @@
 package com.dmdev.webStore.http.controller;
 
 
-import com.dmdev.webStore.dao.repository.filter.ProductFilter;
-import com.dmdev.webStore.dto.CatalogReadDto;
+import com.dmdev.webStore.repository.filter.ProductFilter;
 import com.dmdev.webStore.dto.PageResponse;
-import com.dmdev.webStore.dto.ProductCreateEditDto;
-import com.dmdev.webStore.dto.ProductReadDto;
+import com.dmdev.webStore.dto.product.ProductCreateEditDto;
 import com.dmdev.webStore.entity.enums.Brand;
 import com.dmdev.webStore.entity.enums.Color;
 import com.dmdev.webStore.service.CatalogService;
 import com.dmdev.webStore.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -25,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/products")
@@ -35,13 +30,13 @@ public class ProductController {
     private final ProductService productService;
     private final CatalogService catalogService;
 
-    @GetMapping("/registrationproduct")
+    @GetMapping("/registration")
     public String registrationProduct(Model model, @ModelAttribute("product") @Validated ProductCreateEditDto product) {
         model.addAttribute("product", product);
         model.addAttribute("colors", Color.values());
         model.addAttribute("brands", Brand.values());
         model.addAttribute("catalogs", catalogService.findAll());
-        return "product/registrationproduct";
+        return "product/registration";
     }
 
     @GetMapping

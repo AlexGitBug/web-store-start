@@ -1,22 +1,20 @@
 package com.dmdev.webStore.service;
 
-import com.dmdev.webStore.dao.repository.ProductRepository;
-import com.dmdev.webStore.dao.repository.filter.ProductFilter;
-import com.dmdev.webStore.dao.repository.filter.QPredicate;
-import com.dmdev.webStore.dto.ProductCreateEditDto;
-import com.dmdev.webStore.dto.ProductReadDto;
-import com.dmdev.webStore.mapper.ProductCreateEditMapper;
-import com.dmdev.webStore.mapper.ProductReadMapper;
+import com.dmdev.webStore.repository.ProductRepository;
+import com.dmdev.webStore.repository.filter.ProductFilter;
+import com.dmdev.webStore.repository.filter.QPredicate;
+import com.dmdev.webStore.dto.product.ProductCreateEditDto;
+import com.dmdev.webStore.dto.product.ProductReadDto;
+import com.dmdev.webStore.mapper.product.ProductCreateEditMapper;
+import com.dmdev.webStore.mapper.product.ProductReadMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.bind.ValidationException;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 import static com.dmdev.webStore.entity.QCatalog.catalog;
 import static com.dmdev.webStore.entity.QProduct.product;
@@ -34,8 +32,8 @@ public class ProductService {
         var predicate = QPredicate.builder()
                 .add(filter.getCatalogId(), catalog.id::eq)
                 .add(filter.getBrand(), product.brand::eq)
-                .add(filter.getPriceA(), product.price::gt)
-                .add(filter.getPriceB(), product.price::lt)
+                .add(filter.getPriceMin(), product.price::gt)
+                .add(filter.getPriceMax(), product.price::lt)
                 .buildAnd();
 
        return productRepository.findAll(predicate, pageable)
@@ -47,6 +45,7 @@ public class ProductService {
                 .map(productReadMapper::map)
                 .toList();
     }
+
 
     public Optional<ProductReadDto> findById(Integer id) {
         return productRepository.findById(id)

@@ -2,10 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Product</title>
+    <title>RegistrationProduct</title>
 </head>
 <body>
-<form th:action="@{/products/{productId}/update(productId=${product.id})}" method="post" th:object="${product}">
+<form th:action="@{/products}" method="post" th:object="${product}">
     <label for="model">Model:
         <input id="model" type="text" name="model" th:value="*{model}">
     </label> <br>
@@ -19,33 +19,24 @@
         <input id="image" type="text" name="image" th:value="*{image}">
     </label> <br>
     <span th:each="color : ${colors}">
-            <input th:id="${color}" type="radio" name="color" th:value="${color}"
-                   th:checked="${color == product.color}">
+            <input th:id="${color}" type="radio" name="color" th:value="${color}" th:checked="${color == product.color}">
             <label th:for="${color}" th:text="${color}">Color name</label>
         </span><br>
     <span th:each="brand : ${brands}">
-            <input th:id="${brand}" type="radio" name="brand" th:value="${brand}"
-                   th:checked="${brand == product.brand}">
-            <label th:for="${brand}" th:text="${brand}">Color name</label>
+            <input th:id="${brand}" type="radio" name="brand" th:value="${brand}" th:checked="${brand == product.brand}">
+            <label th:for="${brand}"  th:text="${brand}">Color name</label>
         </span><br>
     <div>
         <label for="catalog">Catalog:
             <select id="catalog" name="catalogId">
                 <option th:each="catalog : ${catalogs}"
                         th:value="${catalog.getId()}"
-                        th:selected="${catalog.getId() == product.catalog.getId()}"
-                        th:text="${catalog.getCategory()}">Catalog
-                </option>
+                        th:selected="${catalog.getId() == product.catalogId}"
+                        th:text="${catalog.getCategory()}">Catalog</option>
             </select>
         </label>
     </div>
-    <button type="submit">Update</button>
-</form>
-<form th:action="@{/products/{productId}/delete(productId=${product.id})}" method="post">
-    <button type="submit">Remove</button>
-</form>
-<form th:action="@{/products/registration}" method="get">
-    <button type="submit">Registration Page</button>
+    <button type="submit">Register</button>
 </form>
 </body>
 </html>

@@ -1,19 +1,18 @@
 package com.dmdev.webStore.unit.service;
 
-import com.dmdev.webStore.dao.repository.ProductRepository;
-import com.dmdev.webStore.dao.repository.filter.ProductFilter;
-import com.dmdev.webStore.dao.repository.filter.QPredicate;
-import com.dmdev.webStore.dto.CatalogReadDto;
-import com.dmdev.webStore.dto.ProductCreateEditDto;
-import com.dmdev.webStore.dto.ProductReadDto;
+import com.dmdev.webStore.repository.ProductRepository;
+import com.dmdev.webStore.repository.filter.ProductFilter;
+import com.dmdev.webStore.repository.filter.QPredicate;
+import com.dmdev.webStore.dto.catalog.CatalogReadDto;
+import com.dmdev.webStore.dto.product.ProductCreateEditDto;
+import com.dmdev.webStore.dto.product.ProductReadDto;
 import com.dmdev.webStore.entity.Catalog;
 import com.dmdev.webStore.entity.Product;
 import com.dmdev.webStore.entity.enums.Brand;
 import com.dmdev.webStore.entity.enums.Color;
-import com.dmdev.webStore.mapper.ProductCreateEditMapper;
-import com.dmdev.webStore.mapper.ProductReadMapper;
+import com.dmdev.webStore.mapper.product.ProductCreateEditMapper;
+import com.dmdev.webStore.mapper.product.ProductReadMapper;
 import com.dmdev.webStore.service.ProductService;
-import liquibase.pro.packaged.F;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,7 +26,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static com.dmdev.webStore.entity.QCatalog.catalog;
 import static com.dmdev.webStore.entity.QProduct.product;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
