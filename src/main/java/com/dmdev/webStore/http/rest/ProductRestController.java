@@ -9,8 +9,10 @@ import com.dmdev.webStore.service.CatalogService;
 import com.dmdev.webStore.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,12 +56,30 @@ public class ProductRestController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void delete(@PathVariable("id") Integer id) {
-        if (!productService.delete(id)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+    @GetMapping(value = "/{id}/avatar")
+    public ResponseEntity<byte[]> findImage(@PathVariable("id") Integer id) {
+        return productService.findImage(id)
+                .map(content -> ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                        .contentLength(content.length)
+                        .body(content))
+                .orElseGet(ResponseEntity.notFound()::build);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
+        return productService.delete(id)
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.notFound().build();
+    }
+
+//    @DeleteMapping("/{id}")
+//    @ResponseStatus(HttpStatus.NOT_FOUND)
+//    public void delete(@PathVariable("id") Integer id) {
+//        if (!productService.delete(id)){
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//        }
+//    }
+
 
 }

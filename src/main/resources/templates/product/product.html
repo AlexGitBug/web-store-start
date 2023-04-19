@@ -5,7 +5,7 @@
     <title>Product</title>
 </head>
 <body>
-<form th:action="@{/products/{productId}/update(productId=${product.id})}" method="post" th:object="${product}">
+<form th:action="@{/products/{productId}/update(productId=${product.id})}" enctype="multipart/form-data" method="post" th:object="${product}">
     <label for="model">Model:
         <input id="model" type="text" name="model" th:value="*{model}">
     </label> <br>
@@ -15,8 +15,11 @@
     <label for="price">Price:
         <input id="price" type="number" name="price" th:value="*{price}">
     </label> <br>
+    <div th:if="${product.image}">
+        <img th:src="@{/api/v1/products/{productId}/avatar(productId=${product.id})}" alt="Product image">
+    </div>
     <label for="image">Image:
-        <input id="image" type="text" name="image" th:value="*{image}">
+        <input id="image" type="file" name="image" th:value="*{image}">
     </label> <br>
     <span th:each="color : ${colors}">
             <input th:id="${color}" type="radio" name="color" th:value="${color}"
@@ -31,6 +34,7 @@
     <div>
         <label for="catalog">Catalog:
             <select id="catalog" name="catalogId">
+                <option selected> -- select an option --</option>
                 <option th:each="catalog : ${catalogs}"
                         th:value="${catalog.getId()}"
                         th:selected="${catalog.getId() == product.catalog.getId()}"
@@ -44,7 +48,7 @@
 <form th:action="@{/products/{productId}/delete(productId=${product.id})}" method="post">
     <button type="submit">Remove</button>
 </form>
-<form th:action="@{/products/registration}" method="get">
+<form action="/products/registration" method="get">
     <button type="submit">Registration Page</button>
 </form>
 </body>

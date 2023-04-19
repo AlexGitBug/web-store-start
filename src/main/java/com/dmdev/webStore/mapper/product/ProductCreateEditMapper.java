@@ -7,8 +7,10 @@ import com.dmdev.webStore.entity.Catalog;
 import com.dmdev.webStore.entity.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 @Component
 @RequiredArgsConstructor
@@ -34,10 +36,13 @@ public class ProductCreateEditMapper implements Mapper<ProductCreateEditDto, Pro
         product.setModel(object.getModel());
         product.setDateOfRelease(object.getDateOfRelease());
         product.setPrice(object.getPrice());
-        product.setImage(object.getImage());
         product.setColor(object.getColor());
         product.setBrand(object.getBrand());
         product.setCatalog(getCatalog(object.getCatalogId()));
+
+        Optional.ofNullable(object.getImage())
+                .filter(Predicate.not(MultipartFile::isEmpty))
+                .ifPresent(image -> product.setImage(image.getOriginalFilename()));
     }
 
     private Catalog getCatalog(Integer catalogId) {

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Registration catalog</title>
+</head>
+<body>
+<span>Регистрация нового каталога</span><br><br>
+
+<form th:action="@{/catalogs}" method="post" th:object="${catalog}">
+  <label for="category">Введите новый каталог:
+    <input id="category" type="text" name="category" th:value="*{category}">
+  </label><br>
+  <button type="submit">Registre</button>
+</form>
+</body>
+</html>

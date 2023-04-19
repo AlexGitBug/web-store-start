@@ -22,7 +22,7 @@
             <select id="brand" name="brand">
                 <option selected value> -- select an option --</option>
                 <option th:each="brand : ${brands}"
-                        th:value="${brand}"
+                        th:value="${brand.name()}"
                         th:text="${brand.name()}">Brand name
                 </option>
             </select>

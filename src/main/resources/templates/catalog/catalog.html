@@ -5,9 +5,18 @@
     <title>Catalog</title>
 </head>
 <body>
-    <p th:text="${catalog.getCategory()}" > Описание каталога </p>
-    <form th:action="@{/products}" method="get">
-        <button type="submit">Перейти в продукты смартфоны</button>
+<form th:action="@{/catalogs/{catalogId}/update(catalogId=${catalog.id})}" method="post" th:object="${catalog}">
+    <label for="category">Category:
+        <input id="category" type="text" name="category" th:value="*{category}">
+    </label> <br>
+    <button type="submit">Update</button><br>
+</form><br>
+<form th:action="@{/catalogs/{catalogId}/delete(catalogId=${catalog.id})}" method="post">
+    <button type="submit">Remove</button>
+</form><br>
+    <form th:action="@{/catalogs/{catalogId}/onecatalog(catalogId=${catalog.id})}" method="get">
+        <button type="submit">Redirect to products from catalog</button>
     </form>
+
 </body>
 </html>

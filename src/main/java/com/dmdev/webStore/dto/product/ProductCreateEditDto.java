@@ -4,6 +4,7 @@ import com.dmdev.webStore.entity.enums.Brand;
 import com.dmdev.webStore.entity.enums.Color;
 import lombok.Value;
 import lombok.experimental.FieldNameConstants;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -16,9 +17,10 @@ public class ProductCreateEditDto {
     String model;
     LocalDate dateOfRelease;
     Integer price;
-    @NotBlank
-    String image;
+//    String image;
     Color color;
     Brand brand;
     Integer catalogId;
+
+    MultipartFile image;
 }

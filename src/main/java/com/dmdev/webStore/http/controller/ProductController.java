@@ -1,6 +1,7 @@
 package com.dmdev.webStore.http.controller;
 
 
+import com.dmdev.webStore.dto.catalog.CatalogReadDto;
 import com.dmdev.webStore.repository.filter.ProductFilter;
 import com.dmdev.webStore.dto.PageResponse;
 import com.dmdev.webStore.dto.product.ProductCreateEditDto;
@@ -10,7 +11,10 @@ import com.dmdev.webStore.service.CatalogService;
 import com.dmdev.webStore.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -48,7 +52,6 @@ public class ProductController {
         model.addAttribute("catalogs", catalogService.findAll());
         return "product/products";
     }
-
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Integer id, Model model) {
         return productService.findById(id)
@@ -86,5 +89,6 @@ public class ProductController {
         }
         return "redirect:/products";
     }
+
 
 }
