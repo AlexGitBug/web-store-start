@@ -28,7 +28,7 @@ public class ShoppingCartController {
 
     @GetMapping("/registration")
     public String registration(Model model, @ModelAttribute("product") @Validated ShoppingCartCreateEditDto shoppingCartDto) {
-        model.addAttribute("shoppingCart", shoppingCartDto);
+        model.addAttribute("shoppingcart", shoppingCartDto);
         model.addAttribute("products", productService.findAll());
         model.addAttribute("orders", orderService.findAll());
         return "shoppingcart/registration";
