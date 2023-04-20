@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Registration order</title>
+</head>
+<body>
+<form th:action="@{/orders}" method="post" th:object="${order}">
+  <label for="city">City:
+    <input id="city" type="text" name="city" th:value="*{city}">
+  </label><br>
+  <label for="street">Street:
+    <input id="street" type="text" name="street" th:value="*{street}">
+  </label><br>
+  <label for="building">Building:
+    <input id="building" type="number" name="building" th:value="*{building}">
+  </label><br>
+  <label for="deliveryDate">DeliveryDate:
+    <input id="deliveryDate" type="date" name="deliveryDate" th:value="*{deliveryDate}">
+  </label><br>
+  <div th:each="paymentCondition : ${payments}">
+    <input th:id="${paymentCondition}" type="radio" name="paymentCondition" th:value="${paymentCondition}" th:checked="${paymentCondition == order.paymentCondition}">
+    <label th:for="${paymentCondition}" th:text="${paymentCondition}">Role name</label>
+  </div>
+  <div>
+    <label for="user">User:
+      <select id="user" name="userId">
+        <option th:each="user : ${users}"
+                th:value="${user.getId()}"
+                th:selected="${user.getId() == order.userId}"
+                th:text="${user.lastName}">User</option>
+      </select>
+    </label>
+  </div>
+  <button type="submit">Register</button>
+</form>
+</body>
+</html>

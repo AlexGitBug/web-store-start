@@ -2,6 +2,7 @@ package com.dmdev.webStore.http.controller;
 
 
 import com.dmdev.webStore.dto.catalog.CatalogReadDto;
+import com.dmdev.webStore.repository.filter.OrderFilter;
 import com.dmdev.webStore.repository.filter.ProductFilter;
 import com.dmdev.webStore.dto.PageResponse;
 import com.dmdev.webStore.dto.product.ProductCreateEditDto;
@@ -35,7 +36,7 @@ public class ProductController {
     private final CatalogService catalogService;
 
     @GetMapping("/registration")
-    public String registrationProduct(Model model, @ModelAttribute("product") @Validated ProductCreateEditDto product) {
+    public String registration(Model model, @ModelAttribute("product") @Validated ProductCreateEditDto product) {
         model.addAttribute("product", product);
         model.addAttribute("colors", Color.values());
         model.addAttribute("brands", Brand.values());
@@ -52,6 +53,13 @@ public class ProductController {
         model.addAttribute("catalogs", catalogService.findAll());
         return "product/products";
     }
+
+    @GetMapping("/productsfromorder")
+    public String findAllProductsFromOrder(Model model, OrderFilter filter) {
+        model.addAttribute("filter", filter);
+        model.addAttribute("products", productService.findAllProductsFromOrder(filter));
+        return "product/productsfromorder";
+    }
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Integer id, Model model) {
         return productService.findById(id)
@@ -66,12 +74,7 @@ public class ProductController {
     }
 
     @PostMapping
-//    @ResponseStatus(HttpStatus.CREATED)
     public String create(@ModelAttribute ProductCreateEditDto product, RedirectAttributes redirectAttributes) {
-//        if(true){
-//            redirectAttributes.addFlashAttribute("product", product);
-//            return "redirect:/products/registrationProduct";
-//        }
         return "redirect:/products/" + productService.create(product).getId();
     }
 

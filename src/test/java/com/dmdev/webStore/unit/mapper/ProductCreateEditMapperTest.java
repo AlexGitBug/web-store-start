@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -22,6 +23,7 @@ class ProductCreateEditMapperTest {
 
     @Test
     void mapCreateEditMapperTest() {
+        MultipartFile file = null;
 
         CatalogReadDto catalogReadDto = new CatalogReadDto(1,"test");
 
@@ -29,10 +31,10 @@ class ProductCreateEditMapperTest {
                 "test",
                 LocalDate.of(2020, 9, 12),
                 950,
-                "test",
                 Color.BLACK,
                 Brand.APPLE,
-               catalogReadDto.getId()
+               catalogReadDto.getId(),
+                null
         );
 
         var actualResult = productCreateEditMapper.map(productCreateEditDto);

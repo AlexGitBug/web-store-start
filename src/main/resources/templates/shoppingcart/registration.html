@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Registration ShoppingCart</title>
+</head>
+<body>
+<form th:action="@{/shoppingcarts}" method="post" th:object="${shoppingCart}">
+    <label for="catalog">Catalog:
+      <select id="catalog" name="catalogId">
+        <option th:each="catalog : ${catalogs}"
+                th:value="${catalog.getId()}"
+                th:selected="${catalog.getId() == product.catalogId}"
+                th:text="${catalog.getCategory()}">Catalog</option>
+      </select>
+    </label>
+  <button type="submit">Register</button>
+</form>
+</body>
+</html>

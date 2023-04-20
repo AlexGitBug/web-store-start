@@ -11,6 +11,7 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.time.LocalDate;
@@ -73,6 +74,9 @@ class ProductControllerTest extends IntegrationTestBase {
     @Test
     @SneakyThrows
     void findById() {
+
+        MultipartFile file = null;
+
         var productReadDto = productService.create(new ProductCreateEditDto(
                 "test-model",
                 LocalDate.now(),
@@ -80,7 +84,7 @@ class ProductControllerTest extends IntegrationTestBase {
                 Color.BLACK,
                 Brand.APPLE,
                 1,
-                1
+                file
         ));
 
         mockMvc.perform(get("/products/" + productReadDto.getId()))
@@ -95,6 +99,7 @@ class ProductControllerTest extends IntegrationTestBase {
     @Test
     @SneakyThrows
     void update() {
+        MultipartFile file = null;
         var productReadDto = productService.create(new ProductCreateEditDto(
                 "test-model",
                 LocalDate.now(),
@@ -102,7 +107,7 @@ class ProductControllerTest extends IntegrationTestBase {
                 Color.BLACK,
                 Brand.APPLE,
                 1,
-                1
+                null
         ));
 
         mockMvc.perform(post("/products/" + productReadDto.getId() + "/update")
@@ -123,6 +128,7 @@ class ProductControllerTest extends IntegrationTestBase {
     @Test
     @SneakyThrows
     void delete() {
+        MultipartFile file = null;
         var productReadDto = productService.create(new ProductCreateEditDto(
                 "test-model",
                 LocalDate.now(),
@@ -130,7 +136,7 @@ class ProductControllerTest extends IntegrationTestBase {
                 Color.BLACK,
                 Brand.APPLE,
                 1,
-                "1"
+                null
         ));
 
         mockMvc.perform(post("/products/" + productReadDto.getId() + "/delete"))

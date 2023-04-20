@@ -249,7 +249,7 @@ class ProductServiceTest {
     }
 
     private ProductCreateEditDto getProductCreateEditDto() {
-        return new ProductCreateEditDto("test", LocalDate.now(), 123, "test", Color.BLACK, Brand.APPLE, 9);
+        return new ProductCreateEditDto("test", LocalDate.now(), 123,  Color.BLACK, Brand.APPLE, 9, null);
     }
 
 

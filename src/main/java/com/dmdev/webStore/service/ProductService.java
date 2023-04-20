@@ -3,6 +3,7 @@ package com.dmdev.webStore.service;
 import com.dmdev.webStore.dto.catalog.CatalogReadDto;
 import com.dmdev.webStore.entity.Product;
 import com.dmdev.webStore.repository.ProductRepository;
+import com.dmdev.webStore.repository.filter.OrderFilter;
 import com.dmdev.webStore.repository.filter.ProductFilter;
 import com.dmdev.webStore.repository.filter.QPredicate;
 import com.dmdev.webStore.dto.product.ProductCreateEditDto;
@@ -45,6 +46,12 @@ public class ProductService {
         return productRepository.findAll(predicate, pageable)
                 .map(productReadMapper::map);
 
+    }
+
+    public List<ProductReadDto> findAllProductsFromOrder(OrderFilter orderFilter) {
+        return productRepository.findAllProductsFromOrder(orderFilter).stream()
+                .map(productReadMapper::map)
+                .toList();
     }
 
     public List<ProductReadDto> findAllByCatalogId(Integer id) {

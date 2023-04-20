@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All orders one user</title>
+</head>
+<body>
+<form action="/orders/allordersoneuser">
+    <div>
+        <label for="email">Email:
+<!--            <select id="email" type="text" name="email" >-->
+<!--                <option selected> &#45;&#45; select an option &#45;&#45;</option>-->
+<!--                <option th:each="user : ${users}"-->
+<!--                        th:value="${user.email}"-->
+<!--                        th:text="${user.email}">User email-->
+<!--                </option>-->
+<!--            </select>-->
+            <input id="email" type="text" name="email">
+        </label>
+    </div>
+    <button type="submit">Filter</button>
+</form>
+<div th:each="order : ${orders}">
+  <a th:href="@{'/orders/' + ${order.id}}"
+     th:text="|${order.id}. ${order.deliveryDate} street:${order.street}|">Order</a>
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

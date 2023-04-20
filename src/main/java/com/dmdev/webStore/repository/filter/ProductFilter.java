@@ -18,6 +18,7 @@ public class ProductFilter {
     Integer price;
     Integer priceMin;
     Integer priceMax;
+    Integer priceLow;
     Color color;
 
 }

@@ -7,6 +7,7 @@ import com.dmdev.webStore.service.ProductService;
 import com.dmdev.webStore.integration.IntegrationTestBase;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -37,14 +38,15 @@ public class ProductServiceIT extends IntegrationTestBase {
 
     @Test
     void create() {
+        MultipartFile file = null;
         var productDto = new ProductCreateEditDto(
-                "testModel",
+                "test-model",
                 LocalDate.now(),
                 123,
-                "test",
                 Color.BLACK,
                 Brand.APPLE,
-                CATALOG_1
+                1,
+                null
         );
 
         var actualResult = productService.create(productDto);
@@ -60,14 +62,15 @@ public class ProductServiceIT extends IntegrationTestBase {
 
     @Test
     void update() {
+        MultipartFile file = null;
         var productDto = new ProductCreateEditDto(
-                "testModel",
+                "test-model",
                 LocalDate.now(),
                 123,
-                "test",
                 Color.BLACK,
                 Brand.APPLE,
-                CATALOG_1
+                1,
+                null
         );
 
         var actualResult = productService.update(PRODUCT_1, productDto);

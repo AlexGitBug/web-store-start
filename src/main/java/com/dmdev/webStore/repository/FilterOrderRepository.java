@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface FilterOrderRepository {
 
-    List<Order> findAllOrdersWithProductsOfOneUser(PersonalInformationFilter personalInformationFilter);
+    List<Order> findAllOrdersWithProductsOfOneUser(PersonalInformationFilter filter);
 }

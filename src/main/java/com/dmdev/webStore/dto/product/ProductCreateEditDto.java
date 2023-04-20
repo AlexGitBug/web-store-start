@@ -24,3 +24,5 @@ public class ProductCreateEditDto {
 
     MultipartFile image;
 }
+
+
