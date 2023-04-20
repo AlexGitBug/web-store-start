@@ -77,9 +77,9 @@ class ProductControllerTest extends IntegrationTestBase {
                 "test-model",
                 LocalDate.now(),
                 123,
-                "test-image",
                 Color.BLACK,
                 Brand.APPLE,
+                1,
                 1
         ));
 
@@ -99,9 +99,9 @@ class ProductControllerTest extends IntegrationTestBase {
                 "test-model",
                 LocalDate.now(),
                 123,
-                "test-image",
                 Color.BLACK,
                 Brand.APPLE,
+                1,
                 1
         ));
 
@@ -127,10 +127,10 @@ class ProductControllerTest extends IntegrationTestBase {
                 "test-model",
                 LocalDate.now(),
                 123,
-                "test-image",
                 Color.BLACK,
                 Brand.APPLE,
-                1
+                1,
+                "1"
         ));
 
         mockMvc.perform(post("/products/" + productReadDto.getId() + "/delete"))
