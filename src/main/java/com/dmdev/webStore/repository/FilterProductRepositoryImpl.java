@@ -24,6 +24,7 @@ public class FilterProductRepositoryImpl implements FilterProductRepository {
 
         var predicate = QPredicate.builder()
                 .add(orderFilter.getDeliveryDate(), order.deliveryDate::eq)
+                .add(orderFilter.getId(), order.id::eq)
                 .buildAnd();
 
         return new JPAQuery<Product>(entityManager)
@@ -34,5 +35,6 @@ public class FilterProductRepositoryImpl implements FilterProductRepository {
                 .where(predicate)
                 .fetch();
     }
+
 }
 

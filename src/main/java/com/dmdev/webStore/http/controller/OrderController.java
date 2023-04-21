@@ -9,6 +9,7 @@ import com.dmdev.webStore.entity.enums.Brand;
 import com.dmdev.webStore.entity.enums.Color;
 import com.dmdev.webStore.entity.enums.PaymentCondition;
 import com.dmdev.webStore.repository.OrderRepository;
+import com.dmdev.webStore.repository.filter.OrderFilter;
 import com.dmdev.webStore.repository.filter.PersonalInformationFilter;
 import com.dmdev.webStore.service.CatalogService;
 import com.dmdev.webStore.service.OrderService;
@@ -35,6 +36,8 @@ public class OrderController {
     private final UserService userService;
     private final CatalogService catalogService;
 
+    private final ProductService productService;
+
     @GetMapping("/registration")
     public String registration(Model model, @ModelAttribute("order") @Validated OrderCreateEditDto order) {
         model.addAttribute("order", order);
@@ -56,6 +59,18 @@ public class OrderController {
         model.addAttribute("orders", orderService.findAllOrdersWithProductsOfOneUser(filter));
         model.addAttribute("users", userService.findAll());
         return "order/allordersoneuser";
+    }
+
+    @GetMapping("/{id}/onecatalog")
+    public String findAllProductsByCatalog(@PathVariable("id") Integer id, Model model) {
+        model.addAttribute("products", productService.findAllByCatalogId(id));
+        return "catalog/onecatalog";
+    }
+
+    @GetMapping("/productsfromorder")
+    public String findAllProductsFromOrder(Model model, OrderFilter filter) {
+        model.addAttribute("products", productService.findAllProductsFromOrder(filter));
+        return "catalog/onecatalog";
     }
 
     @GetMapping("/{id}")

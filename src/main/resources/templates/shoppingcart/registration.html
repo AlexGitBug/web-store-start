@@ -1,29 +1,35 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Registration ShoppingCart</title>
+    <meta charset="UTF-8">
+    <title>Registration ShoppingCart</title>
 </head>
 <body>
 <form th:action="@{/shoppingcarts}" method="post" th:object="${shoppingcart}">
-    <label for="order">Order:
-      <select id="order" name="orderId">
-        <option th:each="order : ${orders}"
-                th:value="${order.getId()}"
-                th:text="${order.getId()}">Order id</option>
-      </select>
-    </label>
-    <label for="product">Product:
-        <select id="product" name="productId" multiple>
-            <option th:each="product : ${products}"
-                    th:value="${product.getId()}"
-                    th:text="${product.getId()}">Product id</option>
-        </select>
-    </label>
+    <div>
+        <label for="order">Order:
+            <select id="order" name="orderId">
+                <option th:each="order : ${orders}"
+                        th:value="${order.getId()}"
+                        th:text="${order.getId()}">Order id
+                </option>
+            </select>
+        </label>
+    </div>
+    <div>
+        <label for="product">Product:
+            <select id="product" name="productId">
+                <option th:each="product : ${products}"
+                        th:value="${product.id}"
+                        th:text="${product.id}">Product id
+                </option>
+            </select>
+        </label>
+    </div>
     <label for="createdAt">CreatedAt:
         <input id="createdAt" type="date" name="createdAt" th:value="*{createdAt}">
     </label><br>
-  <button type="submit">Register</button>
+    <button type="submit">Register</button>
 </form>
 </body>
 </html>

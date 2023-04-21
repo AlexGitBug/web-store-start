@@ -23,12 +23,11 @@ public class ShoppingCartController {
 
     private final ShoppingCartService shoppingCartService;
     private final ProductService productService;
-
     private final OrderService orderService;
 
     @GetMapping("/registration")
-    public String registration(Model model, @ModelAttribute("product") @Validated ShoppingCartCreateEditDto shoppingCartDto) {
-        model.addAttribute("shoppingcart", shoppingCartDto);
+    public String registration(Model model, @Validated ShoppingCartCreateEditDto shoppingcart) {
+        model.addAttribute("shoppingcart", shoppingcart);
         model.addAttribute("products", productService.findAll());
         model.addAttribute("orders", orderService.findAll());
         return "shoppingcart/registration";
@@ -38,4 +37,5 @@ public class ShoppingCartController {
     public String create(@ModelAttribute ShoppingCartCreateEditDto shoppingCart, RedirectAttributes redirectAttributes) {
         return "redirect:/shoppingcarts/" + shoppingCartService.create(shoppingCart).getId();
     }
+
 }

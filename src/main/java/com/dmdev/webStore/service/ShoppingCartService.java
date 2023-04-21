@@ -7,10 +7,12 @@ import com.dmdev.webStore.dto.user.UserReadDto;
 import com.dmdev.webStore.mapper.shoppingCart.ShoppingCartCreateEditMapper;
 import com.dmdev.webStore.mapper.shoppingCart.ShoppingCartReadMapper;
 import com.dmdev.webStore.repository.ShoppingCartRepository;
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,7 +22,6 @@ public class ShoppingCartService {
 
     private final ShoppingCartCreateEditMapper shoppingCartCreateEditMapper;
     private final ShoppingCartRepository shoppingCartRepository;
-
     private final ShoppingCartReadMapper shoppingCartReadMapper;
 
     @Transactional
@@ -31,4 +32,10 @@ public class ShoppingCartService {
                 .map(shoppingCartReadMapper::map)
                 .orElseThrow();
     }
+
+//    @Transactional
+//    public List<Tuple> getStatisticOfEachOrdersWithSum() {
+//        return
+//    }
+
 }

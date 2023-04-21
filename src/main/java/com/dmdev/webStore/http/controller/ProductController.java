@@ -2,6 +2,7 @@ package com.dmdev.webStore.http.controller;
 
 
 import com.dmdev.webStore.dto.catalog.CatalogReadDto;
+import com.dmdev.webStore.entity.Product;
 import com.dmdev.webStore.repository.filter.OrderFilter;
 import com.dmdev.webStore.repository.filter.ProductFilter;
 import com.dmdev.webStore.dto.PageResponse;
@@ -9,6 +10,7 @@ import com.dmdev.webStore.dto.product.ProductCreateEditDto;
 import com.dmdev.webStore.entity.enums.Brand;
 import com.dmdev.webStore.entity.enums.Color;
 import com.dmdev.webStore.service.CatalogService;
+import com.dmdev.webStore.service.OrderService;
 import com.dmdev.webStore.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/products")
@@ -34,6 +38,7 @@ public class ProductController {
 
     private final ProductService productService;
     private final CatalogService catalogService;
+    private final OrderService orderService;
 
     @GetMapping("/registration")
     public String registration(Model model, @ModelAttribute("product") @Validated ProductCreateEditDto product) {
@@ -51,7 +56,13 @@ public class ProductController {
         model.addAttribute("filter", filter);
         model.addAttribute("brands", Brand.values());
         model.addAttribute("catalogs", catalogService.findAll());
+        model.addAttribute("orders", orderService.findAll());
         return "product/products";
+    }
+    @GetMapping("/{id}/onecatalog")
+    public String findAllProductsByCatalog(@PathVariable("id") Integer id, Model model) {
+        model.addAttribute("products", productService.findAllByCatalogId(id));
+        return "catalog/onecatalog";
     }
 
     @GetMapping("/productsfromorder")
@@ -65,6 +76,7 @@ public class ProductController {
         return productService.findById(id)
                 .map(product -> {
                     model.addAttribute("product", product);
+                    model.addAttribute("products", productService.findAll());
                     model.addAttribute("colors", Color.values());
                     model.addAttribute("brands", Brand.values());
                     model.addAttribute("catalogs", catalogService.findAll());

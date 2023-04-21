@@ -28,7 +28,7 @@ public class ShoppingCartCreateEditMapper implements Mapper<ShoppingCartCreateEd
     }
 
     private void copy(ShoppingCartCreateEditDto object, ShoppingCart shoppingCart) {
-        shoppingCart.setProduct(getProduct(object.getOrderId()));
+        shoppingCart.setProduct(getProduct(object.getProductId()));
         shoppingCart.setOrder(getOrder(object.getOrderId()));
         shoppingCart.setCreatedAt(object.getCreatedAt());
     }

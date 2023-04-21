@@ -56,7 +56,8 @@ public class CatalogController {
     }
     @PostMapping
     public String create(@ModelAttribute CatalogCreateEditDto catalog) {
-        return "redirect:/catalogs/" + catalogService.create(catalog).getId();
+        catalogService.create(catalog);
+        return "redirect:/catalogs";
     }
 
     @PostMapping("/{id}/update")

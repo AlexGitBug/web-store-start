@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.dmdev.webStore.entity.QCatalog.catalog;
 import static com.dmdev.webStore.entity.QProduct.product;
@@ -58,7 +59,6 @@ public class ProductService {
         return productRepository.findAllByCatalogId(id)
                 .stream().map(productReadMapper::map)
                 .toList();
-
     }
 
     public List<ProductReadDto> findAll() {

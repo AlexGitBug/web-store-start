@@ -20,5 +20,6 @@ public interface ProductRepository extends
     List<Product> findAllByCatalogId(Integer catalog);
     Optional<Product> findTopByOrderByPriceAsc();
     Optional<Product> findTopByOrderByPriceDesc();
+
 }
 
