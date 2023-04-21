@@ -81,11 +81,12 @@ class ProductServiceTest {
         var product1 = getProduct1(catalog);
         var catalogReadDto = getCatalogReadDto();
         var productReadDto = getProductReadDto(catalogReadDto);
-        var productReadDto1 = getProductReadDto(catalogReadDto);
+        var productReadDto1 = getProductReadDto1(catalogReadDto);
         List<Product> productList = List.of(product, product1);
         List<ProductReadDto> expectedDtoList = List.of(productReadDto, productReadDto1);
         doReturn(productList).when(productRepository).findAll();
-        doReturn(expectedDtoList.get(0), expectedDtoList.get(1)).when(productReadMapper).map(any(Product.class));
+        doReturn(expectedDtoList.get(0), expectedDtoList.get(1))
+                .when(productReadMapper).map(any(Product.class));
 
         List<ProductReadDto> actualResult = productService.findAll();
 
