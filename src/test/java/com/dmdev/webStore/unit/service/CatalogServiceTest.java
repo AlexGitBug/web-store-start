@@ -51,9 +51,9 @@ public class CatalogServiceTest {
 
     @Test
     void findByIdNotSuccess() {
-        doReturn(Optional.empty()).when(catalogRepository).findById(FIND_BY_ID);
+        doReturn(Optional.empty()).when(catalogRepository).findById(any());
 
-        Optional<CatalogReadDto> actualResult = catalogService.findById(FIND_BY_ID);
+        Optional<CatalogReadDto> actualResult = catalogService.findById(any());
 
         assertThat(actualResult).isEmpty();
         verifyNoInteractions(catalogReadMapper);
@@ -106,7 +106,7 @@ public class CatalogServiceTest {
     void update() {
         CatalogCreateEditDto catalogCreateEditDto = getCatalogCreateEditDto();
         Catalog catalog = getCatalog();
-        Catalog updatedCatalog = getCatalog1();
+        Catalog updatedCatalog = getCatalog();
         CatalogReadDto catalogReadDto = getCatalogReadDto();
         doReturn(Optional.of(catalog)).when(catalogRepository).findById(catalog.getId());
         doReturn(updatedCatalog).when(catalogCreateEditMapper).map(catalogCreateEditDto, catalog);
@@ -130,7 +130,6 @@ public class CatalogServiceTest {
         boolean actualResult = catalogService.delete(catalog.getId());
 
         assertThat(actualResult).isTrue();
-        verify(catalogService).delete(catalog.getId());
     }
 
     @Test

@@ -17,7 +17,8 @@ import static java.nio.file.StandardOpenOption.*;
 @RequiredArgsConstructor
 public class ImageService {
 
-    @Value("${app.image.bucket:C:\\webstore\\images}")
+    //    @Value("${app.image.bucket:C:\\webstore\\images}")
+    @Value("${app.image.bucket:C:\\Users\\User\\IdeaProjects\\web-store-start\\images}")
     private final String bucket;
 
     @SneakyThrows

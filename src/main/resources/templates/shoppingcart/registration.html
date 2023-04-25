@@ -10,8 +10,8 @@
         <label for="order">Order:
             <select id="order" name="orderId">
                 <option th:each="order : ${orders}"
-                        th:value="${order.getId()}"
-                        th:text="${order.getId()}">Order id
+                        th:value="${order.id}"
+                        th:text="${order.id}">Order id
                 </option>
             </select>
         </label>

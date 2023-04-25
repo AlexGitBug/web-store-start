@@ -28,9 +28,6 @@
             </select>
         </label>
     </div>
-    <label for="brand">Brand:
-        <input id="brand" type="text" name="brand">
-    </label><br>
     <label for="priceMin">PriceStart:
         <input id="priceMin" type="number" name="priceMin">
     </label><br>
@@ -51,39 +48,13 @@
 <div th:each="product : ${products.content}">
     <a th:href="@{'/products/' + ${product.id}}"
        th:text="|id: ${product.id}. price: ${product.price}, brand: ${product.brand.name()}|">Product</a>
-    <a href="/shoppingcarts/registration">Добавить товар в корзину</a>
-<!--    <form th:action="@{/shoppingcarts/registration}" method="get">-->
-<!--        <button type="submit">Add product in order</button>-->
+<!--    <form th:action="@{/shoppingcarts/${product.id}?orderId=${currentorder.id}}" method="post">-->
+<!--        <button type="submit">Add to shoppingcart</button>-->
 <!--    </form>-->
-<!--    <form th:action="@{/orders/{orderId}/shopping(orderId=${order.id})}/" method="post">-->
-<!--        <button type="submit">Add product in order</button>-->
-<!--    </form>-->
-</div>
+    <form th:action="@{/shoppingcarts/{productId}(productId=${product.id})}" method="post">
+        <button type="submit">Add to shoppingcart</button>
+    </form>
+</div><br><br><br>
+<a th:href="@{/shoppingcarts?orderId=1}">Redirect to shoppingcart</a>
 </body>
 </html>
-
-<!--<a th:href="@{'/products/' + ${product.id}}"-->
-<!--   th:text="|id: ${product.id}. price: ${product.price}, brand: ${product.brand.name()}|">Product</a>-->
-
-
-<!--<form th:action="@{/catalogs/{catalogId}/update(catalogId=${catalog.id})}" method="post" th:object="${catalog}">-->
-<!--    <label for="category">Category:-->
-<!--        <input id="category" type="text" name="category" th:value="*{category}">-->
-<!--    </label> <br>-->
-<!--    <button type="submit">Update</button><br>-->
-<!--</form><br>-->
-<!--<form th:action="@{/catalogs/{catalogId}/delete(catalogId=${catalog.id})}" method="post">-->
-<!--    <button type="submit">Remove</button>-->
-<!--</form><br>-->
-<!--<form th:action="@{/catalogs/{catalogId}/onecatalog(catalogId=${catalog.id})}" method="get">-->
-<!--    <button type="submit">Redirect to products from catalog</button>-->
-<!--</form>-->
-<!--<form th:action="@{/users/registration}" method="get">-->
-<!--    <button type="submit">Redirect create User</button>-->
-
-<!--<div th:each="product : ${products.content}">-->
-<!--    <form th:action="@{'/products/' + ${product.id}}">-->
-<!--        <-->
-<!--        <button type="submit">Add product in order</button>-->
-<!--    </form>-->
-<!--</div>-->

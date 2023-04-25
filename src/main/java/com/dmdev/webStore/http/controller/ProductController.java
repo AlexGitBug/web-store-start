@@ -2,6 +2,7 @@ package com.dmdev.webStore.http.controller;
 
 
 import com.dmdev.webStore.dto.catalog.CatalogReadDto;
+import com.dmdev.webStore.dto.order.OrderCreateEditDto;
 import com.dmdev.webStore.entity.Product;
 import com.dmdev.webStore.repository.filter.OrderFilter;
 import com.dmdev.webStore.repository.filter.ProductFilter;
@@ -12,6 +13,7 @@ import com.dmdev.webStore.entity.enums.Color;
 import com.dmdev.webStore.service.CatalogService;
 import com.dmdev.webStore.service.OrderService;
 import com.dmdev.webStore.service.ProductService;
+import com.dmdev.webStore.service.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -39,6 +41,7 @@ public class ProductController {
     private final ProductService productService;
     private final CatalogService catalogService;
     private final OrderService orderService;
+    private final ShoppingCartService shoppingCartService;
 
     @GetMapping("/registration")
     public String registration(Model model, @ModelAttribute("product") @Validated ProductCreateEditDto product) {
@@ -49,6 +52,12 @@ public class ProductController {
         return "product/registration";
     }
 
+    @GetMapping("/{id}/orders")
+    public String orders(@PathVariable("id") Integer id, Model model) {
+        model.addAttribute("products", productService.findById(id));
+        return "redirect:/orders/registration";
+    }
+
     @GetMapping
     public String findAll(Model model, ProductFilter filter, Pageable pageable) {
         var page = productService.findAllProducts(filter, pageable);
@@ -57,6 +66,7 @@ public class ProductController {
         model.addAttribute("brands", Brand.values());
         model.addAttribute("catalogs", catalogService.findAll());
         model.addAttribute("orders", orderService.findAll());
+//        model.addAttribute("currentorder", orderService.findUserOrder(current_user_id из security. пока 1));
         return "product/products";
     }
     @GetMapping("/{id}/onecatalog")
@@ -89,7 +99,6 @@ public class ProductController {
     public String create(@ModelAttribute ProductCreateEditDto product, RedirectAttributes redirectAttributes) {
         return "redirect:/products/" + productService.create(product).getId();
     }
-
     @PostMapping("/{id}/update")
     public String update(@PathVariable("id") Integer id, @ModelAttribute ProductCreateEditDto product) {
         return productService.update(id, product)

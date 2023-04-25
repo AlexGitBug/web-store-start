@@ -1,6 +1,13 @@
 package com.dmdev.webStore.entity.enums;
 
-public enum Role {
+import org.springframework.security.core.GrantedAuthority;
+
+public enum Role implements GrantedAuthority {
     USER,
-    ADMIN
+    ADMIN;
+
+    @Override
+    public String getAuthority() {
+        return name();
+    }
 }
