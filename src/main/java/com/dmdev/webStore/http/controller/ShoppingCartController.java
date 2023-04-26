@@ -7,6 +7,8 @@ import com.dmdev.webStore.service.ProductService;
 import com.dmdev.webStore.service.ShoppingCartService;
 import com.dmdev.webStore.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.time.LocalDate;
 
@@ -34,16 +37,29 @@ public class ShoppingCartController {
         return "shoppingcart/shoppingcart";
     }
 
+//    @PostMapping("/{id}")
+//    public String create(Model model,
+//                         @PathVariable("id") Integer id,
+//                         @AuthenticationPrincipal UserDetails userDetails
+////                         @RequestParam("orderId") Integer orderId
+//    ) {
+////        model.addAttribute("products", productService.findById(productId));
+////        model.addAttribute("orders", orderService.findById(orderId));
+//        var productId = productService.findById(id).get().getId();
+//        var orderIdFromUser = userService.findById(1).get().getId();
+//        shoppingCartService.create(new ShoppingCartCreateEditDto(orderIdFromUser, productId, LocalDate.now()));
+//        return "redirect:/products";
+//    }
+
     @PostMapping("/{id}")
     public String create(Model model,
-                         @PathVariable("id") Integer id
+                         @PathVariable("id") Integer id,
+                         @AuthenticationPrincipal UserDetails userDetails
 //                         @RequestParam("orderId") Integer orderId
     ) {
-//        model.addAttribute("products", productService.findById(productId));
-//        model.addAttribute("orders", orderService.findById(orderId));
+        var orderId = userService.findByEmail(userDetails.getUsername()).get().getId();
         var productId = productService.findById(id).get().getId();
-        var orderIdFromUser = userService.findById(1).get().getId();
-        shoppingCartService.create(new ShoppingCartCreateEditDto(orderIdFromUser, productId, LocalDate.now()));
+        shoppingCartService.create(new ShoppingCartCreateEditDto(orderId, productId, LocalDate.now()));
         return "redirect:/products";
     }
 

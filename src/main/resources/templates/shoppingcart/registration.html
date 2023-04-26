@@ -5,6 +5,7 @@
     <title>Registration ShoppingCart</title>
 </head>
 <body>
+<div th:insert="~{fragment :: header}"></div>
 <form th:action="@{/shoppingcarts}" method="post" th:object="${shoppingcart}">
     <div>
         <label for="order">Order:

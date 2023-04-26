@@ -5,6 +5,7 @@
     <title>Catalog</title>
 </head>
 <body>
+<div th:insert="~{fragment :: header}"></div>
 <form th:action="@{/catalogs/{catalogId}/update(catalogId=${catalog.id})}" method="post" th:object="${catalog}">
     <label for="category">Category:
         <input id="category" type="text" name="category" th:value="*{category}">

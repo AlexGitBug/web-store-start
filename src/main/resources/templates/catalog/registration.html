@@ -5,6 +5,7 @@
   <title>Registration catalog</title>
 </head>
 <body>
+<div th:insert="~{fragment :: header}"></div>
 <span>Регистрация нового каталога</span><br><br>
 
 <form th:action="@{/catalogs}" method="post" th:object="${catalog}">

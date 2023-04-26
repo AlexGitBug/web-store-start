@@ -45,6 +45,8 @@ public class User implements BaseEntity<Integer> {
     @Version
     private Integer version;
 
+    private String password;
+
     @Column
     @Enumerated(EnumType.STRING)
     private Role role;

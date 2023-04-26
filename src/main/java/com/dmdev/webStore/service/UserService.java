@@ -73,10 +73,15 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email)
                 .map(user -> new org.springframework.security.core.userdetails.User(
                         user.getPersonalInformation().getEmail(),
-                        user.getPersonalInformation().getPassword(),
+                        user.getPassword(),
                         Collections.singleton(user.getRole())
                 ))
                 .orElseThrow(()->new UsernameNotFoundException("Failed to retrieve user: " + email));
+    }
+
+    public Optional<UserReadDto> findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(userReadMapper::map);
     }
 }
 

@@ -5,8 +5,9 @@
     <title>Catalogs</title>
 </head>
 <body>
+<div th:insert="~{fragment :: header}"></div>
 <div th:each="catalog : ${catalogs}">
-    <a th:href="@{'/catalogs/' + ${catalog.getId()}}"
+    <a th:href="@{'/catalogs/' + ${catalog.getId() + '/onecatalog'}}"
        th:text="|id: ${catalog.getId()}. category: ${catalog.getCategory()}|">Catalog</a>
 </div>
 <a href="/catalogs/registration">Добавить новый каталог</a>

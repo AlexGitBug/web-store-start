@@ -5,6 +5,7 @@
     <title>ShoppingCart</title>
 </head>
 <body>
+<div th:insert="~{fragment :: header}"></div>
 <div th:each="shoppingcart : ${shoppingcarts}">
     <a th:href="@{'/products/' + ${shoppingcart.product.id}}"
        th:text="|category: ${shoppingcart.product.catalog.category},

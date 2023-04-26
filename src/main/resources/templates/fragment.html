@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Fragments</title>
+</head>
+<body>
+<div th:fragment="header">
+    <form action="/logout" method="post">
+        <button type="submit">Logout</button>
+    </form>
+</div>
+
+<div th:fragment="footer">
+    <form action="/catalogs" method="get">
+        <button type="submit">Redirect to catalogs</button>
+    </form>
+</div>
+</body>
+</html>

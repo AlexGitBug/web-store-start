@@ -5,11 +5,18 @@ import com.dmdev.webStore.entity.User;
 import com.dmdev.webStore.entity.embeddable.PersonalInformation;
 import com.dmdev.webStore.mapper.Mapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import java.util.Objects;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class UserCreateEditMapper implements Mapper<UserCreateEditDto, User> {
+
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User map(UserCreateEditDto object) {
@@ -30,10 +37,15 @@ public class UserCreateEditMapper implements Mapper<UserCreateEditDto, User> {
                 object.getFirstName(),
                 object.getLastName(),
                 object.getEmail(),
-                object.getPassword(),
                 object.getTelephone(),
                 object.getBirthDate()
         ));
+        Optional.ofNullable(object.getPassword())
+                .filter(str -> StringUtils.hasText(str))
+                .map(password -> passwordEncoder.encode(password))
+                .ifPresent(user::setPassword);
 
     }
+
+
 }

@@ -5,10 +5,15 @@
     <title>Catalog of products</title>
 </head>
 <body>
+<div th:insert="~{fragment :: header}"></div>
 <div th:each="product : ${products}">
     <a th:href="@{'/products/' + ${product.id}}"
        th:text="|id: ${product.id}. price: ${product.price}, brand: ${product.brand.name()}|">Product</a>
+    <form th:action="@{/shoppingcarts/{productId}(productId=${product.id})}" method="post">
+        <button type="submit">Add to shoppingcart</button>
+    </form>
 </div>
+<div th:insert="~{fragment :: footer}"></div>
 </body>
 </html>
 

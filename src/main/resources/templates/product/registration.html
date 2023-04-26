@@ -5,6 +5,7 @@
     <title>Registration Product</title>
 </head>
 <body>
+<div th:insert="~{fragment :: header}"></div>
 <form th:action="@{/products}" enctype="multipart/form-data" method="post" th:object="${product}">
     <label for="model">Model:
         <input id="model" type="text" name="model" th:value="*{model}">
