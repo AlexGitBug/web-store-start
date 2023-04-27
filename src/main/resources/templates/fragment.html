@@ -6,14 +6,20 @@
 </head>
 <body>
 <div th:fragment="header">
+    <span th:text="${#authentication.principal.username}">Email</span>
     <form action="/logout" method="post">
         <button type="submit">Logout</button>
     </form>
-</div>
-
+</div><br>
 <div th:fragment="footer">
     <form action="/catalogs" method="get">
         <button type="submit">Redirect to catalogs</button>
+    </form>
+    <form action="/orders/registration" method="get">
+        <button type="submit">Redirect to order registration</button>
+    </form>
+    <form action="/products" method="get">
+        <button type="submit">Redirect to products</button>
     </form>
 </div>
 </body>

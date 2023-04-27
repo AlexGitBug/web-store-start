@@ -1,6 +1,5 @@
 package com.dmdev.webStore.http.controller;
 
-
 import com.dmdev.webStore.dto.shoppingCart.ShoppingCartCreateEditDto;
 import com.dmdev.webStore.service.OrderService;
 import com.dmdev.webStore.service.ProductService;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.time.LocalDate;
 
@@ -37,6 +35,19 @@ public class ShoppingCartController {
         return "shoppingcart/shoppingcart";
     }
 
+
+    @PostMapping("/{id}")
+    public String create(Model model,
+                         @PathVariable("id") Integer id,
+                         @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        var userId = userService.findByEmail(userDetails.getUsername()).getId();
+        var orderId = orderService.findByUserId(userId).getId();
+        var productId = productService.finByProductId(id).getId();
+        shoppingCartService.create(new ShoppingCartCreateEditDto(orderId, productId, LocalDate.now()));
+        return "redirect:/products";
+    }
+
 //    @PostMapping("/{id}")
 //    public String create(Model model,
 //                         @PathVariable("id") Integer id,
@@ -51,17 +62,6 @@ public class ShoppingCartController {
 //        return "redirect:/products";
 //    }
 
-    @PostMapping("/{id}")
-    public String create(Model model,
-                         @PathVariable("id") Integer id,
-                         @AuthenticationPrincipal UserDetails userDetails
-//                         @RequestParam("orderId") Integer orderId
-    ) {
-        var orderId = userService.findByEmail(userDetails.getUsername()).get().getId();
-        var productId = productService.findById(id).get().getId();
-        shoppingCartService.create(new ShoppingCartCreateEditDto(orderId, productId, LocalDate.now()));
-        return "redirect:/products";
-    }
 
 //    @GetMapping("/registration")
 //    public String registration(Model model, @Validated ShoppingCartCreateEditDto shoppingcart) {

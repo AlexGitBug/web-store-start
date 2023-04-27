@@ -10,10 +10,7 @@ import com.dmdev.webStore.dto.PageResponse;
 import com.dmdev.webStore.dto.product.ProductCreateEditDto;
 import com.dmdev.webStore.entity.enums.Brand;
 import com.dmdev.webStore.entity.enums.Color;
-import com.dmdev.webStore.service.CatalogService;
-import com.dmdev.webStore.service.OrderService;
-import com.dmdev.webStore.service.ProductService;
-import com.dmdev.webStore.service.ShoppingCartService;
+import com.dmdev.webStore.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -41,7 +38,7 @@ public class ProductController {
     private final ProductService productService;
     private final CatalogService catalogService;
     private final OrderService orderService;
-    private final ShoppingCartService shoppingCartService;
+    private final UserService userService;
 
     @GetMapping("/registration")
     public String registration(Model model, @ModelAttribute("product") @Validated ProductCreateEditDto product) {
@@ -90,6 +87,7 @@ public class ProductController {
                     model.addAttribute("colors", Color.values());
                     model.addAttribute("brands", Brand.values());
                     model.addAttribute("catalogs", catalogService.findAll());
+                    model.addAttribute("user", userService.findAll());
                     return "product/product";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

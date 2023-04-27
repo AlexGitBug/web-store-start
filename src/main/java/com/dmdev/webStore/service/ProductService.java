@@ -72,6 +72,12 @@ public class ProductService {
                 .map(productReadMapper::map);
     }
 
+    public ProductReadDto finByProductId(Integer id) {
+        return productRepository.findById(id)
+                .map(productReadMapper::map)
+                .orElseThrow();
+    }
+
     public Optional<byte[]> findImage(Integer id) {
         return productRepository.findById(id)
                 .map(Product::getImage)

@@ -6,6 +6,7 @@ import com.dmdev.webStore.dto.product.ProductCreateEditDto;
 import com.dmdev.webStore.dto.product.ProductReadDto;
 import com.dmdev.webStore.dto.user.UserCreateEditDto;
 import com.dmdev.webStore.dto.user.UserReadDto;
+import com.dmdev.webStore.entity.User;
 import com.dmdev.webStore.mapper.order.OrderCreateEditMapper;
 import com.dmdev.webStore.mapper.order.OrderReadMapper;
 import com.dmdev.webStore.repository.OrderRepository;
@@ -24,11 +25,16 @@ import java.util.Optional;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-
     private final OrderReadMapper orderReadMapper;
     private final OrderCreateEditMapper orderCreateEditMapper;
 
 
+    public OrderReadDto findByUserId(Integer id) {
+        return orderRepository.findByUserId(id)
+                .map(orderReadMapper::map)
+                .orElseThrow();
+
+    }
     public List<OrderReadDto> findAllOrdersWithProductsOfOneUser(PersonalInformationFilter filter) {
         return orderRepository.findAllOrdersWithProductsOfOneUser(filter).stream()
                 .map(orderReadMapper::map)

@@ -18,6 +18,8 @@ import com.dmdev.webStore.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -39,10 +41,12 @@ public class OrderController {
     private final ProductService productService;
 
     @GetMapping("/registration")
-    public String registration(Model model, @ModelAttribute("order") @Validated OrderCreateEditDto order) {
+    public String registration(Model model,
+                               @ModelAttribute("order") @Validated OrderCreateEditDto order,
+                               @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("order", order);
         model.addAttribute("payments", PaymentCondition.values());
-        model.addAttribute("users", userService.findAll());
+        model.addAttribute("userid", userService.findByEmail(userDetails.getUsername()).getId());
         return "order/registration";
     }
 
@@ -74,13 +78,14 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable("id") Integer id, Model model) {
+    public String findById(@PathVariable("id") Integer id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
         return orderService.findById(id)
                 .map(order -> {
                     model.addAttribute("order", order);
                     model.addAttribute("payments", PaymentCondition.values());
                     model.addAttribute("users", userService.findAll());
                     model.addAttribute("catalogs", catalogService.findAll());
+                    model.addAttribute("userid", userService.findByEmail(userDetails.getUsername()).getId());
                     return "order/order";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

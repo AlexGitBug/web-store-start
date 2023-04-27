@@ -79,9 +79,10 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(()->new UsernameNotFoundException("Failed to retrieve user: " + email));
     }
 
-    public Optional<UserReadDto> findByEmail(String email) {
+    public UserReadDto findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .map(userReadMapper::map);
+                .map(userReadMapper::map)
+                .orElseThrow();
     }
 }
 

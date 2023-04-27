@@ -19,21 +19,25 @@
   <label for="deliveryDate">DeliveryDate:
     <input id="deliveryDate" type="date" name="deliveryDate" th:value="*{deliveryDate}">
   </label><br>
+  <label for="user">User id:
+    <input id="user" type="number" name="userId" th:value="${userid}">
+  </label><br>
   <div th:each="paymentCondition : ${payments}">
     <input th:id="${paymentCondition}" type="radio" name="paymentCondition" th:value="${paymentCondition}" th:checked="${paymentCondition == order.paymentCondition}">
     <label th:for="${paymentCondition}" th:text="${paymentCondition}">Role name</label>
   </div>
-  <div>
-    <label for="user">User:
-      <select id="user" name="userId">
-        <option th:each="user : ${users}"
-                th:value="${user.getId()}"
-                th:selected="${user.getId() == order.userId}"
-                th:text="${user.lastName}">User</option>
-      </select>
-    </label>
-  </div>
+<!--  <div>-->
+<!--    <label for="user">User:-->
+<!--      <select id="user" name="userId">-->
+<!--        <option th:each="user : ${users}"-->
+<!--                th:value="${user.getId()}"-->
+<!--                th:selected="${user.getId() == order.userId}"-->
+<!--                th:text="${user.lastName}">User</option>-->
+<!--      </select>-->
+<!--    </label>-->
+<!--  </div>-->
   <button type="submit">Register</button>
 </form>
+<div th:insert="~{fragment :: footer}"></div>
 </body>
 </html>
