@@ -19,7 +19,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeHttpRequests(urlConfig -> urlConfig
                         .antMatchers("/login", "/users/registration/**", "/users/**").permitAll()
                         .antMatchers("/catalogs", "/orders/registration", "/orders/{\\d+}", "/orders/{\\d+}/update",
-                                "/products", "/catalogs/{\\d+}/onecatalog", "/products/{\\d+}").hasAnyAuthority(Role.USER.getAuthority(), Role.ADMIN.getAuthority())
+                                "/products", "/catalogs/{\\d+}/onecatalog", "/products/{\\d+}",
+                                "/shoppingcarts/{\\d+}/add", "/shoppingcarts/{\\d+}").hasAnyAuthority(Role.USER.getAuthority(), Role.ADMIN.getAuthority())
                         .anyRequest().authenticated())
                 .logout(logout -> logout
                         .logoutUrl("/logout")
@@ -27,20 +28,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 )
                 .formLogin(login -> login
                         .loginPage("/login")
-                        .defaultSuccessUrl("/orders/registration"));
-
-//        http
-//                .csrf().disable()
-//                .authorizeRequests().anyRequest().authenticated()
-//                .and()
-//                .logout(logout->logout
-//                        .logoutUrl("/logout")
-//                        .logoutSuccessUrl("/login")
-//                )
-//                .formLogin(login -> login
-//                        .loginPage("/login")
-//                        .defaultSuccessUrl("/products")
-//                        .permitAll());
+                        .defaultSuccessUrl("/catalogs"));
     }
 
     @Bean

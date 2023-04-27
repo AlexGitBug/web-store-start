@@ -14,6 +14,7 @@ import com.dmdev.webStore.repository.filter.PersonalInformationFilter;
 import com.dmdev.webStore.service.CatalogService;
 import com.dmdev.webStore.service.OrderService;
 import com.dmdev.webStore.service.ProductService;
+import com.dmdev.webStore.service.ShoppingCartService;
 import com.dmdev.webStore.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -37,8 +38,8 @@ public class OrderController {
     private final OrderService orderService;
     private final UserService userService;
     private final CatalogService catalogService;
-
     private final ProductService productService;
+    private final ShoppingCartService shoppingCartService;
 
     @GetMapping("/registration")
     public String registration(Model model,
@@ -47,6 +48,7 @@ public class OrderController {
         model.addAttribute("order", order);
         model.addAttribute("payments", PaymentCondition.values());
         model.addAttribute("userid", userService.findByEmail(userDetails.getUsername()).getId());
+        model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(orderService.findByUserId(userService.findByEmail(userDetails.getUsername()).getId()).getId()));
         return "order/registration";
     }
 

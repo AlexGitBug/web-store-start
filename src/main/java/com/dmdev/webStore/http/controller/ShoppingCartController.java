@@ -1,6 +1,9 @@
 package com.dmdev.webStore.http.controller;
 
+import com.dmdev.webStore.dto.order.OrderCreateEditDto;
+import com.dmdev.webStore.dto.order.OrderReadDto;
 import com.dmdev.webStore.dto.shoppingCart.ShoppingCartCreateEditDto;
+import com.dmdev.webStore.entity.enums.PaymentCondition;
 import com.dmdev.webStore.service.OrderService;
 import com.dmdev.webStore.service.ProductService;
 import com.dmdev.webStore.service.ShoppingCartService;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/shoppingcarts")
@@ -47,6 +52,39 @@ public class ShoppingCartController {
         shoppingCartService.create(new ShoppingCartCreateEditDto(orderId, productId, LocalDate.now()));
         return "redirect:/products";
     }
+
+    @PostMapping("/{id}/add")
+    public String addProductInShoppingCartList(Model model,
+                                               @PathVariable("id") Integer id,
+                                               @AuthenticationPrincipal UserDetails userDetails) {
+//        orderService.create(new OrderCreateEditDto("null", "null", 1, LocalDate.now(), PaymentCondition.CASH, userService.findByEmail(userDetails.getUsername()).getId()));
+//        if (orderService.findByUserId(userService.findByEmail(userDetails.getUsername()).getId()).getId() != null) {
+            var productId = productService.finByProductId(id).getId();
+            var orderId = orderService.findByUserId(userService.findByEmail(userDetails.getUsername()).getId()).getId();
+            shoppingCartService.create(new ShoppingCartCreateEditDto(orderId, productId, LocalDate.now()));
+            return "redirect:/catalogs";
+//        }
+//        return "redirect:/orders/registration";
+    }
+
+
+//    @PostMapping("/{id}/add")
+//    public String addProductInShoppingCartList(Model model,
+//                                               @PathVariable("id") Integer id,
+//                                               @AuthenticationPrincipal UserDetails userDetails
+//    ) {
+//
+//        var order = orderService.findByUserId(userService.findByEmail(userDetails.getUsername()).getId());
+//        if (order == null) {
+//            var newOrder = orderService.create(new OrderCreateEditDto("1", "1", 1, LocalDate.now(),
+//                    PaymentCondition.CASH, userService.findByEmail(userDetails.getUsername()).getId()));
+//            return "redirect:/catalogs";
+//        }
+//        var productId = productService.finByProductId(id).getId();
+//        shoppingCartService.create(new ShoppingCartCreateEditDto(order.getId(), productId, LocalDate.now()));
+//        return "redirect:/orders/" + orderService.findByUserId(userService.findByEmail(userDetails.getUsername()).getId());
+//    }
+
 
 //    @PostMapping("/{id}")
 //    public String create(Model model,
@@ -99,7 +137,6 @@ public class ShoppingCartController {
 //        shoppingCartService.create(new ShoppingCartCreateEditDto(orderId, productId, LocalDate.now()));
 //        return "redirect:product/products";
 //    }
-
 
 
 }

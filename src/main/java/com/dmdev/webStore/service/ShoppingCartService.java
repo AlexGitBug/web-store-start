@@ -52,4 +52,10 @@ public class ShoppingCartService {
                 .collect(toList());
     }
 
+    public List<ShoppingCartReadDto> findAll() {
+        return shoppingCartRepository.findAll().stream()
+                .map(shoppingCartReadMapper::map)
+                .collect(toList());
+    }
+
 }

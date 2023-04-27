@@ -38,6 +38,10 @@
 <!--  </div>-->
   <button type="submit">Register</button>
 </form>
+
+<div th:each="shoppingcart : ${shoppingcarts}">
+  <a th:text="|id: ${shoppingcart.getId()}. category: ${shoppingcart.product.catalog.category}|">shoppingcart</a>
+</div>
 <div th:insert="~{fragment :: footer}"></div>
 </body>
 </html>

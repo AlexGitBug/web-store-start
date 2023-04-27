@@ -10,7 +10,8 @@
     <form action="/logout" method="post">
         <button type="submit">Logout</button>
     </form>
-</div><br>
+</div>
+<br>
 <div th:fragment="footer">
     <form action="/catalogs" method="get">
         <button type="submit">Redirect to catalogs</button>
@@ -21,6 +22,12 @@
     <form action="/products" method="get">
         <button type="submit">Redirect to products</button>
     </form>
+</div>
+<br>
+<div th:fragment="payment">
+<form action="/payments" method="get">
+    <button type="submit">Redirect to payments</button>
+</form>
 </div>
 </body>
 </html>
