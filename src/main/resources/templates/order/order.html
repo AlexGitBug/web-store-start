@@ -38,13 +38,19 @@
 <!--  </div>-->
   <button type="submit">Update</button><br>
 </form>
+
+<div th:each="shoppingcart : ${shoppingcarts}">
+  <a th:text="|id: ${shoppingcart.getId()}. category: ${shoppingcart.product.catalog.category}|">shoppingcart</a>
+</div>
+<form th:action="@{/orders/{orderId}/setStatus(orderId=${order.id})}" method="post">
+  <button type="submit">Confirm</button>
+</form><br>
 <form th:action="@{/orders/{orderId}/delete(orderId=${order.id})}" method="post">
   <button type="submit">Remove</button>
 </form>
 <form th:action="@{/orders/allordersoneuser}" method="get">
   <button type="submit">Redirect to all orders of user</button>
 </form><br>
-<div th:insert="~{fragment :: footer}"></div>
 <div th:insert="~{fragment :: footer}"></div>
 </body>
 </html>

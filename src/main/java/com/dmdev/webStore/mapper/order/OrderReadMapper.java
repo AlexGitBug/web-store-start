@@ -29,6 +29,7 @@ public class OrderReadMapper implements Mapper<Order, OrderReadDto> {
                 object.getDeliveryAdress().getBuilding(),
                 object.getDeliveryDate(),
                 object.getPaymentCondition(),
+                object.getStatus(),
                 user
         );
     }

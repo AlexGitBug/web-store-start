@@ -1,7 +1,9 @@
 package com.dmdev.webStore.http.controller;
 
 import com.dmdev.webStore.dto.order.OrderCreateEditDto;
+import com.dmdev.webStore.dto.order.OrderReadDto;
 import com.dmdev.webStore.dto.product.ProductCreateEditDto;
+import com.dmdev.webStore.dto.shoppingCart.ShoppingCartCreateEditDto;
 import com.dmdev.webStore.dto.user.UserCreateEditDto;
 import com.dmdev.webStore.entity.Order;
 import com.dmdev.webStore.entity.embeddable.DeliveryAdress;
@@ -48,7 +50,7 @@ public class OrderController {
         model.addAttribute("order", order);
         model.addAttribute("payments", PaymentCondition.values());
         model.addAttribute("userid", userService.findByEmail(userDetails.getUsername()).getId());
-        model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(orderService.findByUserId(userService.findByEmail(userDetails.getUsername()).getId()).getId()));
+//        model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(orderService.findByUserId(userService.findByEmail(userDetails.getUsername()).getId()).getId()));
         return "order/registration";
     }
 
@@ -79,6 +81,18 @@ public class OrderController {
         return "catalog/onecatalog";
     }
 
+    @PostMapping("/{id}/add")
+    public String create(Model model,
+                         @PathVariable("id") Integer id,
+                         @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        var userId = userService.findByEmail(userDetails.getUsername()).getId();
+        var orderId = orderService.findByUserId(userId).getId();
+        var productId = productService.finByProductId(id).getId();
+        shoppingCartService.create(new ShoppingCartCreateEditDto(orderId, productId, LocalDate.now()));
+        return "redirect:/products";
+    }
+
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Integer id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
         return orderService.findById(id)
@@ -88,6 +102,9 @@ public class OrderController {
                     model.addAttribute("users", userService.findAll());
                     model.addAttribute("catalogs", catalogService.findAll());
                     model.addAttribute("userid", userService.findByEmail(userDetails.getUsername()).getId());
+                    model.addAttribute("shoppingcarts",
+                            shoppingCartService.findShoppingCartByOrderId(
+                                    orderService.findByUserId(userService.findByEmail(userDetails.getUsername()).getId()).getId()));
                     return "order/order";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -103,6 +120,12 @@ public class OrderController {
         return orderService.update(id, order)
                 .map(it -> "redirect:/orders/{id}")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping("/{id}/setStatus")
+    public String setStatus(@PathVariable("id") Integer id, @ModelAttribute OrderCreateEditDto order) {
+         orderService.setStatus(id);
+         return "redirect:/catalogs";
     }
 
     @PostMapping("/{id}/delete")

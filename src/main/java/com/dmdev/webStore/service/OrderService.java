@@ -7,6 +7,7 @@ import com.dmdev.webStore.dto.product.ProductReadDto;
 import com.dmdev.webStore.dto.user.UserCreateEditDto;
 import com.dmdev.webStore.dto.user.UserReadDto;
 import com.dmdev.webStore.entity.User;
+import com.dmdev.webStore.entity.enums.ProgressStatus;
 import com.dmdev.webStore.mapper.order.OrderCreateEditMapper;
 import com.dmdev.webStore.mapper.order.OrderReadMapper;
 import com.dmdev.webStore.repository.OrderRepository;
@@ -34,6 +35,12 @@ public class OrderService {
                 .map(orderReadMapper::map)
                 .orElseThrow();
 
+    }
+
+    public OrderReadDto findByStatusAndUserId(Integer id) {
+        return orderRepository.findByStatusAndUserId(ProgressStatus.IN_PROGRESS, id)
+                .map(orderReadMapper::map)
+                .orElseThrow();
     }
     public List<OrderReadDto> findAllOrdersWithProductsOfOneUser(PersonalInformationFilter filter) {
         return orderRepository.findAllOrdersWithProductsOfOneUser(filter).stream()
@@ -84,4 +91,11 @@ public class OrderService {
                 })
                 .orElse(false);
     }
+
+    @Transactional
+    public int setStatus(Integer id) {
+        return orderRepository.setStatus(ProgressStatus.PAID, id);
+    }
+
+
 }

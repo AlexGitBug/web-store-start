@@ -39,6 +39,7 @@ public class OrderCreateEditMapper implements Mapper<OrderCreateEditDto, Order> 
         ));
         order.setDeliveryDate(object.getDeliveryDate());
         order.setPaymentCondition(object.getPaymentCondition());
+        order.setStatus(object.getStatus());
         order.setUser(getUser(object.getUserId()));
     }
 

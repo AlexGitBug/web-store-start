@@ -2,6 +2,7 @@ package com.dmdev.webStore.entity;
 
 import com.dmdev.webStore.entity.embeddable.DeliveryAdress;
 import com.dmdev.webStore.entity.enums.PaymentCondition;
+import com.dmdev.webStore.entity.enums.ProgressStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -46,6 +47,9 @@ public class Order implements BaseEntity<Integer>{
     @Column(name = "payment_condition")
     @Enumerated(EnumType.STRING)
     private PaymentCondition paymentCondition;
+
+    @Enumerated(EnumType.STRING)
+    private ProgressStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
