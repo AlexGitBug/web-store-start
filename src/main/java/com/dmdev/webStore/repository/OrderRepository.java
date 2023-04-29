@@ -23,5 +23,6 @@ public interface OrderRepository extends
     int setStatus(ProgressStatus status, Integer id);
 
     Optional<Order> findByStatusAndUserId(ProgressStatus status, Integer id);
+    Optional<Order> findByIdAndStatus(Integer id, ProgressStatus status);
 
 }

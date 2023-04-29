@@ -58,4 +58,15 @@ public class ShoppingCartService {
                 .collect(toList());
     }
 
+    @Transactional
+    public boolean delete(Integer id) {
+        return shoppingCartRepository.findById(id)
+                .map(entity -> {
+                    shoppingCartRepository.delete(entity);
+                    shoppingCartRepository.flush();
+                    return true;
+                })
+                .orElse(false);
+    }
+
 }

@@ -20,8 +20,11 @@
     <input id="deliveryDate" type="date" name="deliveryDate" th:value="*{deliveryDate}">
   </label><br>
   <label for="userId">User id:
-    <input id="userId" type="number" name="userId" th:value="${userid}">
+    <input id="userId" type="text" readonly name="userId" th:value="${userid}">
   </label><br>
+  <label for="status">Status
+    <input id="status" type="text" readonly name="status" value="IN_PROGRESS">
+  </label>
   <div th:each="paymentCondition : ${payments}">
     <input th:id="${paymentCondition}" type="radio" name="paymentCondition" th:value="${paymentCondition}" th:checked="${paymentCondition == order.paymentCondition}">
     <label th:for="${paymentCondition}" th:text="${paymentCondition}">Role name</label>
@@ -41,6 +44,9 @@
 
 <div th:each="shoppingcart : ${shoppingcarts}">
   <a th:text="|id: ${shoppingcart.getId()}. category: ${shoppingcart.product.catalog.category}|">shoppingcart</a>
+  <form th:action="@{/shoppingcarts/{shid}/delete(shid=${shoppingcart.id})}" method="post">
+    <button type="submit">Remove</button>
+  </form>
 </div>
 <form th:action="@{/orders/{orderId}/setStatus(orderId=${order.id})}" method="post">
   <button type="submit">Confirm</button>

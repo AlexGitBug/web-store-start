@@ -25,20 +25,30 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/products")
+@SessionAttributes({"basket"})
 public class ProductController {
 
     private final ProductService productService;
     private final CatalogService catalogService;
     private final OrderService orderService;
     private final UserService userService;
+    private final List<Integer> list;
+
+    @PostMapping("/{id}/add")
+    public String addToBascket(Model model, @PathVariable("id") Integer id) {
+        list.add(productService.finByProductId(id).getId());
+        return "redirect:/catalogs";
+    }
 
     @GetMapping("/registration")
     public String registration(Model model, @ModelAttribute("product") @Validated ProductCreateEditDto product) {

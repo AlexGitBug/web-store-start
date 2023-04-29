@@ -37,6 +37,12 @@ public class OrderService {
 
     }
 
+    public Optional<OrderReadDto> findByIdAndStatus(Integer id, ProgressStatus status) {
+        return orderRepository.findByIdAndStatus(id, status)
+                .map(orderReadMapper::map);
+
+    }
+
     public OrderReadDto findByStatusAndUserId(Integer id) {
         return orderRepository.findByStatusAndUserId(ProgressStatus.IN_PROGRESS, id)
                 .map(orderReadMapper::map)

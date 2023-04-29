@@ -10,6 +10,8 @@ import com.dmdev.webStore.entity.embeddable.DeliveryAdress;
 import com.dmdev.webStore.entity.enums.Brand;
 import com.dmdev.webStore.entity.enums.Color;
 import com.dmdev.webStore.entity.enums.PaymentCondition;
+
+import com.dmdev.webStore.entity.enums.ProgressStatus;
 import com.dmdev.webStore.repository.OrderRepository;
 import com.dmdev.webStore.repository.filter.OrderFilter;
 import com.dmdev.webStore.repository.filter.PersonalInformationFilter;
@@ -31,6 +33,9 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import static com.dmdev.webStore.entity.enums.ProgressStatus.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -50,6 +55,7 @@ public class OrderController {
         model.addAttribute("order", order);
         model.addAttribute("payments", PaymentCondition.values());
         model.addAttribute("userid", userService.findByEmail(userDetails.getUsername()).getId());
+        model.addAttribute("status", values());
 //        model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(orderService.findByUserId(userService.findByEmail(userDetails.getUsername()).getId()).getId()));
         return "order/registration";
     }
@@ -94,17 +100,34 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable("id") Integer id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        return orderService.findById(id)
+    public String findById(@PathVariable("id") Integer id,
+                           @RequestParam("status") ProgressStatus status,
+                           Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if (status == IN_PROGRESS) {
+            return orderService.findByIdAndStatus(id, IN_PROGRESS)
+                    .map(order -> {
+                        model.addAttribute("order", order);
+                        model.addAttribute("payments", PaymentCondition.values());
+                        model.addAttribute("users", userService.findAll());
+                        model.addAttribute("catalogs", catalogService.findAll());
+                        model.addAttribute("userid", userService.findByEmail(userDetails.getUsername()).getId());
+                        model.addAttribute("status", values());
+                        model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(
+                                orderService.findByIdAndStatus(id, IN_PROGRESS).get().getId()));
+                        return "order/order";
+                    })
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        }
+        return orderService.findByIdAndStatus(id, PAID)
                 .map(order -> {
                     model.addAttribute("order", order);
                     model.addAttribute("payments", PaymentCondition.values());
                     model.addAttribute("users", userService.findAll());
                     model.addAttribute("catalogs", catalogService.findAll());
                     model.addAttribute("userid", userService.findByEmail(userDetails.getUsername()).getId());
-                    model.addAttribute("shoppingcarts",
-                            shoppingCartService.findShoppingCartByOrderId(
-                                    orderService.findByUserId(userService.findByEmail(userDetails.getUsername()).getId()).getId()));
+                    model.addAttribute("status", values());
+                    model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(
+                            orderService.findByIdAndStatus(id, PAID).get().getId()));
                     return "order/order";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -112,7 +135,8 @@ public class OrderController {
 
     @PostMapping
     public String create(@ModelAttribute OrderCreateEditDto order, RedirectAttributes redirectAttributes) {
-        return "redirect:/orders/" + orderService.create(order).getId();
+        orderService.create(order);
+        return "redirect:/catalogs";
     }
 
     @PostMapping("/{id}/update")
@@ -124,8 +148,8 @@ public class OrderController {
 
     @PostMapping("/{id}/setStatus")
     public String setStatus(@PathVariable("id") Integer id, @ModelAttribute OrderCreateEditDto order) {
-         orderService.setStatus(id);
-         return "redirect:/catalogs";
+        orderService.setStatus(id);
+        return "redirect:/catalogs";
     }
 
     @PostMapping("/{id}/delete")
@@ -135,7 +159,6 @@ public class OrderController {
         }
         return "redirect:/orders";
     }
-
 
 
 }
