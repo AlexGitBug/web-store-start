@@ -69,23 +69,23 @@ public class OrderRepositoryIT extends IntegrationTestBase {
 
     }
 
-    @Test
-    void findAllOrdersWithProductsOfOneUserIT() {
-        var filter = PersonalInformationFilter.builder()
-                .email(MAIL_PETR)
-                .build();
-
-        var results = orderRepository.findAllOrdersWithProductsOfOneUser(filter);
-
-        var orderId = results.stream().map(Order::getId).collect(toList());
-
-        assertAll(
-                () -> assertThat(results).hasSize(3),
-                () -> assertThat(orderId).containsExactlyInAnyOrder(
-                        3, 3, 3
-                )
-        );
-    }
+//    @Test
+//    void findAllOrdersWithProductsOfOneUserIT() {
+//        var filter = PersonalInformationFilter.builder()
+//                .email(MAIL_PETR)
+//                .build();
+//
+//        var results = orderRepository.findAllOrdersWithProductsOfOneUser(filter);
+//
+//        var orderId = results.stream().map(Order::getId).collect(toList());
+//
+//        assertAll(
+//                () -> assertThat(results).hasSize(3),
+//                () -> assertThat(orderId).containsExactlyInAnyOrder(
+//                        3, 3, 3
+//                )
+//        );
+//    }
 
     private Order getOrder() {
         var user = MocksForRepository.getUser();

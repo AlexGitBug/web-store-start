@@ -60,7 +60,8 @@ public class ProductController {
     }
 
     @GetMapping("/{id}/orders")
-    public String orders(@PathVariable("id") Integer id, Model model) {
+    public String orders(@PathVariable("id") Integer id,
+                         Model model) {
         model.addAttribute("products", productService.findById(id));
         return "redirect:/orders/registration";
     }

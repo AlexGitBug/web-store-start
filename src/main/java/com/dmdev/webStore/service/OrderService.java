@@ -54,6 +54,12 @@ public class OrderService {
                 .toList();
     }
 
+    public List<OrderReadDto> findAllByUserId(Integer id) {
+        return orderRepository.findAllByUserId(id).stream()
+                .map(orderReadMapper::map)
+                .toList();
+    }
+
     public List<OrderReadDto> findAll(Sort sort) {
         return orderRepository.findAll(sort).stream()
                 .map(orderReadMapper::map)

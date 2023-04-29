@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All orders one user</title>
+</head>
+<body>
+<div th:insert="~{fragment :: header}"></div>
+<form action="/orders/allordersofoneuser">
+    <div>
+        <label for="email">Email:
+            <input id="email" type="text" name="email">
+        </label>
+    </div>
+    <button type="submit">Filter</button>
+</form>
+<!--<div th:each="order : ${orders}">-->
+<!--    <a th:text="|${order.id}. ${order.deliveryDate} street:${order.street} products.catalog.category|">Order</a>-->
+<!--</div>-->
+<div th:each="shoppingcart : ${shoppingcarts}">
+    <a th:text="|order id:${shoppingcart.order.id} category:${shoppingcart.product.catalog.category} model:${shoppingcart.product.model}|">Order</a>
+</div>
+<div th:insert="~{fragment :: footer}"></div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

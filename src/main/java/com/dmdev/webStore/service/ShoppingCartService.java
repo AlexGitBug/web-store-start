@@ -10,6 +10,7 @@ import com.dmdev.webStore.mapper.shoppingCart.ShoppingCartReadMapper;
 import com.dmdev.webStore.repository.OrderRepository;
 import com.dmdev.webStore.repository.ProductRepository;
 import com.dmdev.webStore.repository.ShoppingCartRepository;
+import com.dmdev.webStore.repository.filter.PersonalInformationFilter;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.Persistence;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,6 +69,12 @@ public class ShoppingCartService {
                     return true;
                 })
                 .orElse(false);
+    }
+
+    public List<ShoppingCartReadDto> findAllOrdersWithProductsOfOneUser(PersonalInformationFilter filter) {
+        return shoppingCartRepository.findAllOrdersWithProductsOfOneUser(filter).stream()
+                .map(shoppingCartReadMapper::map)
+                .collect(toList());
     }
 
 }

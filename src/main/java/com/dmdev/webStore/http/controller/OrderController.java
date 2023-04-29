@@ -1,18 +1,11 @@
 package com.dmdev.webStore.http.controller;
 
 import com.dmdev.webStore.dto.order.OrderCreateEditDto;
-import com.dmdev.webStore.dto.order.OrderReadDto;
-import com.dmdev.webStore.dto.product.ProductCreateEditDto;
 import com.dmdev.webStore.dto.shoppingCart.ShoppingCartCreateEditDto;
-import com.dmdev.webStore.dto.user.UserCreateEditDto;
 import com.dmdev.webStore.entity.Order;
-import com.dmdev.webStore.entity.embeddable.DeliveryAdress;
-import com.dmdev.webStore.entity.enums.Brand;
-import com.dmdev.webStore.entity.enums.Color;
 import com.dmdev.webStore.entity.enums.PaymentCondition;
 
 import com.dmdev.webStore.entity.enums.ProgressStatus;
-import com.dmdev.webStore.repository.OrderRepository;
 import com.dmdev.webStore.repository.filter.OrderFilter;
 import com.dmdev.webStore.repository.filter.PersonalInformationFilter;
 import com.dmdev.webStore.service.CatalogService;
@@ -33,7 +26,6 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import static com.dmdev.webStore.entity.enums.ProgressStatus.*;
 
@@ -68,11 +60,21 @@ public class OrderController {
         return "order/orders";
     }
 
-    @GetMapping("/allordersoneuser")
-    public String findAllOrdersWithProductsOfOneUser(Model model, PersonalInformationFilter filter) {
-        model.addAttribute("orders", orderService.findAllOrdersWithProductsOfOneUser(filter));
+    @GetMapping("/allordersofoneuser")
+    public String findAllOrdersWithProductsOfOneUser(Model model,
+                                                     PersonalInformationFilter filter) {
+//        model.addAttribute("orders", orderService.findAllOrdersWithProductsOfOneUser(filter));
+//        model.addAttribute("products", productService.findAll());
+        model.addAttribute("shoppingcarts", shoppingCartService.findAllOrdersWithProductsOfOneUser(filter));
+        return "order/allordersofoneuser";
+    }
+
+    @GetMapping("/allordersbyuserid")
+    public String findAllOrdersWithProductsByUserId(Model model,
+                                                    @AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("orders", orderService.findAllByUserId(userService.findByEmail(userDetails.getUsername()).getId()));
         model.addAttribute("users", userService.findAll());
-        return "order/allordersoneuser";
+        return "order/allordersbyuserid";
     }
 
     @GetMapping("/{id}/onecatalog")
@@ -102,35 +104,12 @@ public class OrderController {
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Integer id,
                            @RequestParam("status") ProgressStatus status,
-                           Model model, @AuthenticationPrincipal UserDetails userDetails) {
+                           Model model,
+                           @AuthenticationPrincipal UserDetails userDetails) {
         if (status == IN_PROGRESS) {
-            return orderService.findByIdAndStatus(id, IN_PROGRESS)
-                    .map(order -> {
-                        model.addAttribute("order", order);
-                        model.addAttribute("payments", PaymentCondition.values());
-                        model.addAttribute("users", userService.findAll());
-                        model.addAttribute("catalogs", catalogService.findAll());
-                        model.addAttribute("userid", userService.findByEmail(userDetails.getUsername()).getId());
-                        model.addAttribute("status", values());
-                        model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(
-                                orderService.findByIdAndStatus(id, IN_PROGRESS).get().getId()));
-                        return "order/order";
-                    })
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            return getModelForFindById(id, model, userDetails, IN_PROGRESS);
         }
-        return orderService.findByIdAndStatus(id, PAID)
-                .map(order -> {
-                    model.addAttribute("order", order);
-                    model.addAttribute("payments", PaymentCondition.values());
-                    model.addAttribute("users", userService.findAll());
-                    model.addAttribute("catalogs", catalogService.findAll());
-                    model.addAttribute("userid", userService.findByEmail(userDetails.getUsername()).getId());
-                    model.addAttribute("status", values());
-                    model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(
-                            orderService.findByIdAndStatus(id, PAID).get().getId()));
-                    return "order/order";
-                })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return getModelForFindById(id, model, userDetails, PAID);
     }
 
     @PostMapping
@@ -140,7 +119,9 @@ public class OrderController {
     }
 
     @PostMapping("/{id}/update")
-    public String update(@PathVariable("id") Integer id, @ModelAttribute OrderCreateEditDto order) {
+    public String update(@PathVariable("id") Integer id,
+                         @ModelAttribute OrderCreateEditDto order,
+                         @RequestParam("status") ProgressStatus status) {
         return orderService.update(id, order)
                 .map(it -> "redirect:/orders/{id}")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -158,6 +139,24 @@ public class OrderController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         return "redirect:/orders";
+    }
+
+    private String getModelForFindById(@PathVariable("id") Integer id, Model model,
+                                       @AuthenticationPrincipal UserDetails userDetails,
+                                       ProgressStatus paid) {
+        return orderService.findByIdAndStatus(id, paid)
+                .map(order -> {
+                    model.addAttribute("order", order);
+                    model.addAttribute("payments", PaymentCondition.values());
+                    model.addAttribute("users", userService.findAll());
+                    model.addAttribute("catalogs", catalogService.findAll());
+                    model.addAttribute("userid", userService.findByEmail(userDetails.getUsername()).getId());
+                    model.addAttribute("status", values());
+                    model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(
+                            orderService.findByIdAndStatus(id, paid).get().getId()));
+                    return "order/order";
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
 

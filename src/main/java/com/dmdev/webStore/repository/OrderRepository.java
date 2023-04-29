@@ -2,11 +2,13 @@ package com.dmdev.webStore.repository;
 
 import com.dmdev.webStore.entity.Order;
 import com.dmdev.webStore.entity.enums.ProgressStatus;
+import com.dmdev.webStore.repository.filter.PersonalInformationFilter;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -24,5 +26,6 @@ public interface OrderRepository extends
 
     Optional<Order> findByStatusAndUserId(ProgressStatus status, Integer id);
     Optional<Order> findByIdAndStatus(Integer id, ProgressStatus status);
+    List<Order> findAllByUserId(Integer id);
 
 }
