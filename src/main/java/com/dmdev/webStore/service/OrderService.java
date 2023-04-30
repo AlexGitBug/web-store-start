@@ -2,16 +2,10 @@ package com.dmdev.webStore.service;
 
 import com.dmdev.webStore.dto.order.OrderCreateEditDto;
 import com.dmdev.webStore.dto.order.OrderReadDto;
-import com.dmdev.webStore.dto.product.ProductCreateEditDto;
-import com.dmdev.webStore.dto.product.ProductReadDto;
-import com.dmdev.webStore.dto.user.UserCreateEditDto;
-import com.dmdev.webStore.dto.user.UserReadDto;
-import com.dmdev.webStore.entity.User;
 import com.dmdev.webStore.entity.enums.ProgressStatus;
 import com.dmdev.webStore.mapper.order.OrderCreateEditMapper;
 import com.dmdev.webStore.mapper.order.OrderReadMapper;
 import com.dmdev.webStore.repository.OrderRepository;
-import com.dmdev.webStore.repository.filter.PersonalInformationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -29,18 +23,15 @@ public class OrderService {
     private final OrderReadMapper orderReadMapper;
     private final OrderCreateEditMapper orderCreateEditMapper;
 
-
     public OrderReadDto findByUserId(Integer id) {
         return orderRepository.findByUserId(id)
                 .map(orderReadMapper::map)
                 .orElseThrow();
-
     }
 
     public Optional<OrderReadDto> findByIdAndStatus(Integer id, ProgressStatus status) {
         return orderRepository.findByIdAndStatus(id, status)
                 .map(orderReadMapper::map);
-
     }
 
     public OrderReadDto findByStatusAndUserId(Integer id) {
@@ -48,12 +39,6 @@ public class OrderService {
                 .map(orderReadMapper::map)
                 .orElseThrow();
     }
-    public List<OrderReadDto> findAllOrdersWithProductsOfOneUser(PersonalInformationFilter filter) {
-        return orderRepository.findAllOrdersWithProductsOfOneUser(filter).stream()
-                .map(orderReadMapper::map)
-                .toList();
-    }
-
     public List<OrderReadDto> findAllByUserId(Integer id) {
         return orderRepository.findAllByUserId(id).stream()
                 .map(orderReadMapper::map)

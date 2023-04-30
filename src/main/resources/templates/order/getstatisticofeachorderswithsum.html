@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistic</title>
+</head>
+<body>
+<div th:each="statistic : ${statistics}">
+    <a th:text="${statistic.get(0)}"></a>
+    <a th:text="${statistic.get(1)}"></a>
+</div>
+<div th:insert="~{fragment :: footer}"></div>
+</body>
+</html>

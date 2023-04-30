@@ -36,12 +36,6 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id)
                 .map(userReadMapper::map);
     }
-
-    public List<UserReadDto> findUsersWhoMadeOrderSpecificTime(UserFilter filter) {
-        return userRepository.findUsersWhoMadeOrderSpecificTime(filter).stream()
-                .map(userReadMapper::map)
-                .toList();
-    }
     @Transactional
     public UserReadDto create(UserCreateEditDto userDto) {
         return Optional.of(userDto)
@@ -50,6 +44,8 @@ public class UserService implements UserDetailsService {
                 .map(userReadMapper::map)
                 .orElseThrow();
     }
+
+
     @Transactional
     public Optional<UserReadDto> update(Integer id, UserCreateEditDto userDto) {
         return userRepository.findById(id)
@@ -83,6 +79,12 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email)
                 .map(userReadMapper::map)
                 .orElseThrow();
+    }
+
+    public List<UserReadDto> findUsersWhoMadeOrderSpecificTime(UserFilter filter) {
+        return userRepository.findUsersWhoMadeOrderSpecificTime(filter).stream()
+                .map(userReadMapper::map)
+                .toList();
     }
 }
 

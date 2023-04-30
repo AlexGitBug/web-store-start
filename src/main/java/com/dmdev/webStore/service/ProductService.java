@@ -1,6 +1,5 @@
 package com.dmdev.webStore.service;
 
-import com.dmdev.webStore.dto.catalog.CatalogReadDto;
 import com.dmdev.webStore.entity.Product;
 import com.dmdev.webStore.repository.ProductRepository;
 import com.dmdev.webStore.repository.filter.OrderFilter;
@@ -21,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.dmdev.webStore.entity.QCatalog.catalog;
 import static com.dmdev.webStore.entity.QProduct.product;
@@ -49,18 +47,6 @@ public class ProductService {
 
     }
 
-    public List<ProductReadDto> findAllProductsFromOrder(OrderFilter orderFilter) {
-        return productRepository.findAllProductsFromOrder(orderFilter).stream()
-                .map(productReadMapper::map)
-                .toList();
-    }
-
-    public List<ProductReadDto> findAllByCatalogId(Integer id) {
-        return productRepository.findAllByCatalogId(id)
-                .stream().map(productReadMapper::map)
-                .toList();
-    }
-
     public List<ProductReadDto> findAll() {
         return productRepository.findAll().stream()
                 .map(productReadMapper::map)
@@ -70,19 +56,6 @@ public class ProductService {
     public Optional<ProductReadDto> findById(Integer id) {
         return productRepository.findById(id)
                 .map(productReadMapper::map);
-    }
-
-    public ProductReadDto finByProductId(Integer id) {
-        return productRepository.findById(id)
-                .map(productReadMapper::map)
-                .orElseThrow();
-    }
-
-    public Optional<byte[]> findImage(Integer id) {
-        return productRepository.findById(id)
-                .map(Product::getImage)
-                .filter(StringUtils::hasText)
-                .flatMap(imageService::get);
     }
 
     @Transactional
@@ -97,13 +70,6 @@ public class ProductService {
                 .orElseThrow();
     }
 
-    @SneakyThrows
-    private void uploadImage(MultipartFile image) {
-        if (!image.isEmpty()) {
-            imageService.upload(image.getOriginalFilename(), image.getInputStream());
-        }
-    }
-
     @Transactional
     public Optional<ProductReadDto> update(Integer id, ProductCreateEditDto productDto) {
         return productRepository.findById(id)
@@ -115,6 +81,7 @@ public class ProductService {
                 .map(productReadMapper::map);
     }
 
+
     @Transactional
     public boolean delete(Integer id) {
         return productRepository.findById(id)
@@ -125,6 +92,43 @@ public class ProductService {
                 })
                 .orElse(false);
     }
+
+
+    public List<ProductReadDto> findAllProductsFromOrder(OrderFilter orderFilter) {
+        return productRepository.findAllProductsFromOrder(orderFilter).stream()
+                .map(productReadMapper::map)
+                .toList();
+    }
+
+    public List<ProductReadDto> findAllByCatalogId(Integer id) {
+        return productRepository.findAllByCatalogId(id)
+                .stream().map(productReadMapper::map)
+                .toList();
+    }
+
+
+
+    public ProductReadDto findByProductId(Integer id) {
+        return productRepository.findById(id)
+                .map(productReadMapper::map)
+                .orElseThrow();
+    }
+    public Optional<byte[]> findImage(Integer id) {
+        return productRepository.findById(id)
+                .map(Product::getImage)
+                .filter(StringUtils::hasText)
+                .flatMap(imageService::get);
+    }
+    //-------------------------------------------------------------------------
+
+    @SneakyThrows
+    private void uploadImage(MultipartFile image) {
+        if (!image.isEmpty()) {
+            imageService.upload(image.getOriginalFilename(), image.getInputStream());
+        }
+    }
+
+
 
 
 }

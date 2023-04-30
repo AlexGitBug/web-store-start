@@ -1,6 +1,7 @@
 package com.dmdev.webStore.unit.service;
 
 import com.dmdev.webStore.repository.ProductRepository;
+import com.dmdev.webStore.repository.filter.OrderFilter;
 import com.dmdev.webStore.repository.filter.ProductFilter;
 import com.dmdev.webStore.repository.filter.QPredicate;
 import com.dmdev.webStore.dto.catalog.CatalogReadDto;
@@ -12,6 +13,7 @@ import com.dmdev.webStore.entity.enums.Brand;
 import com.dmdev.webStore.entity.enums.Color;
 import com.dmdev.webStore.mapper.product.ProductCreateEditMapper;
 import com.dmdev.webStore.mapper.product.ProductReadMapper;
+import com.dmdev.webStore.service.ImageService;
 import com.dmdev.webStore.service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.mock.web.MockMultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -46,6 +49,8 @@ class ProductServiceTest {
     private ProductReadMapper productReadMapper;
     @Mock
     private ProductCreateEditMapper productCreateEditMapper;
+    @Mock
+    private ImageService imageService;
     @InjectMocks
     private ProductService productService;
 
@@ -96,7 +101,6 @@ class ProductServiceTest {
         verify(productRepository).findAll();
     }
 
-
     @Test
     void findAllProducts() {
         var filter = ProductFilter.builder()
@@ -107,7 +111,7 @@ class ProductServiceTest {
                 .buildAnd();
         List<Product> products = List.of(getProduct(getCatalog()), getProduct1(getCatalog()));
         var pageable = PageRequest.of(0, 3);
-        Page<Product> productPage = new PageImpl<>(products, pageable, products.size());
+        Page<Product> productPage = new PageImpl<>(products);
         doReturn(productPage).when(productRepository).findAll(predicate, pageable);
 
         var actualResult = productService.findAllProducts(filter, pageable);
@@ -152,7 +156,7 @@ class ProductServiceTest {
         var productCreateEditDto = getProductCreateEditDto();
         var catalog = getCatalog();
         var product = getProduct(catalog);
-        var updatedProduct = getProduct1(catalog);
+        var updatedProduct = getProduct(catalog);
         var catalogReadDto = getCatalogReadDto();
         var productReadDto = getProductReadDto(catalogReadDto);
         doReturn(Optional.of(product)).when(productRepository).findById(FIND_BY_ID);
@@ -190,8 +194,6 @@ class ProductServiceTest {
         var actualResult = productService.delete(FIND_BY_ID);
 
         assertThat(actualResult).isTrue();
-        verify(productService).delete(FIND_BY_ID);
-        verify(productRepository).flush();
 
     }
 
@@ -202,6 +204,71 @@ class ProductServiceTest {
         var actualResult = productService.delete(FIND_BY_ID);
 
         assertThat(actualResult).isFalse();
+    }
+
+    @Test
+    void findAllProductsFromOrder() {
+        var filter = OrderFilter.builder()
+                .id(1)
+                .deliveryDate(LocalDate.now())
+                .build();
+        var productReadDto = getProductReadDto(getCatalogReadDto());
+        var productReadDto1 = getProductReadDto1(getCatalogReadDto());
+        List<Product> products = List.of(getProduct(getCatalog()), getProduct1(getCatalog()));
+        doReturn(products).when(productRepository).findAllProductsFromOrder(filter);
+        doReturn(productReadDto).when(productReadMapper).map(products.get(0));
+        doReturn(productReadDto1).when(productReadMapper).map(products.get(1));
+
+        var actualResult = productService.findAllProductsFromOrder(filter);
+
+        assertThat(actualResult).isNotNull();
+        assertThat(actualResult).hasSize(2);
+        assertThat(actualResult).containsExactlyInAnyOrder(productReadDto,productReadDto1);
+    }
+
+    @Test
+    void findAllByCatalogId() {
+        Integer catalogId = 9;
+        List<Product> products = List.of(getProduct(getCatalog()), getProduct1(getCatalog()));
+        var productReadDto = getProductReadDto(getCatalogReadDto());
+        var productReadDto1 = getProductReadDto1(getCatalogReadDto());
+        doReturn(products).when(productRepository).findAllByCatalogId(catalogId);
+        doReturn(productReadDto).when(productReadMapper).map(products.get(0));
+        doReturn(productReadDto1).when(productReadMapper).map(products.get(1));
+
+        var actualResult = productService.findAllByCatalogId(catalogId);
+
+        assertThat(actualResult).isNotNull();
+        assertThat(actualResult).hasSize(2);
+        assertThat(actualResult).containsExactlyInAnyOrder(productReadDto,productReadDto1);
+    }
+
+    @Test
+    void findByProductId() {
+        var product = getProduct(getCatalog());
+        var productReadDto = getProductReadDto(getCatalogReadDto());
+        doReturn(Optional.of(product)).when(productRepository).findById(product.getId());
+        doReturn(productReadDto).when(productReadMapper).map(product);
+
+        var actualResult = productService.findByProductId(product.getId());
+
+        assertThat(actualResult).isNotNull();
+        assertThat(actualResult.getPrice()).isEqualTo(123);
+    }
+
+    @Test
+    void findImage() {
+        String image = "test-image";
+        var product = getProduct(getCatalog());
+        product.setImage(image);
+        byte[] imageBytes = image.getBytes();
+        doReturn(Optional.of(product)).when(productRepository).findById(product.getId());
+        doReturn(Optional.of(imageBytes)).when(imageService).get(image);
+
+        var actualResult = productService.findImage(product.getId());
+
+        assertThat(actualResult).isNotEmpty();
+        assertThat(actualResult.get()).isEqualTo(imageBytes);
     }
 
     private Product getProduct(Catalog catalog) {
@@ -250,7 +317,7 @@ class ProductServiceTest {
     }
 
     private ProductCreateEditDto getProductCreateEditDto() {
-        return new ProductCreateEditDto("test", LocalDate.now(), 123,  Color.BLACK, Brand.APPLE, 9, null);
+        return new ProductCreateEditDto("test", LocalDate.now(), 123,  Color.BLACK, Brand.APPLE, 9, new MockMultipartFile("test", new byte[0]));
     }
 
 

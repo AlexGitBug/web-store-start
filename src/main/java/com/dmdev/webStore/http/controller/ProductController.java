@@ -1,9 +1,6 @@
 package com.dmdev.webStore.http.controller;
 
 
-import com.dmdev.webStore.dto.catalog.CatalogReadDto;
-import com.dmdev.webStore.dto.order.OrderCreateEditDto;
-import com.dmdev.webStore.entity.Product;
 import com.dmdev.webStore.repository.filter.OrderFilter;
 import com.dmdev.webStore.repository.filter.ProductFilter;
 import com.dmdev.webStore.dto.PageResponse;
@@ -13,10 +10,7 @@ import com.dmdev.webStore.entity.enums.Color;
 import com.dmdev.webStore.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -46,7 +40,7 @@ public class ProductController {
 
     @PostMapping("/{id}/add")
     public String addToBascket(Model model, @PathVariable("id") Integer id) {
-        list.add(productService.finByProductId(id).getId());
+        list.add(productService.findByProductId(id).getId());
         return "redirect:/catalogs";
     }
 

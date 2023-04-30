@@ -48,8 +48,13 @@ public class OrderController {
         model.addAttribute("payments", PaymentCondition.values());
         model.addAttribute("userid", userService.findByEmail(userDetails.getUsername()).getId());
         model.addAttribute("status", values());
-//        model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(orderService.findByUserId(userService.findByEmail(userDetails.getUsername()).getId()).getId()));
         return "order/registration";
+    }
+
+    @GetMapping("/getstatisticofeachorderswithsum")
+    public String getStatisticOfEachOrdersWithSum(Model model){
+        model.addAttribute("statistics", shoppingCartService.getStatisticOfEachOrdersWithSum());
+        return "order/getstatisticofeachorderswithsum";
     }
 
     @GetMapping
@@ -63,8 +68,6 @@ public class OrderController {
     @GetMapping("/allordersofoneuser")
     public String findAllOrdersWithProductsOfOneUser(Model model,
                                                      PersonalInformationFilter filter) {
-//        model.addAttribute("orders", orderService.findAllOrdersWithProductsOfOneUser(filter));
-//        model.addAttribute("products", productService.findAll());
         model.addAttribute("shoppingcarts", shoppingCartService.findAllOrdersWithProductsOfOneUser(filter));
         return "order/allordersofoneuser";
     }
@@ -96,7 +99,7 @@ public class OrderController {
     ) {
         var userId = userService.findByEmail(userDetails.getUsername()).getId();
         var orderId = orderService.findByUserId(userId).getId();
-        var productId = productService.finByProductId(id).getId();
+        var productId = productService.findByProductId(id).getId();
         shoppingCartService.create(new ShoppingCartCreateEditDto(orderId, productId, LocalDate.now()));
         return "redirect:/products";
     }

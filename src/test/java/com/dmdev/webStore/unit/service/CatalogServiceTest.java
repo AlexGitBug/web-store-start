@@ -76,7 +76,6 @@ public class CatalogServiceTest {
         assertThat(actualResult).hasSize(2);
         assertThat(actualResult).isEqualTo(expectedCatalogDtoList);
         assertThat(actualResult).containsExactlyInAnyOrder(catalogReadDto, catalogReadDto1);
-
     }
 
     @Test
