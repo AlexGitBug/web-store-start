@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>After login</title>
+</head>
+<body>
+    Здравствуйте, хотите продолжить предыдущий Ваш заказ?
+    <form action="orders/afterloginpage" method="get">
+      <button type="submit">Continue old order</button>
+    </form>
+<!--    <form th:action="@{/shoppingcarts/{productId}(productId=${product.id})}" method="post">-->
+<!--      <button type="submit">New order</button>-->
+<!--    </form>-->
+</body>
+</html>

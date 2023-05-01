@@ -12,14 +12,15 @@
         <label for="email">Email:
             <input id="email" type="text" name="email">
         </label>
+        <label for="date">Email:
+            <input id="date" type="date" name="deliveryDate">
+        </label>
     </div>
     <button type="submit">Filter</button>
 </form>
-<!--<div th:each="order : ${orders}">-->
-<!--    <a th:text="|${order.id}. ${order.deliveryDate} street:${order.street} products.catalog.category|">Order</a>-->
-<!--</div>-->
 <div th:each="shoppingcart : ${shoppingcarts}">
-    <a th:text="|order id:${shoppingcart.order.id} category:${shoppingcart.product.catalog.category} model:${shoppingcart.product.model}|">Order</a>
+    <a th:href="@{'/shoppingcarts/' + ${shoppingcart.id}}"
+    th:text="|order id:${shoppingcart.order.id} category:${shoppingcart.product.catalog.category} model:${shoppingcart.product.model}|">Order</a>
 </div>
 <div th:insert="~{fragment :: footer}"></div>
 </body>

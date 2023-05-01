@@ -13,6 +13,7 @@ import com.dmdev.webStore.service.OrderService;
 import com.dmdev.webStore.service.ProductService;
 import com.dmdev.webStore.service.ShoppingCartService;
 import com.dmdev.webStore.service.UserService;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -52,7 +53,7 @@ public class OrderController {
     }
 
     @GetMapping("/getstatisticofeachorderswithsum")
-    public String getStatisticOfEachOrdersWithSum(Model model){
+    public String getStatisticOfEachOrdersWithSum(Model model) {
         model.addAttribute("statistics", shoppingCartService.getStatisticOfEachOrdersWithSum());
         return "order/getstatisticofeachorderswithsum";
     }
@@ -67,8 +68,8 @@ public class OrderController {
 
     @GetMapping("/allordersofoneuser")
     public String findAllOrdersWithProductsOfOneUser(Model model,
-                                                     PersonalInformationFilter filter) {
-        model.addAttribute("shoppingcarts", shoppingCartService.findAllOrdersWithProductsOfOneUser(filter));
+                                                     PersonalInformationFilter filter, OrderFilter orderFilter) {
+        model.addAttribute("shoppingcarts", shoppingCartService.findAllOrdersWithProductsOfOneUser(filter, orderFilter));
         return "order/allordersofoneuser";
     }
 
@@ -115,6 +116,14 @@ public class OrderController {
         return getModelForFindById(id, model, userDetails, PAID);
     }
 
+    @GetMapping("/afterloginpage")
+    public String afterloginpage(@AuthenticationPrincipal UserDetails userDetails) {
+        if (orderService.findByStatusAndUserId(userService.findByEmail(userDetails.getUsername()).getId()).getStatus() == IN_PROGRESS) {
+            return "redirect:/orders/" + orderService.findByStatusAndUserId(userService.findByEmail(userDetails.getUsername()).getId()).getId() + "?status=IN_PROGRESS";
+        }
+        return "order/registration";
+    }
+
     @PostMapping
     public String create(@ModelAttribute OrderCreateEditDto order, RedirectAttributes redirectAttributes) {
         orderService.create(order);
@@ -126,7 +135,7 @@ public class OrderController {
                          @ModelAttribute OrderCreateEditDto order,
                          @RequestParam("status") ProgressStatus status) {
         return orderService.update(id, order)
-                .map(it -> "redirect:/orders/{id}")
+                .map(it -> "redirect:/orders/{id}" + "?status=IN_PROGRESS")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 

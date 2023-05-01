@@ -1,5 +1,6 @@
 package com.dmdev.webStore.repository;
 
+import com.dmdev.webStore.repository.filter.OrderFilter;
 import com.dmdev.webStore.repository.filter.PersonalInformationFilter;
 import com.dmdev.webStore.repository.filter.ProductFilter;
 import com.dmdev.webStore.entity.ShoppingCart;
@@ -13,5 +14,5 @@ public interface FilterShoppingCartRepository {
 
     List<ShoppingCart> findUsersWhoMadeOrderOfSpecificProduct(ProductFilter productFilter);
 
-    List<ShoppingCart> findAllOrdersWithProductsOfOneUser(PersonalInformationFilter filter);
+    List<ShoppingCart> findAllOrdersWithProductsOfOneUser(PersonalInformationFilter filter, OrderFilter orderFilter);
 }

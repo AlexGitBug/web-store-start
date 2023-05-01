@@ -11,6 +11,8 @@ import com.dmdev.webStore.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -84,7 +86,8 @@ public class ProductController {
         return "product/productsfromorder";
     }
     @GetMapping("/{id}")
-    public String findById(@PathVariable("id") Integer id, Model model) {
+    public String findById(@PathVariable("id") Integer id, Model model,
+                           @AuthenticationPrincipal UserDetails userDetails) {
         return productService.findById(id)
                 .map(product -> {
                     model.addAttribute("product", product);
@@ -92,7 +95,7 @@ public class ProductController {
                     model.addAttribute("colors", Color.values());
                     model.addAttribute("brands", Brand.values());
                     model.addAttribute("catalogs", catalogService.findAll());
-                    model.addAttribute("user", userService.findAll());
+                    model.addAttribute("user", userService.findById(userService.findByEmail(userDetails.getUsername()).getId()));
                     return "product/product";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

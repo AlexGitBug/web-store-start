@@ -17,7 +17,6 @@ public class ProductCreateEditDto {
     String model;
     LocalDate dateOfRelease;
     Integer price;
-//    String image;
     Color color;
     Brand brand;
     Integer catalogId;

@@ -60,7 +60,7 @@ public class ShoppingCartController {
         if (!shoppingCartService.delete(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return "redirect:/orders";
+        return "redirect:/orders/" + orderService.findByStatusAndUserId(userService.findByEmail(userDetails.getUsername()).getId()).getId() + "?status=IN_PROGRESS";
     }
 
 }

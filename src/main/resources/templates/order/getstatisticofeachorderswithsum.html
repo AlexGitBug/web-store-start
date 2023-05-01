@@ -6,8 +6,8 @@
 </head>
 <body>
 <div th:each="statistic : ${statistics}">
-    <a th:text="${statistic.get(0)}"></a>
-    <a th:text="${statistic.get(1)}"></a>
+    <a th:text="|order id: ${statistic.getOrderId()}|"></a>
+    <a th:text="|order sum: ${statistic.getSum()}|"></a>
 </div>
 <div th:insert="~{fragment :: footer}"></div>
 </body>

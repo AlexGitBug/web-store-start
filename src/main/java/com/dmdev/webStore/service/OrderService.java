@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.dmdev.webStore.entity.enums.ProgressStatus.*;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -23,6 +25,16 @@ public class OrderService {
     private final OrderReadMapper orderReadMapper;
     private final OrderCreateEditMapper orderCreateEditMapper;
 
+    public Optional<OrderReadDto> findById(Integer id) {
+        return orderRepository.findById(id)
+                .map(orderReadMapper::map);
+    }
+
+    public List<OrderReadDto> findAll() {
+        return orderRepository.findAll().stream()
+                .map(orderReadMapper::map)
+                .toList();
+    }
     public OrderReadDto findByUserId(Integer id) {
         return orderRepository.findByUserId(id)
                 .map(orderReadMapper::map)
@@ -33,9 +45,9 @@ public class OrderService {
         return orderRepository.findByIdAndStatus(id, status)
                 .map(orderReadMapper::map);
     }
-
+    //---------------------------------------------------------------------------
     public OrderReadDto findByStatusAndUserId(Integer id) {
-        return orderRepository.findByStatusAndUserId(ProgressStatus.IN_PROGRESS, id)
+        return orderRepository.findByStatusAndUserId(IN_PROGRESS, id)
                 .map(orderReadMapper::map)
                 .orElseThrow();
     }
@@ -51,16 +63,6 @@ public class OrderService {
                 .toList();
     }
 
-    public List<OrderReadDto> findAll() {
-        return orderRepository.findAll().stream()
-                .map(orderReadMapper::map)
-                .toList();
-    }
-
-    public Optional<OrderReadDto> findById(Integer id) {
-        return orderRepository.findById(id)
-                .map(orderReadMapper::map);
-    }
     @Transactional
     public OrderReadDto create(OrderCreateEditDto orderDto) {
         return Optional.of(orderDto)
@@ -91,7 +93,7 @@ public class OrderService {
 
     @Transactional
     public int setStatus(Integer id) {
-        return orderRepository.setStatus(ProgressStatus.PAID, id);
+        return orderRepository.setStatus(PAID, id);
     }
 
 

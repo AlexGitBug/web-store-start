@@ -46,7 +46,7 @@
     </div>
     <button type="submit">Update</button>
 </form>
-<form th:action="@{/products/{productId}/delete(productId=${product.id})}" th:if="${user.role.name() == 'ADMIN'}" method="post">
+<form th:action="@{/products/{productId}/delete(productId=${product.id})}" th:if="${user.get().role.name() == 'ADMIN'}" method="post">
     <button type="submit">Remove</button>
 </form>
 <form action="/products/registration" method="get">
@@ -55,6 +55,3 @@
 <div th:insert="~{fragment :: footer}"></div>
 </body>
 </html>
-<form th:action="@{/users/{userId}/delete(userId=${user.id})}" th:if="${user.role.name() == 'ADMIN'}" method="post">
-    <button type="submit">Remove</button>
-</form>

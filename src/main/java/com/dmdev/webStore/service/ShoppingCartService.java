@@ -1,10 +1,13 @@
 package com.dmdev.webStore.service;
 
+import com.dmdev.webStore.dto.TupleReadDto;
 import com.dmdev.webStore.dto.shoppingCart.ShoppingCartCreateEditDto;
 import com.dmdev.webStore.dto.shoppingCart.ShoppingCartReadDto;
+import com.dmdev.webStore.mapper.TupleReadMapper;
 import com.dmdev.webStore.mapper.shoppingCart.ShoppingCartCreateEditMapper;
 import com.dmdev.webStore.mapper.shoppingCart.ShoppingCartReadMapper;
 import com.dmdev.webStore.repository.ShoppingCartRepository;
+import com.dmdev.webStore.repository.filter.OrderFilter;
 import com.dmdev.webStore.repository.filter.PersonalInformationFilter;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,7 @@ public class ShoppingCartService {
     private final ShoppingCartCreateEditMapper shoppingCartCreateEditMapper;
     private final ShoppingCartRepository shoppingCartRepository;
     private final ShoppingCartReadMapper shoppingCartReadMapper;
+    private final TupleReadMapper tupleReadMapper;
 
     @Transactional
     public ShoppingCartReadDto create(ShoppingCartCreateEditDto shoppingCartCreateEditDto) {
@@ -58,15 +62,17 @@ public class ShoppingCartService {
                 .orElse(false);
     }
 
-    public List<ShoppingCartReadDto> findAllOrdersWithProductsOfOneUser(PersonalInformationFilter filter) {
-        return shoppingCartRepository.findAllOrdersWithProductsOfOneUser(filter).stream()
+    public List<ShoppingCartReadDto> findAllOrdersWithProductsOfOneUser(PersonalInformationFilter filter, OrderFilter orderFilter) {
+        return shoppingCartRepository.findAllOrdersWithProductsOfOneUser(filter, orderFilter).stream()
                 .map(shoppingCartReadMapper::map)
                 .collect(toList());
     }
 
-    public List<Tuple> getStatisticOfEachOrdersWithSum() {
+    public List<TupleReadDto> getStatisticOfEachOrdersWithSum() {
         return shoppingCartRepository.getStatisticOfEachOrdersWithSum().stream()
+                .map(tupleReadMapper::map)
                 .toList();
+
     }
 
 }

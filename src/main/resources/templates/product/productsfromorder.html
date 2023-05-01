@@ -12,7 +12,7 @@
     </label><br>
     <button type="submit">Filter</button>
 </form>
-<div th:each="product : ${products.content}">
+<div th:each="product : ${products}">
     <a th:href="@{'/products/' + ${product.id}}"
        th:text="|id: ${product.id}. price: ${product.price}, brand: ${product.brand.name()}|">Product</a>
 </div>
