@@ -6,12 +6,10 @@ import com.dmdev.webStore.entity.Catalog;
 import com.dmdev.webStore.entity.Product;
 import com.dmdev.webStore.entity.enums.Brand;
 import com.dmdev.webStore.entity.enums.Color;
-import com.dmdev.webStore.mapper.catalog.CatalogReadMapper;
 import com.dmdev.webStore.mapper.product.ProductReadMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -42,7 +40,7 @@ class ProductReadMapperTest {
 
     private Product getProduct() {
         return Product.builder()
-                .id(99)
+                .id(1)
                 .model("test")
                 .brand(Brand.APPLE)
                 .dateOfRelease(LocalDate.now())

@@ -35,7 +35,6 @@ public class FilterShoppingCartRepositoryImpl implements FilterShoppingCartRepos
                 .select(order.id, product.price.sum())
                 .fetch();
     }
-
     @Override
     public List<ShoppingCart> findUsersWhoMadeOrderOfSpecificProduct(ProductFilter productFilter) {
         var predicate = QPredicate.builder()
@@ -72,6 +71,19 @@ public class FilterShoppingCartRepositoryImpl implements FilterShoppingCartRepos
                 .join(order.user, user)
                 .setHint(GraphSemantic.LOAD.getJpaHintName(), entityManager.getEntityGraph("findAllOrdersOfUsers"))
                 .where(predicate)
+                .fetch();
+    }
+
+    @Override
+    public List<Tuple> getStatisticSumOfOrder(Integer orderId) {
+        return new JPAQuery<Tuple>(entityManager)
+                .select(shoppingCart)
+                .from(shoppingCart)
+                .join(shoppingCart.product, product)
+                .join(shoppingCart.order, order)
+                .where(order.id.eq(orderId))
+                .groupBy(order.id)
+                .select(order.id, product.price.sum())
                 .fetch();
     }
 }

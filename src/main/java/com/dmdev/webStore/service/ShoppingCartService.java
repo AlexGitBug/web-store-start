@@ -73,4 +73,10 @@ public class ShoppingCartService {
                 .map(tupleReadMapper::map)
                 .toList();
     }
+
+    public List<TupleReadDto> getStatisticSumOfOrder(Integer orderId) {
+        return shoppingCartRepository.getStatisticSumOfOrder(orderId).stream()
+                .map(tupleReadMapper::map)
+                .toList();
+    }
 }

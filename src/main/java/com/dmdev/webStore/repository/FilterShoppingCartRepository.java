@@ -15,4 +15,6 @@ public interface FilterShoppingCartRepository {
     List<ShoppingCart> findUsersWhoMadeOrderOfSpecificProduct(ProductFilter productFilter);
 
     List<ShoppingCart> findAllOrdersWithProductsOfOneUser(PersonalInformationFilter filter, OrderFilter orderFilter);
+
+    List<Tuple> getStatisticSumOfOrder(Integer orderId);
 }

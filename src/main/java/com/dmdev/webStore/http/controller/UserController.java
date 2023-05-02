@@ -7,6 +7,8 @@ import com.dmdev.webStore.repository.filter.UserFilter;
 import com.dmdev.webStore.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -29,6 +31,12 @@ public class UserController {
         model.addAttribute("roles", Role.values());
         model.addAttribute("users", userService.findAll());
         return "user/registration";
+    }
+
+    @GetMapping("/oldorneworder")
+    public String oldorneworder(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("user", userService.findByEmail(userDetails.getUsername()));
+        return "user/oldorneworder";
     }
 
     @GetMapping("/ordertime")

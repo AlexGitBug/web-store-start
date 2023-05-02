@@ -4,6 +4,7 @@ plugins {
     id "io.spring.dependency-management" version '1.0.11.RELEASE'
     id "io.freefair.lombok" version "6.3.0"
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+    id 'jacoco'
 }
 group 'org.example'
 version '1.0-SNAPSHOT'
@@ -24,8 +25,8 @@ sourceSets {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
 }
 
 configurations {
@@ -83,3 +84,6 @@ compileQuerydsl.dependsOn(clean)
 test {
     useJUnitPlatform()
 }
+
+test.finalizedBy jacocoTestReport
+jacocoTestReport.dependsOn test

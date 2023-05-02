@@ -45,7 +45,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 )
                 .formLogin(login -> login
                         .loginPage("/login")
-                        .defaultSuccessUrl("/catalogs"))
+                        .defaultSuccessUrl("/users/oldorneworder"))
                 .oauth2Login(config -> config
                         .loginPage("/login")
                         .defaultSuccessUrl("/catalogs")

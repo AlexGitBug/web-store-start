@@ -29,24 +29,16 @@
     <input th:id="${paymentCondition}" type="radio" name="paymentCondition" th:value="${paymentCondition}" th:checked="${paymentCondition == order.paymentCondition}">
     <label th:for="${paymentCondition}" th:text="${paymentCondition}">Role name</label>
   </div>
-<!--  <div>-->
-<!--    <label for="user">User:-->
-<!--        <select id="user" name="userId">-->
-<!--          <option th:each="user : ${users}"-->
-<!--                  th:value="${user.getId()}"-->
-<!--                  th:selected="${user.getId() == order.getUser().getId()}"-->
-<!--          th:text="${user.lastName}">User</option>-->
-<!--        </select>-->
-<!--    </label>-->
-<!--  </div>-->
   <button type="submit">Update</button><br>
 </form>
-
 <div th:each="shoppingcart : ${shoppingcarts}">Товары:
   <a th:text="|id: ${shoppingcart.id}. category: ${shoppingcart.product.catalog.category}|">shoppingcart</a>
   <form th:action="@{/shoppingcarts/{shid}/delete(shid=${shoppingcart.id})}" th:if="${order.status.name() == 'IN_PROGRESS'}" method="post">
     <button type="submit">Remove product</button>
   </form>
+</div>
+<div th:each="statistic : ${statistics}">
+  <a th:text="|order sum: ${statistic.getSum()}|"></a>
 </div>
 <form th:action="@{/orders/{orderId}/setStatus(orderId=${order.id})}" th:if="${order.status.name() == 'IN_PROGRESS'}" method="post">
   <button type="submit">Confirm</button>

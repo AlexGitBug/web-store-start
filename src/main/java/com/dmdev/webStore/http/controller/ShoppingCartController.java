@@ -42,16 +42,16 @@ public class ShoppingCartController {
 
 
     @PostMapping("/{id}")
-    public String create(Model model,
-                         @PathVariable("id") Integer id,
+    public String create(@PathVariable("id") Integer id,
                          @AuthenticationPrincipal UserDetails userDetails) {
-        if (orderService.findByStatusAndUserId(userService.findByEmail(userDetails.getUsername()).getId()).getStatus() == ProgressStatus.IN_PROGRESS) {
-            OrderReadDto order = orderService.findByStatusAndUserId(userService.findByEmail(userDetails.getUsername()).getId());
-            var productId = productService.findByProductId(id).getId();
-            shoppingCartService.create(new ShoppingCartCreateEditDto(order.getId(), productId, LocalDate.now()));
-        }
-//        return "redirect:/orders/" + orderService.findByStatusAndUserId(userService.findByEmail(userDetails.getUsername()).getId()).getId();
-        return "redirect:/products";
+        var userId = userService.findByEmail(userDetails.getUsername()).getId();
+        var order = orderService.findByStatusAndUserId(userId);
+        var productId = productService.findByProductId(id).getId();
+        order.ifPresent(orderReadDto -> shoppingCartService
+                .create(new ShoppingCartCreateEditDto(orderReadDto.getId(), productId, LocalDate.now())));
+        return order.map(orderReadDto -> "redirect:/orders/" + orderReadDto.getId() + "?status=IN_PROGRESS")
+                .orElse("redirect:/orders/registration");
+
     }
 
     @PostMapping("/{id}/delete")
@@ -60,8 +60,10 @@ public class ShoppingCartController {
         if (!shoppingCartService.delete(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return "redirect:/orders/" + orderService.findByStatusAndUserId(userService.findByEmail(userDetails.getUsername()).getId()).getId() + "?status=IN_PROGRESS";
+        var userId = userService.findByEmail(userDetails.getUsername()).getId();
+        var order = orderService.findByStatusAndUserId(userId);
+        return order.map(orderReadDto -> "redirect:/orders/" + orderReadDto.getId() + "?status=IN_PROGRESS")
+                .orElse("redirect:/orders/registration");
     }
-
 }
 

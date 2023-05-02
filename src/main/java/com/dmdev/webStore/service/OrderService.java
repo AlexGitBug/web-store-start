@@ -46,10 +46,9 @@ public class OrderService {
                 .map(orderReadMapper::map);
     }
 
-    public OrderReadDto findByStatusAndUserId(Integer id) {
+    public Optional<OrderReadDto> findByStatusAndUserId(Integer id) {
         return orderRepository.findByStatusAndUserId(IN_PROGRESS, id)
-                .map(orderReadMapper::map)
-                .orElseThrow();
+                .map(orderReadMapper::map);
     }
 
     public List<OrderReadDto> findAllByUserId(Integer id) {
@@ -65,12 +64,11 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderReadDto create(OrderCreateEditDto orderDto) {
+    public Optional<OrderReadDto> create(OrderCreateEditDto orderDto) {
         return Optional.of(orderDto)
                 .map(orderCreateEditMapper::map)
                 .map(orderRepository::save)
-                .map(orderReadMapper::map)
-                .orElseThrow();
+                .map(orderReadMapper::map);
     }
 
     @Transactional

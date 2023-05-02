@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>After login</title>
+</head>
+<body>
+<p th:text="|Hello, Dear ${user.firstName} ${user.lastName}|"></span></p>
+<form th:action="@{/orders/afterloginpage}" method="get">
+    <button type="submit">Continue old order</button>
+</form><br>
+<form th:action="@{/orders/registration}" method="get">
+    <button type="submit">New order</button>
+</form>
+</body>
+</html>
