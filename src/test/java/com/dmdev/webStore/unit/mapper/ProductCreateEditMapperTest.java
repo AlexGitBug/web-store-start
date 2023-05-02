@@ -2,6 +2,8 @@ package com.dmdev.webStore.unit.mapper;
 
 import com.dmdev.webStore.dto.catalog.CatalogReadDto;
 import com.dmdev.webStore.dto.product.ProductCreateEditDto;
+import com.dmdev.webStore.entity.Catalog;
+import com.dmdev.webStore.entity.Product;
 import com.dmdev.webStore.entity.enums.Brand;
 import com.dmdev.webStore.entity.enums.Color;
 import com.dmdev.webStore.mapper.product.ProductCreateEditMapper;
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -23,23 +26,22 @@ class ProductCreateEditMapperTest {
 
     @Test
     void mapCreateEditMapperTest() {
-        MultipartFile file = null;
+        ProductCreateEditDto productCreateEditDto = getProductCreateEditDto();
 
-        CatalogReadDto catalogReadDto = new CatalogReadDto(1,"test");
+        Product actualResult = productCreateEditMapper.map(productCreateEditDto);
 
-        var productCreateEditDto = new ProductCreateEditDto(
-                "test",
-                LocalDate.of(2020, 9, 12),
-                950,
-                Color.BLACK,
-                Brand.APPLE,
-               catalogReadDto.getId(),
-                null
-        );
+        assertThat(actualResult.getCatalog().getId())
+                .isEqualTo(productCreateEditDto.getCatalogId());
+    }
 
-        var actualResult = productCreateEditMapper.map(productCreateEditDto);
+    private Catalog getCatalog() {
+        return Catalog.builder()
+                .id(1)
+                .category("test")
+                .build();
+    }
 
-        assertThat(actualResult).isNotNull();
-        assertThat(actualResult.getModel()).isEqualTo(productCreateEditDto.getModel());
+    private ProductCreateEditDto getProductCreateEditDto() {
+        return new ProductCreateEditDto("test", LocalDate.now(), 123,  Color.BLACK, Brand.APPLE, getCatalog().getId(), new MockMultipartFile("test", new byte[0]));
     }
 }

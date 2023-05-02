@@ -40,12 +40,6 @@ public class ProductController {
     private final UserService userService;
     private final List<Integer> list;
 
-    @PostMapping("/{id}/add")
-    public String addToBascket(Model model, @PathVariable("id") Integer id) {
-        list.add(productService.findByProductId(id).getId());
-        return "redirect:/catalogs";
-    }
-
     @GetMapping("/registration")
     public String registration(Model model, @ModelAttribute("product") @Validated ProductCreateEditDto product) {
         model.addAttribute("product", product);
@@ -56,7 +50,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}/orders")
-    public String orders(@PathVariable("id") Integer id,
+    public String findByIdOrders(@PathVariable("id") Integer id,
                          Model model) {
         model.addAttribute("products", productService.findById(id));
         return "redirect:/orders/registration";
@@ -120,5 +114,10 @@ public class ProductController {
         return "redirect:/products";
     }
 
+    //    @PostMapping("/{id}/add")
+//    public String addToBascket(Model model, @PathVariable("id") Integer id) {
+//        list.add(productService.findByProductId(id).getId());
+//        return "redirect:/catalogs";
+//    }
 
 }

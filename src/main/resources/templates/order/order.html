@@ -6,7 +6,7 @@
 </head>
 <body>
 <div th:insert="~{fragment :: header}"></div>
-<form th:action="@{/orders/{orderId}(orderId=${order.id})}" method="post" th:object="${order}">
+<form th:action="@{/orders/{orderId}/update(orderId=${order.id})}" method="post" th:object="${order}">
   <label for="city">City:
     <input id="city" type="text" name="city" th:value="*{city}">
   </label><br>

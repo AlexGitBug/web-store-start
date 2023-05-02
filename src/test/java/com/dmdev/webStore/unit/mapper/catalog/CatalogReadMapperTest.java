@@ -1,4 +1,4 @@
-package com.dmdev.webStore.unit.mapper;
+package com.dmdev.webStore.unit.mapper.catalog;
 
 import com.dmdev.webStore.entity.Catalog;
 import com.dmdev.webStore.mapper.catalog.CatalogReadMapper;

@@ -6,7 +6,10 @@
 </head>
 <body>
     Здравствуйте, хотите продолжить предыдущий Ваш заказ?
-    <form action="orders/afterloginpage" method="get">
+    <form th:action="@{/orders/afterloginpage}" method="get">
+        <label for="username">Firstname:
+            <input id="username" type="text" name="firstName">
+        </label><br>
       <button type="submit">Continue old order</button>
     </form>
 <!--    <form th:action="@{/shoppingcarts/{productId}(productId=${product.id})}" method="post">-->

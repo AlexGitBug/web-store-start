@@ -117,12 +117,15 @@ public class OrderController {
     }
 
     @GetMapping("/afterloginpage")
-    public String afterloginpage(@AuthenticationPrincipal UserDetails userDetails) {
+    public String afterLoginPageContinue(@AuthenticationPrincipal UserDetails userDetails) {
         if (orderService.findByStatusAndUserId(userService.findByEmail(userDetails.getUsername()).getId()).getStatus() == IN_PROGRESS) {
-            return "redirect:/orders/" + orderService.findByStatusAndUserId(userService.findByEmail(userDetails.getUsername()).getId()).getId() + "?status=IN_PROGRESS";
+            return "redirect:/orders/" + orderService.findByStatusAndUserId(
+                    userService.findByEmail(userDetails.getUsername()).getId()).getId() + "?status=IN_PROGRESS";
+        } else {
+            return "redirect:/orders/registration";
         }
-        return "order/registration";
     }
+
 
     @PostMapping
     public String create(@ModelAttribute OrderCreateEditDto order, RedirectAttributes redirectAttributes) {
