@@ -62,8 +62,8 @@ public class ShoppingCartService {
                 .orElse(false);
     }
 
-    public List<ShoppingCartReadDto> findAllOrdersWithProductsOfOneUser(PersonalInformationFilter filter, OrderFilter orderFilter) {
-        return shoppingCartRepository.findAllOrdersWithProductsOfOneUser(filter, orderFilter).stream()
+    public List<ShoppingCartReadDto> findAllOrdersWithProductsOfOneUser(PersonalInformationFilter personalInformationFilter, OrderFilter orderFilter) {
+        return shoppingCartRepository.findAllOrdersWithProductsOfOneUser(personalInformationFilter, orderFilter).stream()
                 .map(shoppingCartReadMapper::map)
                 .collect(toList());
     }
@@ -72,7 +72,5 @@ public class ShoppingCartService {
         return shoppingCartRepository.getStatisticOfEachOrdersWithSum().stream()
                 .map(tupleReadMapper::map)
                 .toList();
-
     }
-
 }

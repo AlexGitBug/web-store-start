@@ -45,12 +45,13 @@ public class OrderService {
         return orderRepository.findByIdAndStatus(id, status)
                 .map(orderReadMapper::map);
     }
-    //---------------------------------------------------------------------------
+
     public OrderReadDto findByStatusAndUserId(Integer id) {
         return orderRepository.findByStatusAndUserId(IN_PROGRESS, id)
                 .map(orderReadMapper::map)
                 .orElseThrow();
     }
+
     public List<OrderReadDto> findAllByUserId(Integer id) {
         return orderRepository.findAllByUserId(id).stream()
                 .map(orderReadMapper::map)

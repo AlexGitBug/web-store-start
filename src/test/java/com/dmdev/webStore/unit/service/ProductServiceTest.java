@@ -175,7 +175,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void updateNotFound() {
+    void updateNotFoundProduct() {
         var productCreateEditDto = getProductCreateEditDto();
         doReturn(Optional.empty()).when(productRepository).findById(FIND_BY_ID);
 
@@ -194,7 +194,6 @@ class ProductServiceTest {
         var actualResult = productService.delete(FIND_BY_ID);
 
         assertThat(actualResult).isTrue();
-
     }
 
     @Test
