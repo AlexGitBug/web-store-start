@@ -67,7 +67,7 @@ public class UserController {
                     model.addAttribute("user", user);
                     model.addAttribute("users", userService.findAll());
                     model.addAttribute("roles", Role.values());;
-                    Optional<UserReadDto> userById = userService.findById(userService.findByEmail(userDetails.getUsername()).getId());
+                    var userById = userService.findById(userService.findByEmail(userDetails.getUsername()).getId());
                     model.addAttribute("userRole", userById.map(UserReadDto::getRole).orElseThrow());
                     return "user/user";
                 })

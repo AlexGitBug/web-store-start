@@ -166,8 +166,8 @@ public class OrderController {
 
     private String getModelForFindById(@PathVariable("id") Integer id, Model model,
                                        @AuthenticationPrincipal UserDetails userDetails,
-                                       ProgressStatus paid) {
-        return orderService.findByIdAndStatus(id, paid)
+                                       ProgressStatus status) {
+        return orderService.findByIdAndStatus(id, status)
                 .map(order -> {
                     model.addAttribute("order", order);
                     model.addAttribute("payments", PaymentCondition.values());
@@ -176,7 +176,7 @@ public class OrderController {
                     model.addAttribute("userid", userService.findByEmail(userDetails.getUsername()).getId());
                     model.addAttribute("status", values());
                     model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(
-                            orderService.findByIdAndStatus(id, paid).get().getId()));
+                            orderService.findByIdAndStatus(id, status).get().getId()));
                     model.addAttribute("statistics", shoppingCartService.getStatisticSumOfOrder(id));
                     return "order/order";
                 })
