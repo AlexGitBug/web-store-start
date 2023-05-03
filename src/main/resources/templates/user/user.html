@@ -30,7 +30,11 @@
     <input th:id="${role}" type="radio" name="role" th:value="${role}" th:checked="${role == user.role}">
     <label th:for="${role}" th:text="${role}">Role name</label>
   </div>
-  <button type="submit">Update</button>
+  <button type="submit" th:if="${userRole.name() == 'ADMIN'}">Update user</button>
 </form>
+<form th:action="@{/users/{userId}/delete(userId=${user.id})}" th:if="${userRole.name() == 'ADMIN'}" method="post">
+  <button type="submit">Remove user</button>
+</form>
+<div th:insert="~{fragment :: footer}"></div>
 </body>
 </html>

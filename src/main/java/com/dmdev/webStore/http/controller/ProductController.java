@@ -1,6 +1,8 @@
 package com.dmdev.webStore.http.controller;
 
 
+import com.dmdev.webStore.dto.user.UserReadDto;
+import com.dmdev.webStore.entity.enums.Role;
 import com.dmdev.webStore.repository.filter.OrderFilter;
 import com.dmdev.webStore.repository.filter.ProductFilter;
 import com.dmdev.webStore.dto.PageResponse;
@@ -26,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Controller
@@ -91,7 +94,9 @@ public class ProductController {
                     model.addAttribute("colors", Color.values());
                     model.addAttribute("brands", Brand.values());
                     model.addAttribute("catalogs", catalogService.findAll());
-                    model.addAttribute("user", userService.findById(userService.findByEmail(userDetails.getUsername()).getId()));
+                    var userById = userService.findById(userService.findByEmail(userDetails.getUsername()).getId());
+                    var role = userById.map(UserReadDto::getRole).orElseThrow();
+                    model.addAttribute("user", role);
                     return "product/product";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

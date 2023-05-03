@@ -3,6 +3,7 @@ package com.dmdev.webStore.http.controller;
 
 import com.dmdev.webStore.dto.user.UserCreateEditDto;
 import com.dmdev.webStore.dto.user.UserReadDto;
+import com.dmdev.webStore.entity.User;
 import com.dmdev.webStore.entity.enums.Role;
 import com.dmdev.webStore.repository.filter.UserFilter;
 import com.dmdev.webStore.service.OrderService;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/users")
@@ -57,12 +60,15 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable("id") Integer id, Model model) {
+    public String findById(@PathVariable("id") Integer id, Model model,
+                           @AuthenticationPrincipal UserDetails userDetails) {
         return userService.findById(id)
                 .map(user -> {
                     model.addAttribute("user", user);
                     model.addAttribute("users", userService.findAll());
                     model.addAttribute("roles", Role.values());;
+                    Optional<UserReadDto> userById = userService.findById(userService.findByEmail(userDetails.getUsername()).getId());
+                    model.addAttribute("userRole", userById.map(UserReadDto::getRole).orElseThrow());
                     return "user/user";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
