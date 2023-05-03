@@ -9,11 +9,12 @@
 <form action="/products">
     <div>
         <label for="catalog">Catalog:
-            <select id="catalog" name="catalogId" >
+            <select id="catalog" name="catalogId">
                 <option selected> -- select an option --</option>
                 <option th:each="catalog : ${catalogs}"
-                        th:value="${catalog.getId()}"
-                        th:text="${catalog.getCategory()}">Catalog category
+                        th:value="${catalog.id}"
+                        th:selected="${catalog.id == filter.catalogId}"
+                        th:text="${catalog.category}">Catalog category
                 </option>
             </select>
         </label>
@@ -21,19 +22,20 @@
     <div>
         <label for="brand">Brand:
             <select id="brand" name="brand">
-                <option selected value> -- select an option --</option>
+                <option selected> -- select an option --</option>
                 <option th:each="brand : ${brands}"
                         th:value="${brand.name()}"
+                        th:selected="${brand.name()}"
                         th:text="${brand.name()}">Brand name
                 </option>
             </select>
         </label>
     </div>
     <label for="priceMin">PriceStart:
-        <input id="priceMin" type="number" name="priceMin">
+        <input id="priceMin" type="number" name="priceMin" th:value="${filter.getPriceMin()}">
     </label><br>
     <label for="priceMax">PriceEnd:
-        <input id="priceMax" type="number" name="priceMax">
+        <input id="priceMax" type="number" name="priceMax" th:value="${filter.getPriceMax()}">
     </label><br>
     <button type="submit">Filter</button>
     <br>
@@ -49,14 +51,10 @@
 <div th:each="product : ${products.content}">
     <a th:href="@{'/products/' + ${product.id}}"
        th:text="|id: ${product.id}. price: ${product.price}, brand: ${product.brand.name()}|">Product</a>
-<!--    <form th:action="@{/shoppingcarts/${product.id}?orderId=${currentorder.id}}" method="post">-->
-<!--        <button type="submit">Add to shoppingcart</button>-->
-<!--    </form>-->
     <form th:action="@{/shoppingcarts/{productId}(productId=${product.id})}" method="post">
         <button type="submit">Add to shoppingcart</button>
     </form>
 </div><br><br><br>
 <div th:insert="~{fragment :: footer}"></div>
-<div th:insert="~{fragment :: payment}"></div>
 </body>
 </html>

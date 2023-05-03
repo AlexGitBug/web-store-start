@@ -71,15 +71,20 @@ public class OrderController {
 
     @GetMapping("/allordersofoneuser")
     public String findAllOrdersWithProductsOfOneUser(Model model,
-                                                     PersonalInformationFilter filter, OrderFilter orderFilter) {
-        model.addAttribute("shoppingcarts", shoppingCartService.findAllOrdersWithProductsOfOneUser(filter, orderFilter));
+                                                     PersonalInformationFilter personalFilter,
+                                                     OrderFilter orderFilter) {
+        model.addAttribute("shoppingcarts",
+                shoppingCartService.findAllOrdersWithProductsOfOneUser(personalFilter, orderFilter));
+        model.addAttribute("personalFilter", personalFilter);
+        model.addAttribute("orderFilter", orderFilter);
         return "order/allordersofoneuser";
     }
 
     @GetMapping("/allordersbyuserid")
     public String findAllOrdersWithProductsByUserId(Model model,
                                                     @AuthenticationPrincipal UserDetails userDetails) {
-        model.addAttribute("orders", orderService.findAllByUserId(userService.findByEmail(userDetails.getUsername()).getId()));
+        model.addAttribute("orders",
+                orderService.findAllByUserId(userService.findByEmail(userDetails.getUsername()).getId()));
         model.addAttribute("users", userService.findAll());
         return "order/allordersbyuserid";
     }
@@ -156,7 +161,7 @@ public class OrderController {
         if (!orderService.delete(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return "redirect:/orders";
+        return "redirect:/products";
     }
 
     private String getModelForFindById(@PathVariable("id") Integer id, Model model,

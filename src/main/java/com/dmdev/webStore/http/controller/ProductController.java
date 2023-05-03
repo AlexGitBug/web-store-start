@@ -41,7 +41,8 @@ public class ProductController {
     private final List<Integer> list;
 
     @GetMapping("/registration")
-    public String registration(Model model, @ModelAttribute("product") @Validated ProductCreateEditDto product) {
+    public String registration(Model model,
+                               @ModelAttribute("product") @Validated ProductCreateEditDto product) {
         model.addAttribute("product", product);
         model.addAttribute("colors", Color.values());
         model.addAttribute("brands", Brand.values());
@@ -51,20 +52,21 @@ public class ProductController {
 
     @GetMapping("/{id}/orders")
     public String findByIdOrders(@PathVariable("id") Integer id,
-                         Model model) {
+                                     Model model) {
         model.addAttribute("products", productService.findById(id));
         return "redirect:/orders/registration";
     }
 
     @GetMapping
-    public String findAll(Model model, ProductFilter filter, Pageable pageable) {
+    public String findAll(Model model,
+                          ProductFilter filter,
+                          Pageable pageable) {
         var page = productService.findAllProducts(filter, pageable);
         model.addAttribute("products", PageResponse.of(page));
         model.addAttribute("filter", filter);
         model.addAttribute("brands", Brand.values());
         model.addAttribute("catalogs", catalogService.findAll());
         model.addAttribute("orders", orderService.findAll());
-//        model.addAttribute("currentorder", orderService.findUserOrder(current_user_id из security. пока 1));
         return "product/products";
     }
     @GetMapping("/{id}/onecatalog")

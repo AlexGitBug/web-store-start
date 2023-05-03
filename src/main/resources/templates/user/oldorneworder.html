@@ -6,7 +6,7 @@
 </head>
 <body>
 <p th:text="|Hello, Dear ${user.firstName} ${user.lastName}|"></span></p>
-<form th:action="@{/orders/afterloginpage}" method="get">
+<form th:action="@{/orders/afterloginpage}" th:if="status." method="get">
     <button type="submit">Continue old order</button>
 </form><br>
 <form th:action="@{/orders/registration}" method="get">

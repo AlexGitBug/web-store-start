@@ -49,9 +49,6 @@
 <form th:action="@{/products/{productId}/delete(productId=${product.id})}" th:if="${user.get().role.name() == 'ADMIN'}" method="post">
     <button type="submit">Remove</button>
 </form>
-<form action="/products/registration" method="get">
-    <button type="submit">Registration Page</button>
-</form>
 <div th:insert="~{fragment :: footer}"></div>
 </body>
 </html>

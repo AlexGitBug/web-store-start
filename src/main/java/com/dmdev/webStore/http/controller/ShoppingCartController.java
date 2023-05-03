@@ -50,7 +50,7 @@ public class ShoppingCartController {
         order.ifPresent(orderReadDto -> shoppingCartService
                 .create(new ShoppingCartCreateEditDto(orderReadDto.getId(), productId, LocalDate.now())));
         return order.map(orderReadDto -> "redirect:/orders/" + orderReadDto.getId() + "?status=IN_PROGRESS")
-                .orElse("redirect:/orders/registration");
+                .orElse( "redirect:error/error500");
 
     }
 

@@ -10,10 +10,10 @@
 <form action="/orders/allordersofoneuser">
     <div>
         <label for="email">Email:
-            <input id="email" type="text" name="email">
+            <input id="email" type="text" name="email" th:value="${personalFilter.email}">
         </label>
         <label for="date">Delivery date:
-            <input id="date" type="date" name="deliveryDate">
+            <input id="date" type="date" name="deliveryDate" th:value="${orderFilter.deliveryDate}">
         </label>
     </div>
     <button type="submit">Filter</button>

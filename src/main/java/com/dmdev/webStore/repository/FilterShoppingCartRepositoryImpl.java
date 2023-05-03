@@ -59,7 +59,7 @@ public class FilterShoppingCartRepositoryImpl implements FilterShoppingCartRepos
     public List<ShoppingCart> findAllOrdersWithProductsOfOneUser(PersonalInformationFilter personalInformationFilter,
                                                                  OrderFilter orderFilter) {
         var predicate = QPredicate.builder()
-                .add(personalInformationFilter.getEmail(), user.personalInformation.email::eq)
+                .add(personalInformationFilter.getEmail(), user.personalInformation.email::containsIgnoreCase)
                 .add(orderFilter.getDeliveryDate(), order.deliveryDate::eq)
                 .buildAnd();
 

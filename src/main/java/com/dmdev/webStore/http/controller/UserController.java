@@ -2,8 +2,10 @@ package com.dmdev.webStore.http.controller;
 
 
 import com.dmdev.webStore.dto.user.UserCreateEditDto;
+import com.dmdev.webStore.dto.user.UserReadDto;
 import com.dmdev.webStore.entity.enums.Role;
 import com.dmdev.webStore.repository.filter.UserFilter;
+import com.dmdev.webStore.service.OrderService;
 import com.dmdev.webStore.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final OrderService orderService;
 
     @GetMapping("/registration")
     public String registration(Model model, @ModelAttribute("user") @Validated UserCreateEditDto user) {
@@ -35,7 +38,9 @@ public class UserController {
 
     @GetMapping("/oldorneworder")
     public String oldorneworder(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        model.addAttribute("user", userService.findByEmail(userDetails.getUsername()));
+        var user = userService.findByEmail(userDetails.getUsername());
+        model.addAttribute("user", user);
+        model.addAttribute("status", orderService.findByStatusAndUserId(user.getId()));
         return "user/oldorneworder";
     }
 
