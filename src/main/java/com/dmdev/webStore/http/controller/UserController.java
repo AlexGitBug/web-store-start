@@ -14,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
 
@@ -32,7 +34,7 @@ public class UserController {
     private final OrderService orderService;
 
     @GetMapping("/registration")
-    public String registration(Model model, @ModelAttribute("user") @Validated UserCreateEditDto user) {
+    public String registration(Model model, @ModelAttribute("user") UserCreateEditDto user) {
         model.addAttribute("user", user);
         model.addAttribute("roles", Role.values());
         model.addAttribute("users", userService.findAll());
@@ -66,7 +68,8 @@ public class UserController {
                 .map(user -> {
                     model.addAttribute("user", user);
                     model.addAttribute("users", userService.findAll());
-                    model.addAttribute("roles", Role.values());;
+                    model.addAttribute("roles", Role.values());
+                    ;
                     var userById = userService.findById(userService.findByEmail(userDetails.getUsername()).getId());
                     model.addAttribute("userRole", userById.map(UserReadDto::getRole).orElseThrow());
                     return "user/user";
@@ -75,13 +78,21 @@ public class UserController {
     }
 
     @PostMapping
-    public String create(@ModelAttribute UserCreateEditDto userDto) {
-        userService.create(userDto);
+    public String create(@ModelAttribute @Validated UserCreateEditDto user,
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("user", user);
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/users/registration";
+        }
+        userService.create(user);
         return "redirect:/login";
     }
 
     @PostMapping("/{id}/update")
-    public String update(@PathVariable("id") Integer id, @ModelAttribute UserCreateEditDto userDto) {
+    public String update(@PathVariable("id") Integer id,
+                         @ModelAttribute @Validated UserCreateEditDto userDto) {
         return userService.update(id, userDto)
                 .map(it -> "redirect:/users/{id}")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

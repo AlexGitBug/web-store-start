@@ -5,19 +5,25 @@ import lombok.Value;
 import lombok.experimental.FieldNameConstants;
 //import com.dmdev.spring.validation.group.CreateAction;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Value
 @FieldNameConstants
 public class UserCreateEditDto {
+    @NotBlank
+    @NotEmpty
+    @Size(min = 3, max = 30)
     String firstName;
+    @NotBlank
+    @NotEmpty
+    @Size(min = 3, max = 30)
     String lastName;
+    @Email
     String email;
-
-//    @NotBlank(groups = CreateAction.class)
     String password;
     String telephone;
+    @Past
     LocalDate birthDate;
     Role role;
 }

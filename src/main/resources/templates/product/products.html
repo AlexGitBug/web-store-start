@@ -10,7 +10,7 @@
     <div>
         <label for="catalog">Catalog:
             <select id="catalog" name="catalogId">
-                <option selected> -- select an option --</option>
+                <option selected></option>
                 <option th:each="catalog : ${catalogs}"
                         th:value="${catalog.id}"
                         th:selected="${catalog.id == filter.catalogId}"
@@ -22,23 +22,26 @@
     <div>
         <label for="brand">Brand:
             <select id="brand" name="brand">
-                <option selected> -- select an option --</option>
+                <option selected></option>
                 <option th:each="brand : ${brands}"
                         th:value="${brand.name()}"
-                        th:selected="${brand.name()}"
+                        th:selected="${brand == filter.brand}"
                         th:text="${brand.name()}">Brand name
                 </option>
             </select>
         </label>
     </div>
     <label for="priceMin">PriceStart:
-        <input id="priceMin" type="number" name="priceMin" th:value="${filter.getPriceMin()}">
+        <input id="priceMin" type="number" name="priceMin" th:value="${filter.priceMin}">
     </label><br>
     <label for="priceMax">PriceEnd:
-        <input id="priceMax" type="number" name="priceMax" th:value="${filter.getPriceMax()}">
+        <input id="priceMax" type="number" name="priceMax" th:value="${filter.priceMax}">
     </label><br>
     <button type="submit">Filter</button>
     <br>
+    <div th:if="${errors}">
+        <p style="color: red" th:each="error : ${errors}" th:text="${error.defaultMessage}">Error message</p>
+    </div><br>
     <div>
         <label for="page">Page:
             <input id="page" type="number" name="page" th:value="${products.metadata.page}">
@@ -54,7 +57,7 @@
     <form th:action="@{/shoppingcarts/{productId}(productId=${product.id})}" method="post">
         <button type="submit">Add to shoppingcart</button>
     </form>
-</div><br><br><br>
+</div><br>
 <div th:insert="~{fragment :: footer}"></div>
 </body>
 </html>

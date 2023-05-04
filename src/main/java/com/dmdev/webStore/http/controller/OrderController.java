@@ -1,7 +1,6 @@
 package com.dmdev.webStore.http.controller;
 
 import com.dmdev.webStore.dto.order.OrderCreateEditDto;
-import com.dmdev.webStore.dto.order.OrderReadDto;
 import com.dmdev.webStore.dto.shoppingCart.ShoppingCartCreateEditDto;
 import com.dmdev.webStore.entity.Order;
 import com.dmdev.webStore.entity.enums.PaymentCondition;
@@ -14,7 +13,6 @@ import com.dmdev.webStore.service.OrderService;
 import com.dmdev.webStore.service.ProductService;
 import com.dmdev.webStore.service.ShoppingCartService;
 import com.dmdev.webStore.service.UserService;
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -25,12 +23,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.Console;
 import java.time.LocalDate;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static com.dmdev.webStore.entity.enums.ProgressStatus.*;
 
@@ -135,7 +129,7 @@ public class OrderController {
 
 
     @PostMapping
-    public String create(@ModelAttribute OrderCreateEditDto order) {
+    public String create(@ModelAttribute @Validated OrderCreateEditDto order) {
         var orderReadDto = orderService.create(order);
         return orderReadDto.map(it -> "redirect:/orders/" + it.getId() + "?status=IN_PROGRESS")
                 .orElse("redirect:/orders/registration");

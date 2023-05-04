@@ -30,6 +30,7 @@
     <div>
         <label for="catalog">Catalog:
             <select id="catalog" name="catalogId">
+                <option>empty</option>
                 <option th:each="catalog : ${catalogs}"
                         th:value="${catalog.getId()}"
                         th:selected="${catalog.getId() == product.catalogId}"
@@ -39,5 +40,8 @@
     </div>
     <button type="submit">Register</button>
 </form>
+<div th:if="${errors}">
+    <p style="color: red" th:each="error : ${errors}" th:text="${error.defaultMessage}">Error message</p>
+</div>
 </body>
 </html>

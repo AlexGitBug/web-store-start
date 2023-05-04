@@ -17,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -45,7 +46,7 @@ public class ProductController {
 
     @GetMapping("/registration")
     public String registration(Model model,
-                               @ModelAttribute("product") @Validated ProductCreateEditDto product) {
+                               @ModelAttribute("product") ProductCreateEditDto product) {
         model.addAttribute("product", product);
         model.addAttribute("colors", Color.values());
         model.addAttribute("brands", Brand.values());
@@ -62,8 +63,15 @@ public class ProductController {
 
     @GetMapping
     public String findAll(Model model,
-                          ProductFilter filter,
-                          Pageable pageable) {
+                         @Validated ProductFilter filter,
+                          BindingResult bindingResult,
+                          Pageable pageable,
+                          RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("filter", filter);
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/products";
+        }
         var page = productService.findAllProducts(filter, pageable);
         model.addAttribute("products", PageResponse.of(page));
         model.addAttribute("filter", filter);
@@ -72,6 +80,7 @@ public class ProductController {
         model.addAttribute("orders", orderService.findAll());
         return "product/products";
     }
+
     @GetMapping("/{id}/onecatalog")
     public String findAllProductsByCatalog(@PathVariable("id") Integer id, Model model) {
         model.addAttribute("products", productService.findAllByCatalogId(id));
@@ -103,11 +112,19 @@ public class ProductController {
     }
 
     @PostMapping
-    public String create(@ModelAttribute ProductCreateEditDto product, RedirectAttributes redirectAttributes) {
+    public String create(@ModelAttribute @Validated ProductCreateEditDto product,
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("product", product);
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/products/registration";
+        }
         return "redirect:/products/" + productService.create(product).getId();
     }
     @PostMapping("/{id}/update")
-    public String update(@PathVariable("id") Integer id, @ModelAttribute ProductCreateEditDto product) {
+    public String update(@PathVariable("id") Integer id,
+                         @ModelAttribute @Validated ProductCreateEditDto product) {
         return productService.update(id, product)
                 .map(it -> "redirect:/products/{id}")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

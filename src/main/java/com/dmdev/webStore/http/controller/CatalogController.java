@@ -25,7 +25,8 @@ public class CatalogController {
     private final ProductService productService;
 
     @GetMapping("/registration")
-    public String registrationCatalog(Model model, @ModelAttribute("catalog") @Validated CatalogCreateEditDto catalog) {
+    public String registrationCatalog(Model model,
+                                      @ModelAttribute("catalog") @Validated CatalogCreateEditDto catalog) {
         model.addAttribute("catalog", catalog);
         model.addAttribute("catalogs", catalogService.findAll());
         return "catalog/registration";

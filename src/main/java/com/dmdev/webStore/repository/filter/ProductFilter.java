@@ -5,6 +5,8 @@ import com.dmdev.webStore.entity.enums.Color;
 import lombok.Builder;
 import lombok.Value;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
 
 @Value
@@ -15,8 +17,12 @@ public class ProductFilter {
     Brand brand;
     String model;
     LocalDate dateOfRelease;
+    @PositiveOrZero
     Integer price;
+    @PositiveOrZero
     Integer priceMin;
+    @PositiveOrZero
+    @Min(value = 0)
     Integer priceMax;
     Integer priceLow;
     Color color;
