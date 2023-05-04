@@ -11,6 +11,15 @@
         <button type="submit">Logout</button>
     </form>
 </div>
+<div th:fragment="locale">
+    <form action="">
+        <select name="lang" onchange="this.form.submit()">
+            <option></option>
+            <option value="en">EN</option>
+            <option value="ru">RU</option>
+        </select>
+    </form>
+</div>
 <br>
 <div th:fragment="footer">
     <form action="/catalogs" method="get">

@@ -31,7 +31,6 @@ spring:
             clientId: 102879123337-ddre6f1ummvqi11b380d6dutmktt1b7b.apps.googleusercontent.com
             clientSecret: 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
             redirectUri: http://localhost:8090/login/oauth2/code/google
-
 logging:
   level:
     root: INFO

@@ -1,7 +1,9 @@
 package com.dmdev.webStore.http.controller;
 
 import com.dmdev.webStore.dto.order.OrderCreateEditDto;
+import com.dmdev.webStore.dto.order.OrderReadDto;
 import com.dmdev.webStore.dto.shoppingCart.ShoppingCartCreateEditDto;
+import com.dmdev.webStore.dto.user.UserReadDto;
 import com.dmdev.webStore.entity.Order;
 import com.dmdev.webStore.entity.enums.PaymentCondition;
 
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static com.dmdev.webStore.entity.enums.ProgressStatus.*;
 
@@ -45,11 +48,10 @@ public class OrderController {
                                @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("order", order);
         model.addAttribute("payments", PaymentCondition.values());
-        model.addAttribute("userid", userService.findByEmail(userDetails.getUsername()).getId());
+        model.addAttribute("userid", getUserId(userDetails));
         model.addAttribute("status", values());
         return "order/registration";
     }
-
     @GetMapping("/getstatisticofeachorderswithsum")
     public String getStatisticOfEachOrdersWithSum(Model model) {
         model.addAttribute("statistics", shoppingCartService.getStatisticOfEachOrdersWithSum());
@@ -78,7 +80,7 @@ public class OrderController {
     public String findAllOrdersWithProductsByUserId(Model model,
                                                     @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("orders",
-                orderService.findAllByUserId(userService.findByEmail(userDetails.getUsername()).getId()));
+                orderService.findAllByUserId(getUserId(userDetails)));
         model.addAttribute("users", userService.findAll());
         return "order/allordersbyuserid";
     }
@@ -100,8 +102,8 @@ public class OrderController {
                          @PathVariable("id") Integer id,
                          @AuthenticationPrincipal UserDetails userDetails
     ) {
-        var userId = userService.findByEmail(userDetails.getUsername()).getId();
-        var orderId = orderService.findByUserId(userId).getId();
+        var userId = getUserId(userDetails);
+        var orderId = orderService.findByUserId(userId).map(OrderReadDto::getId).orElseThrow();
         var productId = productService.findByProductId(id).getId();
         shoppingCartService.create(new ShoppingCartCreateEditDto(orderId, productId, LocalDate.now()));
         return "redirect:/products";
@@ -121,7 +123,7 @@ public class OrderController {
     @GetMapping("/afterloginpage")
     public String afterLoginPageContinue(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("user", userService.findByEmail(userDetails.getUsername()));
-        var userId = userService.findByEmail(userDetails.getUsername()).getId();
+        var userId = getUserId(userDetails);
         var order = orderService.findByStatusAndUserId(userId);
         return order.map(orderReadDto -> "redirect:/orders/" + orderReadDto.getId() + "?status=IN_PROGRESS")
                 .orElse("redirect:/orders/registration");
@@ -163,20 +165,26 @@ public class OrderController {
                                        ProgressStatus status) {
         return orderService.findByIdAndStatus(id, status)
                 .map(order -> {
+                    var userId = getUserId(userDetails);
                     model.addAttribute("order", order);
                     model.addAttribute("payments", PaymentCondition.values());
                     model.addAttribute("users", userService.findAll());
                     model.addAttribute("catalogs", catalogService.findAll());
-                    model.addAttribute("userid", userService.findByEmail(userDetails.getUsername()).getId());
+                    model.addAttribute("userid", userId);
                     model.addAttribute("status", values());
-                    model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(
-                            orderService.findByIdAndStatus(id, status).get().getId()));
+                    var orderInProgressId = orderService.findByStatusAndUserId(userId).map(OrderReadDto::getId).orElseThrow();
+                    model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(orderInProgressId));
+//                    model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(
+//                            orderService.findByIdAndStatus(id, status).get().getId()));
                     model.addAttribute("statistics", shoppingCartService.getStatisticSumOfOrder(id));
                     return "order/order";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
+    private Integer getUserId(UserDetails userDetails) {
+        return userService.findByEmail(userDetails.getUsername()).getId();
+    }
 
 }
 

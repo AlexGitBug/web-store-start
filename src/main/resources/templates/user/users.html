@@ -7,13 +7,6 @@
 <body>
 <div th:insert="~{fragment :: header}"></div>
 <form action="/users">
-<!--  <label for="startDate">StartDate:-->
-<!--    <input id="startDate" type="date" name="startDate">-->
-<!--  </label><br>-->
-<!--  <label for="endDate">EndDate:-->
-<!--    <input id="endDate" type="date" name="endDate">-->
-<!--  </label><br>-->
-<!--  <button type="submit">Filter</button>-->
 <div th:each="user : ${users}">
   <a th:href="@{'/users/' + ${user.id}}" th:text="|${user.id}. ${user.lastName}|">User</a>
 </div>

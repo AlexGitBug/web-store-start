@@ -1,7 +1,9 @@
 package com.dmdev.webStore.http.controller;
 
 
+import com.dmdev.webStore.dto.order.OrderReadDto;
 import com.dmdev.webStore.dto.user.UserReadDto;
+import com.dmdev.webStore.entity.enums.ProgressStatus;
 import com.dmdev.webStore.entity.enums.Role;
 import com.dmdev.webStore.repository.filter.OrderFilter;
 import com.dmdev.webStore.repository.filter.ProductFilter;
@@ -31,6 +33,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 import java.util.Optional;
 
+import static com.dmdev.webStore.entity.enums.ProgressStatus.*;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -56,22 +60,28 @@ public class ProductController {
 
     @GetMapping("/{id}/orders")
     public String findByIdOrders(@PathVariable("id") Integer id,
-                                     Model model) {
+                                 Model model) {
         model.addAttribute("products", productService.findById(id));
         return "redirect:/orders/registration";
     }
 
     @GetMapping
     public String findAll(Model model,
-                         @Validated ProductFilter filter,
+                          @Validated ProductFilter filter,
                           BindingResult bindingResult,
                           Pageable pageable,
-                          RedirectAttributes redirectAttributes) {
+                          RedirectAttributes redirectAttributes,
+                          @AuthenticationPrincipal UserDetails userDetails) {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("filter", filter);
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/products";
         }
+        var userId = userService.findByEmail(userDetails.getUsername()).getId();
+        var orderExist = orderService.findByStatusAndUserId(userId)
+                .map(OrderReadDto::getId)
+                .isPresent();
+        model.addAttribute("status", orderExist);
         var page = productService.findAllProducts(filter, pageable);
         model.addAttribute("products", PageResponse.of(page));
         model.addAttribute("filter", filter);
@@ -93,6 +103,7 @@ public class ProductController {
         model.addAttribute("products", productService.findAllProductsFromOrder(filter));
         return "product/productsfromorder";
     }
+
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Integer id, Model model,
                            @AuthenticationPrincipal UserDetails userDetails) {
@@ -103,7 +114,8 @@ public class ProductController {
                     model.addAttribute("colors", Color.values());
                     model.addAttribute("brands", Brand.values());
                     model.addAttribute("catalogs", catalogService.findAll());
-                    var userById = userService.findById(userService.findByEmail(userDetails.getUsername()).getId());
+                    var userId = userService.findByEmail(userDetails.getUsername()).getId();
+                    var userById = userService.findById(userId);
                     var role = userById.map(UserReadDto::getRole).orElseThrow();
                     model.addAttribute("user", role);
                     return "product/product";
@@ -122,6 +134,7 @@ public class ProductController {
         }
         return "redirect:/products/" + productService.create(product).getId();
     }
+
     @PostMapping("/{id}/update")
     public String update(@PathVariable("id") Integer id,
                          @ModelAttribute @Validated ProductCreateEditDto product) {

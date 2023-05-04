@@ -35,10 +35,9 @@ public class OrderService {
                 .map(orderReadMapper::map)
                 .toList();
     }
-    public OrderReadDto findByUserId(Integer id) {
+    public Optional<OrderReadDto> findByUserId(Integer id) {
         return orderRepository.findByUserId(id)
-                .map(orderReadMapper::map)
-                .orElseThrow();
+                .map(orderReadMapper::map);
     }
 
     public Optional<OrderReadDto> findByIdAndStatus(Integer id, ProgressStatus status) {

@@ -3,13 +3,18 @@ package com.dmdev.webStore.http.controller;
 
 import com.dmdev.webStore.dto.catalog.CatalogCreateEditDto;
 import com.dmdev.webStore.dto.catalog.CatalogReadDto;
+import com.dmdev.webStore.dto.order.OrderReadDto;
 import com.dmdev.webStore.dto.product.ProductCreateEditDto;
 import com.dmdev.webStore.entity.enums.Brand;
 import com.dmdev.webStore.entity.enums.Color;
 import com.dmdev.webStore.service.CatalogService;
+import com.dmdev.webStore.service.OrderService;
 import com.dmdev.webStore.service.ProductService;
+import com.dmdev.webStore.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +28,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CatalogController {
     private final CatalogService catalogService;
     private final ProductService productService;
+
+    private final OrderService orderService;
+
+    private final UserService userService;
 
     @GetMapping("/registration")
     public String registrationCatalog(Model model,
@@ -51,8 +60,15 @@ public class CatalogController {
 
 
     @GetMapping("/{id}/onecatalog")
-    public String findAllProductsByCatalog(@PathVariable("id") Integer id, Model model) {
+    public String findAllProductsByCatalog(@PathVariable("id") Integer id,
+                                           Model model,
+                                           @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("products", productService.findAllByCatalogId(id));
+        var userId = userService.findByEmail(userDetails.getUsername()).getId();
+        var orderExist = orderService.findByStatusAndUserId(userId)
+                .map(OrderReadDto::getId)
+                .isPresent();
+        model.addAttribute("status", orderExist);
         return "catalog/onecatalog";
     }
     @PostMapping
