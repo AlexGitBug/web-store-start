@@ -5,6 +5,8 @@
     <title>After login</title>
 </head>
 <body>
+<div th:insert="~{fragment :: header}"></div>
+<div th:insert="~{fragment :: locale}"></div>
 <p th:text="|Hello, Dear ${user.firstName} ${user.lastName}|"></span></p>
 <form th:action="@{/orders/afterloginpage}" th:if="status." method="get">
     <button type="submit">Continue old order</button>
