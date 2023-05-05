@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static com.dmdev.webStore.entity.enums.ProgressStatus.*;
@@ -52,11 +53,13 @@ public class OrderController {
         model.addAttribute("status", values());
         return "order/registration";
     }
+
     @GetMapping("/getstatisticofeachorderswithsum")
     public String getStatisticOfEachOrdersWithSum(Model model) {
         model.addAttribute("statistics", shoppingCartService.getStatisticOfEachOrdersWithSum());
         return "order/getstatisticofeachorderswithsum";
     }
+
     @GetMapping
     public String findAll(Model model, @ModelAttribute OrderCreateEditDto order) {
         var sortBy = Sort.sort(Order.class);
@@ -98,9 +101,9 @@ public class OrderController {
     }
 
     @PostMapping("/{id}/add")
-    public String create(Model model,
-                         @PathVariable("id") Integer id,
-                         @AuthenticationPrincipal UserDetails userDetails
+    public String saveShoppingCard(Model model,
+                                   @PathVariable("id") Integer id,
+                                   @AuthenticationPrincipal UserDetails userDetails
     ) {
         var userId = getUserId(userDetails);
         var orderId = orderService.findByUserId(userId).map(OrderReadDto::getId).orElseThrow();
@@ -166,13 +169,13 @@ public class OrderController {
         return orderService.findByIdAndStatus(id, status)
                 .map(order -> {
                     var userId = getUserId(userDetails);
+                    var orderInProgressId = orderService.findByStatusAndUserId(userId).map(OrderReadDto::getId).orElseThrow();
                     model.addAttribute("order", order);
                     model.addAttribute("payments", PaymentCondition.values());
                     model.addAttribute("users", userService.findAll());
                     model.addAttribute("catalogs", catalogService.findAll());
                     model.addAttribute("userid", userId);
                     model.addAttribute("status", values());
-                    var orderInProgressId = orderService.findByStatusAndUserId(userId).map(OrderReadDto::getId).orElseThrow();
                     model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(orderInProgressId));
 //                    model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(
 //                            orderService.findByIdAndStatus(id, status).get().getId()));
@@ -184,6 +187,33 @@ public class OrderController {
 
     private Integer getUserId(UserDetails userDetails) {
         return userService.findByEmail(userDetails.getUsername()).getId();
+    }
+
+    @GetMapping("/reg")
+    public String registration2(Model model,
+                                @ModelAttribute("order") @Validated OrderCreateEditDto order,
+                                @AuthenticationPrincipal UserDetails userDetails,
+                                @SessionAttribute("basket") List<Integer> list) {
+        model.addAttribute("order", order);
+        model.addAttribute("payments", PaymentCondition.values());
+        model.addAttribute("userid", getUserId(userDetails));
+        model.addAttribute("status", values());
+        model.addAttribute("ola", list);
+        return "order/reg";
+    }
+
+    @PostMapping("/create")
+    public String create2(@ModelAttribute @Validated OrderCreateEditDto order,
+                          @AuthenticationPrincipal UserDetails userDetails,
+                          @SessionAttribute("basket") List<Integer> list) {
+        var orderReadDto = orderService.create(order);
+        var userId = getUserId(userDetails);
+        for (Integer productId : list) {
+            var id = orderService.findByStatusAndUserId(userId).map(OrderReadDto::getId).orElseThrow();
+            shoppingCartService.create(new ShoppingCartCreateEditDto(id, productId, LocalDate.now()));
+        }
+        return orderReadDto.map(it -> "redirect:/orders/" + it.getId() + "?status=IN_PROGRESS")
+                .orElse("redirect:/orders/registration");
     }
 
 }

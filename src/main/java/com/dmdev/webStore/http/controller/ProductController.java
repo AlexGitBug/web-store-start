@@ -1,6 +1,7 @@
 package com.dmdev.webStore.http.controller;
 
 
+import com.dmdev.webStore.dto.AddProductOrderListDto;
 import com.dmdev.webStore.dto.order.OrderReadDto;
 import com.dmdev.webStore.dto.user.UserReadDto;
 import com.dmdev.webStore.entity.enums.ProgressStatus;
@@ -21,12 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -46,8 +42,8 @@ public class ProductController {
     private final CatalogService catalogService;
     private final OrderService orderService;
     private final UserService userService;
-    private final List<Integer> list;
 
+    private final List<Integer> list;
     @GetMapping("/registration")
     public String registration(Model model,
                                @ModelAttribute("product") ProductCreateEditDto product) {
@@ -151,10 +147,12 @@ public class ProductController {
         return "redirect:/products";
     }
 
-    //    @PostMapping("/{id}/add")
-//    public String addToBascket(Model model, @PathVariable("id") Integer id) {
-//        list.add(productService.findByProductId(id).getId());
-//        return "redirect:/catalogs";
-//    }
+    @PostMapping("/{id}/add")
+    public String addToBascket(Model model,
+                               @PathVariable("id") Integer id) {
+        list.add(productService.findByProductId(id).getId());
+        model.addAttribute("basket", list);
+        return "redirect:/products";
+    }
 
 }

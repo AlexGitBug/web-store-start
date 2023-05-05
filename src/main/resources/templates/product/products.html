@@ -57,6 +57,9 @@
     <form th:action="@{/shoppingcarts/{productId}(productId=${product.id})}" th:if="${status}" method="post">
         <button type="submit">Add to shoppingcart</button>
     </form>
+    <form th:action="@{/products/{productId}/add(productId=${product.id})}" method="post">
+        <button type="submit">Add product in List</button>
+    </form>
 </div><br>
 <div th:insert="~{fragment :: footer}"></div>
 </body>

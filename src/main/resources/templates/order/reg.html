@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order</title>
+</head>
+<body>
+<div th:insert="~{fragment :: header}"></div>
+<form th:action="@{/orders/create}" method="post" th:object="${order}">
+    <label for="city">City:
+        <input id="city" type="text" name="city" th:value="*{city}">
+    </label><br>
+    <label for="street">Street:
+        <input id="street" type="text" name="street" th:value="*{street}">
+    </label><br>
+    <label for="building">Building:
+        <input id="building" type="text" name="building" th:value="*{building}">
+    </label><br>
+    <label for="deliveryDate">DeliveryDate:
+        <input id="deliveryDate" type="date" name="deliveryDate" th:value="*{deliveryDate}">
+    </label><br>
+    <label for="user">User id:
+        <input id="user" type="number" readonly name="userId" th:value="${userid}">
+    </label><br>
+    <label for="status">Status
+        <input id="status" type="text" readonly name="status" value="IN_PROGRESS">
+    </label>
+    <div th:each="paymentCondition : ${payments}">
+        <input th:id="${paymentCondition}" type="radio" name="paymentCondition" th:value="${paymentCondition}" th:checked="${paymentCondition == order.paymentCondition}">
+        <label th:for="${paymentCondition}" th:text="${paymentCondition}">Role name</label>
+    </div>
+    <button type="submit">Register</button>
+</form>
+<div th:each="ola : ${ola}">
+    <a th:text="${ola}"></a>
+</div><br>
+<!--<div th:each="shoppingcart : ${shoppingcarts}">-->
+<!--  <a th:text="|id: ${shoppingcart.getId()}. category: ${shoppingcart.product.catalog.category}|">shoppingcart</a>-->
+<!--</div>-->
+<div th:insert="~{fragment :: footer}"></div>
+</body>
+</html>
