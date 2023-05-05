@@ -166,17 +166,35 @@ public class OrderController {
     private String getModelForFindById(@PathVariable("id") Integer id, Model model,
                                        @AuthenticationPrincipal UserDetails userDetails,
                                        ProgressStatus status) {
-        return orderService.findByIdAndStatus(id, status)
+        if (status == IN_PROGRESS) {
+            return orderService.findById(id)
+                    .map(order -> {
+                        var userId = getUserId(userDetails);
+                        var orderInProgressId = orderService.findByStatusAndUserId(userId).map(OrderReadDto::getId).orElseThrow();
+                        model.addAttribute("order", order);
+                        model.addAttribute("payments", PaymentCondition.values());
+                        model.addAttribute("users", userService.findAll());
+                        model.addAttribute("catalogs", catalogService.findAll());
+                        model.addAttribute("userid", userId);
+                        model.addAttribute("status", values());
+                        model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(orderInProgressId));
+//                    model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(
+//                            orderService.findByIdAndStatus(id, status).get().getId()));
+                        model.addAttribute("statistics", shoppingCartService.getStatisticSumOfOrder(id));
+                        return "order/order";
+                    })
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        }
+        return orderService.findById(id)
                 .map(order -> {
                     var userId = getUserId(userDetails);
-                    var orderInProgressId = orderService.findByStatusAndUserId(userId).map(OrderReadDto::getId).orElseThrow();
                     model.addAttribute("order", order);
                     model.addAttribute("payments", PaymentCondition.values());
                     model.addAttribute("users", userService.findAll());
                     model.addAttribute("catalogs", catalogService.findAll());
                     model.addAttribute("userid", userId);
                     model.addAttribute("status", values());
-                    model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(orderInProgressId));
+                    model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(id));
 //                    model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(
 //                            orderService.findByIdAndStatus(id, status).get().getId()));
                     model.addAttribute("statistics", shoppingCartService.getStatisticSumOfOrder(id));
