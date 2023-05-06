@@ -10,7 +10,5 @@ public class CatalogReadDto {
 
     Integer id;
 
-    @NotBlank
-    @NotEmpty
     String category;
 }

@@ -2,7 +2,6 @@ package com.dmdev.webStore.service;
 
 import com.dmdev.webStore.dto.user.UserCreateEditDto;
 import com.dmdev.webStore.dto.user.UserReadDto;
-import com.dmdev.webStore.entity.embeddable.PersonalInformation;
 import com.dmdev.webStore.mapper.user.UserCreateEditMapper;
 import com.dmdev.webStore.mapper.user.UserReadMapper;
 import com.dmdev.webStore.repository.UserRepository;

@@ -1,5 +1,6 @@
 package com.dmdev.webStore.unit.mapper.catalog;
 
+import com.dmdev.webStore.dto.catalog.CatalogReadDto;
 import com.dmdev.webStore.entity.Catalog;
 import com.dmdev.webStore.mapper.catalog.CatalogReadMapper;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,8 @@ class CatalogReadMapperTest {
 
     @Test
     void mapCatalogReadTest() {
+
+
         var catalog = Catalog.builder()
                 .id(1)
                 .category("test")
@@ -24,7 +27,8 @@ class CatalogReadMapperTest {
 
         var actualResult = catalogReadMapper.map(catalog);
 
-        assertThat(actualResult.getId()).isEqualTo(catalog.getId());
+        var expectedResult = new CatalogReadDto(1, "test");
+        assertThat(actualResult).isEqualTo(expectedResult);
     }
 
 }

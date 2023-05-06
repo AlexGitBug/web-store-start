@@ -91,7 +91,7 @@ public class OrderService {
 
     @Transactional
     public int setStatus(Integer id) {
-        return orderRepository.setStatus(PAID, id);
+        return orderRepository.setStatus(CREATE, id);
     }
 
 

@@ -28,7 +28,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import static com.dmdev.webStore.entity.enums.ProgressStatus.*;
 
@@ -120,7 +119,7 @@ public class OrderController {
         if (status == IN_PROGRESS) {
             return getModelForFindById(id, model, userDetails, IN_PROGRESS);
         }
-        return getModelForFindById(id, model, userDetails, PAID);
+        return getModelForFindById(id, model, userDetails, CREATE);
     }
 
     @GetMapping("/afterloginpage")
@@ -150,8 +149,11 @@ public class OrderController {
     }
 
     @PostMapping("/{id}/setStatus")
-    public String setStatus(@PathVariable("id") Integer id, @ModelAttribute OrderCreateEditDto order) {
+    public String setStatus(@PathVariable("id") Integer id,
+                            @ModelAttribute OrderCreateEditDto order,
+                             @SessionAttribute("basket") List<Integer> list) {
         orderService.setStatus(id);
+        list.clear();
         return "redirect:/catalogs";
     }
 
@@ -178,8 +180,6 @@ public class OrderController {
                         model.addAttribute("userid", userId);
                         model.addAttribute("status", values());
                         model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(orderInProgressId));
-//                    model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(
-//                            orderService.findByIdAndStatus(id, status).get().getId()));
                         model.addAttribute("statistics", shoppingCartService.getStatisticSumOfOrder(id));
                         return "order/order";
                     })
@@ -195,16 +195,10 @@ public class OrderController {
                     model.addAttribute("userid", userId);
                     model.addAttribute("status", values());
                     model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(id));
-//                    model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(
-//                            orderService.findByIdAndStatus(id, status).get().getId()));
                     model.addAttribute("statistics", shoppingCartService.getStatisticSumOfOrder(id));
                     return "order/order";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-    }
-
-    private Integer getUserId(UserDetails userDetails) {
-        return userService.findByEmail(userDetails.getUsername()).getId();
     }
 
     @GetMapping("/reg")
@@ -232,6 +226,10 @@ public class OrderController {
         }
         return orderReadDto.map(it -> "redirect:/orders/" + it.getId() + "?status=IN_PROGRESS")
                 .orElse("redirect:/orders/registration");
+    }
+
+    private Integer getUserId(UserDetails userDetails) {
+        return userService.findByEmail(userDetails.getUsername()).getId();
     }
 
 }

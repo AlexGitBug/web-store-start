@@ -261,7 +261,7 @@ public class OrderServiceTest {
     void setStatus() {
         Integer expectedResult = 1;
         Order order = getOrder();
-        doReturn(expectedResult).when(orderRepository).setStatus(PAID, order.getId());
+        doReturn(expectedResult).when(orderRepository).setStatus(CREATE, order.getId());
 
         int actualResult = orderService.setStatus(order.getId());
 

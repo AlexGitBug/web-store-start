@@ -42,7 +42,6 @@ public class ProductController {
     private final CatalogService catalogService;
     private final OrderService orderService;
     private final UserService userService;
-
     private final List<Integer> list;
     @GetMapping("/registration")
     public String registration(Model model,
