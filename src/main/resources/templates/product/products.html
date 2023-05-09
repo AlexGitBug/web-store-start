@@ -58,6 +58,9 @@
         <button type="submit">Add to shoppingcart</button>
     </form>
     <form th:action="@{/products/{productId}/add(productId=${product.id})}" method="post">
+        <label for="count14">PriceStart:
+            <input id="count14" type="number" name="count14">
+        </label><br>
         <button type="submit">Add product in List</button>
     </form>
 </div><br>

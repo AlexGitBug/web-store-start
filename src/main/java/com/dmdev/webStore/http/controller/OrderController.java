@@ -1,5 +1,6 @@
 package com.dmdev.webStore.http.controller;
 
+import com.dmdev.webStore.dto.CountDto;
 import com.dmdev.webStore.dto.order.OrderCreateEditDto;
 import com.dmdev.webStore.dto.order.OrderReadDto;
 import com.dmdev.webStore.dto.shoppingCart.ShoppingCartCreateEditDto;
@@ -26,6 +27,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.lang.constant.ConstantDesc;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -115,10 +117,13 @@ public class OrderController {
     public String findById(@PathVariable("id") Integer id,
                            @RequestParam("status") ProgressStatus status,
                            Model model,
-                           @AuthenticationPrincipal UserDetails userDetails) {
+                           @AuthenticationPrincipal UserDetails userDetails,
+                           @SessionAttribute("count14") CountDto countDto) {
         if (status == IN_PROGRESS) {
+            model.addAttribute("count14", countDto.getCount14());
             return getModelForFindById(id, model, userDetails, IN_PROGRESS);
         }
+        model.addAttribute("count14", countDto.getCount14());
         return getModelForFindById(id, model, userDetails, CREATE);
     }
 
@@ -151,7 +156,7 @@ public class OrderController {
     @PostMapping("/{id}/setStatus")
     public String setStatus(@PathVariable("id") Integer id,
                             @ModelAttribute OrderCreateEditDto order,
-                             @SessionAttribute("basket") List<Integer> list) {
+                            @SessionAttribute("basket") List<Integer> list) {
         orderService.setStatus(id);
         list.clear();
         return "redirect:/catalogs";
@@ -180,6 +185,7 @@ public class OrderController {
                         model.addAttribute("userid", userId);
                         model.addAttribute("status", values());
                         model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(orderInProgressId));
+
                         model.addAttribute("statistics", shoppingCartService.getStatisticSumOfOrder(id));
                         return "order/order";
                     })
@@ -225,7 +231,7 @@ public class OrderController {
             shoppingCartService.create(new ShoppingCartCreateEditDto(id, productId, LocalDate.now()));
         }
         return orderReadDto.map(it -> "redirect:/orders/" + it.getId() + "?status=IN_PROGRESS")
-                .orElse("redirect:/orders/registration");
+                .orElse("redirect:/orders/reg");
     }
 
     private Integer getUserId(UserDetails userDetails) {

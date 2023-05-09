@@ -35,14 +35,14 @@
 </form>
 List of products:
 <div th:each="shoppingcart : ${shoppingcarts}">Product:
-  <a th:text="|id: ${shoppingcart.id}. category: ${shoppingcart.product.catalog.category}|">shoppingcart</a>
+  <a th:text="|id: ${shoppingcart.id}. category: ${shoppingcart.product.catalog.category}. count: ${count14}|">shoppingcart</a>
   <form th:action="@{/shoppingcarts/{shid}/delete(shid=${shoppingcart.id})}"
         th:if="${order.status.name() == 'IN_PROGRESS'}" method="post">
     <button type="submit">Remove product</button>
   </form>
 </div>
 <div th:each="statistic : ${statistics}">
-    <a th:text="|order sum: ${statistic.getSum()}|"></a>
+    <a th:text="|order sum: ${statistic.getSum()*count14}|"></a>
 </div>
 <form th:action="@{/orders/{orderId}/setStatus(orderId=${order.id})}" th:if="${order.status.name() == 'IN_PROGRESS'}"
       method="post">

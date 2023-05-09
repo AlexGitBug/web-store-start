@@ -2,6 +2,7 @@ package com.dmdev.webStore.http.controller;
 
 
 import com.dmdev.webStore.dto.AddProductOrderListDto;
+import com.dmdev.webStore.dto.CountDto;
 import com.dmdev.webStore.dto.order.OrderReadDto;
 import com.dmdev.webStore.dto.user.UserReadDto;
 import com.dmdev.webStore.entity.enums.ProgressStatus;
@@ -14,6 +15,7 @@ import com.dmdev.webStore.entity.enums.Brand;
 import com.dmdev.webStore.entity.enums.Color;
 import com.dmdev.webStore.service.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,7 +37,7 @@ import static com.dmdev.webStore.entity.enums.ProgressStatus.*;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/products")
-@SessionAttributes({"basket"})
+@SessionAttributes({"basket", "count14"})
 public class ProductController {
 
     private final ProductService productService;
@@ -43,6 +45,8 @@ public class ProductController {
     private final OrderService orderService;
     private final UserService userService;
     private final List<Integer> list;
+
+
     @GetMapping("/registration")
     public String registration(Model model,
                                @ModelAttribute("product") ProductCreateEditDto product) {
@@ -148,9 +152,13 @@ public class ProductController {
 
     @PostMapping("/{id}/add")
     public String addToBascket(Model model,
-                               @PathVariable("id") Integer id) {
+                               @PathVariable("id") Integer id,
+                               CountDto countDto) {
+        var count14 = countDto.getCount14();
+        count14 = 0;
         list.add(productService.findByProductId(id).getId());
         model.addAttribute("basket", list);
+        model.addAttribute("count14", countDto.getCount14());
         return "redirect:/products";
     }
 
