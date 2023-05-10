@@ -14,4 +14,5 @@ public class ShoppingCartCreateEditDto {
     Integer orderId;
     Integer productId;
     LocalDate createdAt;
+    Integer count;
 }

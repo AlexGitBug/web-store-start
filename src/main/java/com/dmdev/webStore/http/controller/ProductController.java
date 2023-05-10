@@ -1,12 +1,9 @@
 package com.dmdev.webStore.http.controller;
 
 
-import com.dmdev.webStore.dto.AddProductOrderListDto;
 import com.dmdev.webStore.dto.CountDto;
 import com.dmdev.webStore.dto.order.OrderReadDto;
 import com.dmdev.webStore.dto.user.UserReadDto;
-import com.dmdev.webStore.entity.enums.ProgressStatus;
-import com.dmdev.webStore.entity.enums.Role;
 import com.dmdev.webStore.repository.filter.OrderFilter;
 import com.dmdev.webStore.repository.filter.ProductFilter;
 import com.dmdev.webStore.dto.PageResponse;
@@ -15,7 +12,6 @@ import com.dmdev.webStore.entity.enums.Brand;
 import com.dmdev.webStore.entity.enums.Color;
 import com.dmdev.webStore.service.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,10 +24,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-import java.util.Optional;
-
-import static com.dmdev.webStore.entity.enums.ProgressStatus.*;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Controller
@@ -44,7 +38,8 @@ public class ProductController {
     private final CatalogService catalogService;
     private final OrderService orderService;
     private final UserService userService;
-    private final List<Integer> list;
+//    private final Map<Integer, Integer> productIdAndCount;
+//    private final List<Integer> list;
 
 
     @GetMapping("/registration")
@@ -151,15 +146,34 @@ public class ProductController {
     }
 
     @PostMapping("/{id}/add")
-    public String addToBascket(Model model,
-                               @PathVariable("id") Integer id,
-                               CountDto countDto) {
-        var count14 = countDto.getCount14();
-        count14 = 0;
-        list.add(productService.findByProductId(id).getId());
-        model.addAttribute("basket", list);
+    public String addToBasket(Model model,
+                              @PathVariable("id") Integer id,
+                              CountDto countDto,
+                              @ModelAttribute("basket") Map<Integer, Integer> productIdAndCount,
+                              RedirectAttributes attributes) {
+//        list.add(productService.findByProductId(id).getId());
+//        model.addAttribute("basket", productIdAndCount);
         model.addAttribute("count14", countDto.getCount14());
+        productIdAndCount.put(id, countDto.getCount14());
+        attributes.addFlashAttribute("basket", productIdAndCount);
         return "redirect:/products";
+    }
+
+
+//    @PostMapping("/{id}/add")
+//    public String addToBascket(Model model,
+//                               @PathVariable("id") Integer id,
+//                               CountDto countDto) {
+////        list.add(productService.findByProductId(id).getId());
+//        model.addAttribute("basket", productIdAndCount);
+//        model.addAttribute("count14", countDto.getCount14());
+//        productIdAndCount.put(id, countDto.getCount14());
+//        return "redirect:/products";
+//    }
+
+    @ModelAttribute("basket")
+    public Map<Integer, Integer> productIdAndCount() {
+        return new HashMap<>();
     }
 
 }

@@ -15,4 +15,5 @@ public class ShoppingCartReadDto {
     OrderReadDto order;
     ProductReadDto product;
     LocalDate createdAt;
+    Integer count;
 }

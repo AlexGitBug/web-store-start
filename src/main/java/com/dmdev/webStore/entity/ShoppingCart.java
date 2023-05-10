@@ -50,6 +50,8 @@ public class ShoppingCart implements BaseEntity<Integer>{
     @Column(name = "created_at")
     private LocalDate createdAt;
 
+    private Integer count;
+
     public void setOrder(Order order) {
         this.order = order;
         this.order.getShoppingCarts().add(this);

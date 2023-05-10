@@ -30,6 +30,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.lang.constant.ConstantDesc;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import static com.dmdev.webStore.entity.enums.ProgressStatus.*;
 
@@ -109,7 +110,7 @@ public class OrderController {
         var userId = getUserId(userDetails);
         var orderId = orderService.findByUserId(userId).map(OrderReadDto::getId).orElseThrow();
         var productId = productService.findByProductId(id).getId();
-        shoppingCartService.create(new ShoppingCartCreateEditDto(orderId, productId, LocalDate.now()));
+        shoppingCartService.create(new ShoppingCartCreateEditDto(orderId, productId, LocalDate.now(), null));
         return "redirect:/products";
     }
 
@@ -118,12 +119,10 @@ public class OrderController {
                            @RequestParam("status") ProgressStatus status,
                            Model model,
                            @AuthenticationPrincipal UserDetails userDetails,
-                           @SessionAttribute("count14") CountDto countDto) {
+                             @SessionAttribute("basket") Map<Integer, Integer> productIdAndCount) {
         if (status == IN_PROGRESS) {
-            model.addAttribute("count14", countDto.getCount14());
             return getModelForFindById(id, model, userDetails, IN_PROGRESS);
         }
-        model.addAttribute("count14", countDto.getCount14());
         return getModelForFindById(id, model, userDetails, CREATE);
     }
 
@@ -156,9 +155,9 @@ public class OrderController {
     @PostMapping("/{id}/setStatus")
     public String setStatus(@PathVariable("id") Integer id,
                             @ModelAttribute OrderCreateEditDto order,
-                            @SessionAttribute("basket") List<Integer> list) {
+                            @SessionAttribute("basket") Map<Integer, Integer> productIdAndCount) {
         orderService.setStatus(id);
-        list.clear();
+        productIdAndCount.clear();
         return "redirect:/catalogs";
     }
 
@@ -185,7 +184,6 @@ public class OrderController {
                         model.addAttribute("userid", userId);
                         model.addAttribute("status", values());
                         model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(orderInProgressId));
-
                         model.addAttribute("statistics", shoppingCartService.getStatisticSumOfOrder(id));
                         return "order/order";
                     })
@@ -211,25 +209,31 @@ public class OrderController {
     public String registration2(Model model,
                                 @ModelAttribute("order") @Validated OrderCreateEditDto order,
                                 @AuthenticationPrincipal UserDetails userDetails,
-                                @SessionAttribute("basket") List<Integer> list) {
+                                @SessionAttribute("basket") Map<Integer, Integer> productIdAndCount) {
         model.addAttribute("order", order);
         model.addAttribute("payments", PaymentCondition.values());
         model.addAttribute("userid", getUserId(userDetails));
         model.addAttribute("status", values());
-        model.addAttribute("ola", list);
+//        model.addAttribute("ola", list);
         return "order/reg";
     }
 
     @PostMapping("/create")
     public String create2(@ModelAttribute @Validated OrderCreateEditDto order,
                           @AuthenticationPrincipal UserDetails userDetails,
-                          @SessionAttribute("basket") List<Integer> list) {
+                          @SessionAttribute("basket") Map<Integer, Integer> productIdAndCount) {
         var orderReadDto = orderService.create(order);
         var userId = getUserId(userDetails);
-        for (Integer productId : list) {
-            var id = orderService.findByStatusAndUserId(userId).map(OrderReadDto::getId).orElseThrow();
-            shoppingCartService.create(new ShoppingCartCreateEditDto(id, productId, LocalDate.now()));
+        for (Map.Entry<Integer, Integer> integerEntry : productIdAndCount.entrySet()) {
+            var productId = integerEntry.getKey();
+            var value = integerEntry.getValue();
+            var orderId = orderService.findByStatusAndUserId(userId).map(OrderReadDto::getId).orElseThrow();
+            shoppingCartService.create(new ShoppingCartCreateEditDto(orderId, productId, LocalDate.now(), value));
         }
+//        for (Integer productId : list) {
+//            var id = orderService.findByStatusAndUserId(userId).map(OrderReadDto::getId).orElseThrow();
+//            shoppingCartService.create(new ShoppingCartCreateEditDto(id, productId, LocalDate.now()));
+//        }
         return orderReadDto.map(it -> "redirect:/orders/" + it.getId() + "?status=IN_PROGRESS")
                 .orElse("redirect:/orders/reg");
     }

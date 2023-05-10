@@ -83,7 +83,8 @@ public class FilterShoppingCartRepositoryImpl implements FilterShoppingCartRepos
                 .join(shoppingCart.order, order)
                 .where(order.id.eq(orderId))
                 .groupBy(order.id)
-                .select(order.id, product.price.sum())
+                .select(order.id, product.price.multiply(shoppingCart.count).sum())
+//                .select(order.id, product.price.sum())
                 .fetch();
     }
 }

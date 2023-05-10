@@ -31,6 +31,7 @@ public class ShoppingCartCreateEditMapper implements Mapper<ShoppingCartCreateEd
         shoppingCart.setProduct(getProduct(object.getProductId()));
         shoppingCart.setOrder(getOrder(object.getOrderId()));
         shoppingCart.setCreatedAt(object.getCreatedAt());
+        shoppingCart.setCount(object.getCount());
     }
 
     private Order getOrder(Integer orderId) {

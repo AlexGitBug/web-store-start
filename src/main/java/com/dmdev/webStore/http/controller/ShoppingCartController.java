@@ -48,7 +48,7 @@ public class ShoppingCartController {
         var order = orderService.findByStatusAndUserId(userId);
         var productId = productService.findByProductId(id).getId();
         order.ifPresent(orderReadDto -> shoppingCartService
-                .create(new ShoppingCartCreateEditDto(orderReadDto.getId(), productId, LocalDate.now())));
+                .create(new ShoppingCartCreateEditDto(orderReadDto.getId(), productId, LocalDate.now(), null)));
         return order.map(orderReadDto -> "redirect:/orders/" + orderReadDto.getId() + "?status=IN_PROGRESS")
                 .orElse( "redirect:error/error500");
 

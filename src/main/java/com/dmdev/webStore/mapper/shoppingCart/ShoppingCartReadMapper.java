@@ -34,7 +34,8 @@ public class ShoppingCartReadMapper implements Mapper<ShoppingCart, ShoppingCart
                 object.getId(),
                 order,
                 product,
-                object.getCreatedAt()
+                object.getCreatedAt(),
+                object.getCount()
         );
     }
 }
