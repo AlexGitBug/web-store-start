@@ -1,5 +1,6 @@
 package com.dmdev.webStore.http.controller;
 
+import com.dmdev.webStore.dto.CountDto;
 import com.dmdev.webStore.dto.order.OrderReadDto;
 import com.dmdev.webStore.dto.shoppingCart.ShoppingCartCreateEditDto;
 import com.dmdev.webStore.entity.enums.ProgressStatus;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
@@ -42,15 +45,17 @@ public class ShoppingCartController {
 
 
     @PostMapping("/{id}")
-    public String create(@PathVariable("id") Integer id,
-                         @AuthenticationPrincipal UserDetails userDetails) {
+    public String create(Model model,
+                         @PathVariable("id") Integer id,
+                         @AuthenticationPrincipal UserDetails userDetails,
+                         Integer count) {
+        model.addAttribute("count", count);
         var userId = userService.findByEmail(userDetails.getUsername()).getId();
         var order = orderService.findByStatusAndUserId(userId);
-        var productId = productService.findByProductId(id).getId();
         order.ifPresent(orderReadDto -> shoppingCartService
-                .create(new ShoppingCartCreateEditDto(orderReadDto.getId(), productId, LocalDate.now(), null)));
+                .create(new ShoppingCartCreateEditDto(orderReadDto.getId(), id, LocalDate.now(), count)));
         return order.map(orderReadDto -> "redirect:/orders/" + orderReadDto.getId() + "?status=IN_PROGRESS")
-                .orElse( "redirect:error/error500");
+                .orElse("redirect:error/error500");
 
     }
 

@@ -4,6 +4,7 @@ import com.dmdev.webStore.dto.CountDto;
 import com.dmdev.webStore.dto.order.OrderCreateEditDto;
 import com.dmdev.webStore.dto.order.OrderReadDto;
 import com.dmdev.webStore.dto.shoppingCart.ShoppingCartCreateEditDto;
+import com.dmdev.webStore.dto.shoppingCart.ShoppingCartReadDto;
 import com.dmdev.webStore.dto.user.UserReadDto;
 import com.dmdev.webStore.entity.Order;
 import com.dmdev.webStore.entity.enums.PaymentCondition;
@@ -27,6 +28,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.PreDestroy;
+import javax.persistence.EntityManager;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.lang.constant.ConstantDesc;
 import java.time.LocalDate;
 import java.util.List;
@@ -44,6 +49,7 @@ public class OrderController {
     private final CatalogService catalogService;
     private final ProductService productService;
     private final ShoppingCartService shoppingCartService;
+
 
     @GetMapping("/registration")
     public String registration(Model model,
@@ -118,12 +124,21 @@ public class OrderController {
     public String findById(@PathVariable("id") Integer id,
                            @RequestParam("status") ProgressStatus status,
                            Model model,
-                           @AuthenticationPrincipal UserDetails userDetails,
-                             @SessionAttribute("basket") Map<Integer, Integer> productIdAndCount) {
-        if (status == IN_PROGRESS) {
-            return getModelForFindById(id, model, userDetails, IN_PROGRESS);
-        }
-        return getModelForFindById(id, model, userDetails, CREATE);
+                           @AuthenticationPrincipal UserDetails userDetails) {
+        return orderService.findById(id)
+                .map(order -> {
+                    var userId = getUserId(userDetails);
+                    model.addAttribute("order", order);
+                    model.addAttribute("payments", PaymentCondition.values());
+                    model.addAttribute("users", userService.findAll());
+                    model.addAttribute("catalogs", catalogService.findAll());
+                    model.addAttribute("userid", userId);
+                    model.addAttribute("status", values());
+                    model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(id));
+                    model.addAttribute("statistics", shoppingCartService.getStatisticSumOfOrder(id));
+                    return "order/order";
+                })
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/afterloginpage")
@@ -154,12 +169,12 @@ public class OrderController {
 
     @PostMapping("/{id}/setStatus")
     public String setStatus(@PathVariable("id") Integer id,
-                            @ModelAttribute OrderCreateEditDto order,
-                            @SessionAttribute("basket") Map<Integer, Integer> productIdAndCount) {
+                           @SessionAttribute("basket") Map<Integer, Integer> productIdAndCount) {
         orderService.setStatus(id);
         productIdAndCount.clear();
         return "redirect:/catalogs";
     }
+
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable("id") Integer id) {
@@ -169,47 +184,11 @@ public class OrderController {
         return "redirect:/products";
     }
 
-    private String getModelForFindById(@PathVariable("id") Integer id, Model model,
-                                       @AuthenticationPrincipal UserDetails userDetails,
-                                       ProgressStatus status) {
-        if (status == IN_PROGRESS) {
-            return orderService.findById(id)
-                    .map(order -> {
-                        var userId = getUserId(userDetails);
-                        var orderInProgressId = orderService.findByStatusAndUserId(userId).map(OrderReadDto::getId).orElseThrow();
-                        model.addAttribute("order", order);
-                        model.addAttribute("payments", PaymentCondition.values());
-                        model.addAttribute("users", userService.findAll());
-                        model.addAttribute("catalogs", catalogService.findAll());
-                        model.addAttribute("userid", userId);
-                        model.addAttribute("status", values());
-                        model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(orderInProgressId));
-                        model.addAttribute("statistics", shoppingCartService.getStatisticSumOfOrder(id));
-                        return "order/order";
-                    })
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        }
-        return orderService.findById(id)
-                .map(order -> {
-                    var userId = getUserId(userDetails);
-                    model.addAttribute("order", order);
-                    model.addAttribute("payments", PaymentCondition.values());
-                    model.addAttribute("users", userService.findAll());
-                    model.addAttribute("catalogs", catalogService.findAll());
-                    model.addAttribute("userid", userId);
-                    model.addAttribute("status", values());
-                    model.addAttribute("shoppingcarts", shoppingCartService.findShoppingCartByOrderId(id));
-                    model.addAttribute("statistics", shoppingCartService.getStatisticSumOfOrder(id));
-                    return "order/order";
-                })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-    }
 
     @GetMapping("/reg")
     public String registration2(Model model,
                                 @ModelAttribute("order") @Validated OrderCreateEditDto order,
-                                @AuthenticationPrincipal UserDetails userDetails,
-                                @SessionAttribute("basket") Map<Integer, Integer> productIdAndCount) {
+                                @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("order", order);
         model.addAttribute("payments", PaymentCondition.values());
         model.addAttribute("userid", getUserId(userDetails));
@@ -224,18 +203,21 @@ public class OrderController {
                           @SessionAttribute("basket") Map<Integer, Integer> productIdAndCount) {
         var orderReadDto = orderService.create(order);
         var userId = getUserId(userDetails);
-        for (Map.Entry<Integer, Integer> integerEntry : productIdAndCount.entrySet()) {
-            var productId = integerEntry.getKey();
-            var value = integerEntry.getValue();
-            var orderId = orderService.findByStatusAndUserId(userId).map(OrderReadDto::getId).orElseThrow();
-            shoppingCartService.create(new ShoppingCartCreateEditDto(orderId, productId, LocalDate.now(), value));
+        var orderId = orderService.findByStatusAndUserId(userId).map(OrderReadDto::getId).orElseThrow();
+        var shoppingCartList = shoppingCartService.findShoppingCartByOrderId(orderId);
+        if (shoppingCartList.isEmpty()) {
+            for (Map.Entry<Integer, Integer> integerEntry : productIdAndCount.entrySet()) {
+                var productId = integerEntry.getKey();
+                var count = integerEntry.getValue();
+                var shoppingCartReadDto = shoppingCartService.create(new ShoppingCartCreateEditDto(orderId, productId, LocalDate.now(), count));
+            }
+            return orderReadDto.map(it -> "redirect:/orders/" + it.getId() + "?status=IN_PROGRESS").orElse("redirect:/orders/reg");
         }
 //        for (Integer productId : list) {
 //            var id = orderService.findByStatusAndUserId(userId).map(OrderReadDto::getId).orElseThrow();
 //            shoppingCartService.create(new ShoppingCartCreateEditDto(id, productId, LocalDate.now()));
 //        }
-        return orderReadDto.map(it -> "redirect:/orders/" + it.getId() + "?status=IN_PROGRESS")
-                .orElse("redirect:/orders/reg");
+        return "redirect:/products";
     }
 
     private Integer getUserId(UserDetails userDetails) {

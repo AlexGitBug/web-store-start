@@ -10,7 +10,7 @@
     <label for="model">Model:
         <input id="model" type="text" name="model" th:value="*{model}">
     </label> <br>
-    <label for="dateOfRelease">DateOfRelease:
+    <label for="dateOfRelease">Date of release:
         <input id="dateOfRelease" type="date" name="dateOfRelease" th:value="*{dateOfRelease}">
     </label> <br>
     <label for="price">Price:
@@ -30,7 +30,7 @@
     <div>
         <label for="catalog">Catalog:
             <select id="catalog" name="catalogId">
-                <option>empty</option>
+                <option></option>
                 <option th:each="catalog : ${catalogs}"
                         th:value="${catalog.getId()}"
                         th:selected="${catalog.getId() == product.catalogId}"

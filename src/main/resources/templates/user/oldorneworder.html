@@ -7,12 +7,13 @@
 <body>
 <div th:insert="~{fragment :: header}"></div>
 <div th:insert="~{fragment :: locale}"></div>
-<p th:text="|Hello, Dear ${user.firstName} ${user.lastName}|"></span></p>
+<span th:text="|#{oldorneworder.hello.dear} ${user.firstName} ${user.lastName}|">Hello, Dear</span>
+<!--<p th:text="|Hello, Dear ${user.firstName} ${user.lastName}|"></p>-->
 <form th:action="@{/orders/afterloginpage}" th:if="status." method="get">
-    <button type="submit">Continue old order</button>
+    <button type="submit"><span th:text="#{oldorneworder.buttoncontinueoldorder}">Continue old order</span></button>
 </form><br>
 <form th:action="@{/orders/registration}" method="get">
-    <button type="submit">New order</button>
+    <button type="submit"><span th:text="#{oldorneworder.button.neworder}">New order</span></button>
 </form>
 </body>
 </html>

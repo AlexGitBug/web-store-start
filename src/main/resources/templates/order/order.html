@@ -19,10 +19,10 @@
     <label for="deliveryDate">DeliveryDate:
         <input id="deliveryDate" type="date" name="deliveryDate" th:value="*{deliveryDate}">
     </label><br>
-    <label for="userId">User id:
+    <label for="userId">
         <input id="userId" type="text" readonly hidden name="userId" th:value="${userid}">
     </label><br>
-    <label for="status">Status
+    <label for="status">
         <input id="status" type="text" readonly hidden name="status" th:value="${order.status.name()}">
     </label>
     <div th:each="paymentCondition : ${payments}">

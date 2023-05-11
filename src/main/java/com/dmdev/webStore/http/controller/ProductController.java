@@ -12,6 +12,9 @@ import com.dmdev.webStore.entity.enums.Brand;
 import com.dmdev.webStore.entity.enums.Color;
 import com.dmdev.webStore.service.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -73,7 +76,7 @@ public class ProductController {
         }
         var userId = userService.findByEmail(userDetails.getUsername()).getId();
         var orderExist = orderService.findByStatusAndUserId(userId)
-                .map(OrderReadDto::getId)
+                .map(OrderReadDto::getStatus)
                 .isPresent();
         model.addAttribute("status", orderExist);
         var page = productService.findAllProducts(filter, pageable);

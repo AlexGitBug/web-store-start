@@ -55,10 +55,13 @@
     <a th:href="@{'/products/' + ${product.id}}"
        th:text="|id: ${product.id}. price: ${product.price}, brand: ${product.brand.name()}|">Product</a>
     <form th:action="@{/shoppingcarts/{productId}(productId=${product.id})}" th:if="${status}" method="post">
+        <label for="count">Count:
+            <input id="count" type="number" name="count">
+        </label><br>
         <button type="submit">Add to shoppingcart</button>
     </form>
-    <form th:action="@{/products/{productId}/add(productId=${product.id})}" method="post">
-        <label for="count14">PriceStart:
+    <form th:action="@{/products/{productId}/add(productId=${product.id})}" th:if="${!status}" method="post">
+        <label for="count14">Count:
             <input id="count14" type="number" name="count14">
         </label><br>
         <button type="submit">Add product in List</button>
