@@ -6,9 +6,10 @@
 </head>
 <body>
 <div th:insert="~{fragment :: header}"></div>
+<div th:insert="~{fragment :: locale}"></div>
 <form action="/products">
     <div>
-        <label for="catalog">Catalog:
+        <label for="catalog"><span th:text="#{products.catalogs}">Catalogs:</span>
             <select id="catalog" name="catalogId">
                 <option selected></option>
                 <option th:each="catalog : ${catalogs}"
@@ -20,7 +21,7 @@
         </label>
     </div>
     <div>
-        <label for="brand">Brand:
+        <label for="brand"><span th:text="#{products.brand}">Brand:</span>
             <select id="brand" name="brand">
                 <option selected></option>
                 <option th:each="brand : ${brands}"
@@ -31,22 +32,22 @@
             </select>
         </label>
     </div>
-    <label for="priceMin">PriceStart:
+    <label for="priceMin"><span th:text="#{products.pricestart}">Price start:</span>
         <input id="priceMin" type="number" name="priceMin" th:value="${filter.priceMin}">
     </label><br>
-    <label for="priceMax">PriceEnd:
+    <label for="priceMax"><span th:text="#{products.priceend}">Price end:</span>
         <input id="priceMax" type="number" name="priceMax" th:value="${filter.priceMax}">
     </label><br>
-    <button type="submit">Filter</button>
+    <button type="submit"><span th:text="#{products.button.filter}">Filter:</span></button>
     <br>
     <div th:if="${errors}">
         <p style="color: red" th:each="error : ${errors}" th:text="${error.defaultMessage}">Error message</p>
     </div><br>
     <div>
-        <label for="page">Page:
+        <label for="page"><span th:text="#{products.page}">Page:</span>
             <input id="page" type="number" name="page" th:value="${products.metadata.page}">
         </label>
-        <label for="size">Size:
+        <label for="size"><span th:text="#{products.size}">Size:</span>
             <input id="size" type="number" name="size" th:value="${products.metadata.size}">
         </label>
     </div><br>
@@ -55,16 +56,16 @@
     <a th:href="@{'/products/' + ${product.id}}"
        th:text="|id: ${product.id}. price: ${product.price}, brand: ${product.brand.name()}|">Product</a>
     <form th:action="@{/shoppingcarts/{productId}(productId=${product.id})}" th:if="${status}" method="post">
-        <label for="count">Count:
+        <label for="count"><span th:text="#{products.count}">Count:</span>
             <input id="count" type="number" name="count">
         </label><br>
-        <button type="submit">Add to shoppingcart</button>
+        <button type="submit"><span th:text="#{products.button.addproductinshoppingcart}">Add to shoppingCart</span></button>
     </form>
     <form th:action="@{/products/{productId}/add(productId=${product.id})}" th:if="${!status}" method="post">
-        <label for="count14">Count:
+        <label for="count14"><span th:text="#{products.count}">Count:</span>
             <input id="count14" type="number" name="count14">
         </label><br>
-        <button type="submit">Add product in List</button>
+        <button type="submit"><span th:text="#{products.button.addproductinlist}">Add product in List</span></button>
     </form>
 </div><br>
 <div th:insert="~{fragment :: footer}"></div>

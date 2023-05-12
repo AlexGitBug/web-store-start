@@ -31,8 +31,8 @@ public class ShoppingCartService {
     private final TupleReadMapper tupleReadMapper;
 
     @Transactional
-    public ShoppingCartReadDto create(ShoppingCartCreateEditDto shoppingCartCreateEditDto) {
-        return Optional.of(shoppingCartCreateEditDto)
+    public ShoppingCartReadDto create(ShoppingCartCreateEditDto dto) {
+        return Optional.of(dto)
                 .map(shoppingCartCreateEditMapper::map)
                 .map(shoppingCartRepository::save)
                 .map(shoppingCartReadMapper::map)

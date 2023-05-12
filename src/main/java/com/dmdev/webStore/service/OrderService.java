@@ -63,17 +63,17 @@ public class OrderService {
     }
 
     @Transactional
-    public Optional<OrderReadDto> create(OrderCreateEditDto orderDto) {
-        return Optional.of(orderDto)
+    public Optional<OrderReadDto> create(OrderCreateEditDto dto) {
+        return Optional.of(dto)
                 .map(orderCreateEditMapper::map)
                 .map(orderRepository::save)
                 .map(orderReadMapper::map);
     }
 
     @Transactional
-    public Optional<OrderReadDto> update(Integer id, OrderCreateEditDto orderDto) {
+    public Optional<OrderReadDto> update(Integer id, OrderCreateEditDto dto) {
         return orderRepository.findById(id)
-                .map(entity -> orderCreateEditMapper.map(orderDto, entity))
+                .map(entity -> orderCreateEditMapper.map(dto, entity))
                 .map(orderRepository::saveAndFlush)
                 .map(orderReadMapper::map);
     }

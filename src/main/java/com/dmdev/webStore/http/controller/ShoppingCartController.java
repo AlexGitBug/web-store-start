@@ -3,6 +3,7 @@ package com.dmdev.webStore.http.controller;
 import com.dmdev.webStore.dto.CountDto;
 import com.dmdev.webStore.dto.order.OrderReadDto;
 import com.dmdev.webStore.dto.shoppingCart.ShoppingCartCreateEditDto;
+import com.dmdev.webStore.dto.user.UserReadDto;
 import com.dmdev.webStore.entity.enums.ProgressStatus;
 import com.dmdev.webStore.service.OrderService;
 import com.dmdev.webStore.service.ProductService;
@@ -50,7 +51,7 @@ public class ShoppingCartController {
                          @AuthenticationPrincipal UserDetails userDetails,
                          Integer count) {
         model.addAttribute("count", count);
-        var userId = userService.findByEmail(userDetails.getUsername()).getId();
+        var userId = userService.findByEmail(userDetails.getUsername()).map(UserReadDto::getId).orElseThrow();
         var order = orderService.findByStatusAndUserId(userId);
         order.ifPresent(orderReadDto -> shoppingCartService
                 .create(new ShoppingCartCreateEditDto(orderReadDto.getId(), id, LocalDate.now(), count)));
@@ -65,7 +66,7 @@ public class ShoppingCartController {
         if (!shoppingCartService.delete(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        var userId = userService.findByEmail(userDetails.getUsername()).getId();
+        var userId = userService.findByEmail(userDetails.getUsername()).map(UserReadDto::getId).orElseThrow();
         var order = orderService.findByStatusAndUserId(userId);
         return order.map(orderReadDto -> "redirect:/orders/" + orderReadDto.getId() + "?status=IN_PROGRESS")
                 .orElse("redirect:/orders/registration");

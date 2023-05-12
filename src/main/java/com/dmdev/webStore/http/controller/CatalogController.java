@@ -5,6 +5,7 @@ import com.dmdev.webStore.dto.catalog.CatalogCreateEditDto;
 import com.dmdev.webStore.dto.catalog.CatalogReadDto;
 import com.dmdev.webStore.dto.order.OrderReadDto;
 import com.dmdev.webStore.dto.product.ProductCreateEditDto;
+import com.dmdev.webStore.dto.user.UserReadDto;
 import com.dmdev.webStore.entity.enums.Brand;
 import com.dmdev.webStore.entity.enums.Color;
 import com.dmdev.webStore.service.CatalogService;
@@ -64,7 +65,7 @@ public class CatalogController {
                                            Model model,
                                            @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("products", productService.findAllByCatalogId(id));
-        var userId = userService.findByEmail(userDetails.getUsername()).getId();
+        var userId = userService.findByEmail(userDetails.getUsername()).map(UserReadDto::getId).orElseThrow();
         var orderExist = orderService.findByStatusAndUserId(userId)
                 .map(OrderReadDto::getId)
                 .isPresent();

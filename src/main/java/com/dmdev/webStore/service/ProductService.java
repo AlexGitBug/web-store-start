@@ -59,11 +59,11 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductReadDto create(ProductCreateEditDto productDto) {
-        return Optional.of(productDto)
-                .map(dto -> {
-                    uploadImage(dto.getImage());
-                    return productCreateEditMapper.map(dto);
+    public ProductReadDto create(ProductCreateEditDto dto) {
+        return Optional.of(dto)
+                .map(dtoImage -> {
+                    uploadImage(dtoImage.getImage());
+                    return productCreateEditMapper.map(dtoImage);
                 })
                 .map(productRepository::save)
                 .map(productReadMapper::map)
@@ -71,11 +71,11 @@ public class ProductService {
     }
 
     @Transactional
-    public Optional<ProductReadDto> update(Integer id, ProductCreateEditDto productDto) {
+    public Optional<ProductReadDto> update(Integer id, ProductCreateEditDto dto) {
         return productRepository.findById(id)
                 .map(entity -> {
-                    uploadImage(productDto.getImage());
-                    return productCreateEditMapper.map(productDto, entity);
+                    uploadImage(dto.getImage());
+                    return productCreateEditMapper.map(dto, entity);
                 })
                 .map(productRepository::saveAndFlush)
                 .map(productReadMapper::map);
@@ -119,7 +119,6 @@ public class ProductService {
                 .filter(StringUtils::hasText)
                 .flatMap(imageService::get);
     }
-    //-------------------------------------------------------------------------
 
     @SneakyThrows
     private void uploadImage(MultipartFile image) {

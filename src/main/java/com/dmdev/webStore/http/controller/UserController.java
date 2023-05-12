@@ -43,9 +43,10 @@ public class UserController {
 
     @GetMapping("/oldorneworder")
     public String oldorneworder(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        var user = userService.findByEmail(userDetails.getUsername());
+        var user = userService.findByEmail(userDetails.getUsername()).orElseThrow();
+        var userId = userService.findByEmail(userDetails.getUsername()).map(UserReadDto::getId).orElseThrow();
         model.addAttribute("user", user);
-        model.addAttribute("status", orderService.findByStatusAndUserId(user.getId()));
+        model.addAttribute("status", orderService.findByStatusAndUserId(userId));
         return "user/oldorneworder";
     }
 
@@ -69,8 +70,8 @@ public class UserController {
                     model.addAttribute("user", user);
                     model.addAttribute("users", userService.findAll());
                     model.addAttribute("roles", Role.values());
-                    ;
-                    var userById = userService.findById(userService.findByEmail(userDetails.getUsername()).getId());
+//                    var userId = userService.findByEmail(userDetails.getUsername()).map(UserReadDto::getId).orElseThrow();
+                    var userById = userService.findById(id);
                     model.addAttribute("userRole", userById.map(UserReadDto::getRole).orElseThrow());
                     return "user/user";
                 })

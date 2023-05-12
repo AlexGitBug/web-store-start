@@ -221,8 +221,8 @@ public class OrderController {
     }
 
     private Integer getUserId(UserDetails userDetails) {
-        return userService.findByEmail(userDetails.getUsername()).getId();
+        return userService.findByEmail(userDetails.getUsername())
+                .map(UserReadDto::getId)
+                .orElseThrow();
     }
-
 }
-

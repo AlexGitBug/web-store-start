@@ -74,7 +74,7 @@ public class ProductController {
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/products";
         }
-        var userId = userService.findByEmail(userDetails.getUsername()).getId();
+        var userId = getUserId(userDetails);
         var orderExist = orderService.findByStatusAndUserId(userId)
                 .map(OrderReadDto::getStatus)
                 .isPresent();
@@ -111,7 +111,7 @@ public class ProductController {
                     model.addAttribute("colors", Color.values());
                     model.addAttribute("brands", Brand.values());
                     model.addAttribute("catalogs", catalogService.findAll());
-                    var userId = userService.findByEmail(userDetails.getUsername()).getId();
+                    var userId = getUserId(userDetails);
                     var userById = userService.findById(userId);
                     var role = userById.map(UserReadDto::getRole).orElseThrow();
                     model.addAttribute("user", role);
@@ -162,6 +162,15 @@ public class ProductController {
         return "redirect:/products";
     }
 
+    private Integer getUserId(UserDetails userDetails) {
+        return userService.findByEmail(userDetails.getUsername()).map(UserReadDto::getId).orElseThrow();
+    }
+
+    @ModelAttribute("basket")
+    public Map<Integer, Integer> productIdAndCount() {
+        return new HashMap<>();
+    }
+
 
 //    @PostMapping("/{id}/add")
 //    public String addToBascket(Model model,
@@ -173,10 +182,5 @@ public class ProductController {
 //        productIdAndCount.put(id, countDto.getCount14());
 //        return "redirect:/products";
 //    }
-
-    @ModelAttribute("basket")
-    public Map<Integer, Integer> productIdAndCount() {
-        return new HashMap<>();
-    }
 
 }

@@ -34,8 +34,8 @@ public class CatalogService {
     }
 
     @Transactional
-    public CatalogReadDto create(CatalogCreateEditDto catalogDto) {
-        return Optional.of(catalogDto)
+    public CatalogReadDto create(CatalogCreateEditDto dto) {
+        return Optional.of(dto)
                 .map(catalogCreateEditMapper::map)
                 .map(catalogRepository::save)
                 .map(catalogReadMapper::map)
@@ -43,9 +43,9 @@ public class CatalogService {
     }
 
     @Transactional
-    public Optional<CatalogReadDto> update(Integer id, CatalogCreateEditDto catalogDto) {
+    public Optional<CatalogReadDto> update(Integer id, CatalogCreateEditDto dto) {
         return catalogRepository.findById(id)
-                .map(entity -> catalogCreateEditMapper.map(catalogDto, entity))
+                .map(entity -> catalogCreateEditMapper.map(dto, entity))
                 .map(catalogRepository::saveAndFlush)
                 .map(catalogReadMapper::map);
     }

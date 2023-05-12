@@ -36,8 +36,8 @@ public class UserService implements UserDetailsService {
                 .map(userReadMapper::map);
     }
     @Transactional
-    public UserReadDto create(UserCreateEditDto userDto) {
-        return Optional.of(userDto)
+    public UserReadDto create(UserCreateEditDto dto) {
+        return Optional.of(dto)
                 .map(userCreateEditMapper::map)
                 .map(userRepository::save)
                 .map(userReadMapper::map)
@@ -46,9 +46,9 @@ public class UserService implements UserDetailsService {
 
 
     @Transactional
-    public Optional<UserReadDto> update(Integer id, UserCreateEditDto userDto) {
+    public Optional<UserReadDto> update(Integer id, UserCreateEditDto dto) {
         return userRepository.findById(id)
-                .map(entity -> userCreateEditMapper.map(userDto, entity))
+                .map(entity -> userCreateEditMapper.map(dto, entity))
                 .map(userRepository::saveAndFlush)
                 .map(userReadMapper::map);
     }
@@ -74,10 +74,10 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(()->new UsernameNotFoundException("Failed to retrieve user: " + email));
     }
 
-    public UserReadDto findByEmail(String email) {
+    public Optional<UserReadDto> findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .map(userReadMapper::map)
-                .orElseThrow();
+                .map(userReadMapper::map);
+
     }
 
     public List<UserReadDto> findUsersWhoMadeOrderSpecificTime(UserFilter filter) {
