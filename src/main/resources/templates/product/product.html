@@ -17,7 +17,7 @@
         <input id="price" type="number" name="price" th:value="*{price}">
     </label> <br>
     <div th:if="${product.image}">
-        <img th:src="@{/api/v1/products/{productId}/avatar(productId=${product.id})}" alt="Product image">
+        <img width="150" height="150" th:src="@{/api/v1/products/{productId}/avatar(productId=${product.id})}" alt="Product image">
     </div>
     <label for="image">Image:
         <input id="image" type="file" name="image" th:value="*{image}">
