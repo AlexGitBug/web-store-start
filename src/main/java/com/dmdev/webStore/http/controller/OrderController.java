@@ -147,7 +147,7 @@ public class OrderController {
         var userId = getUserId(userDetails);
         var order = orderService.findByStatusAndUserId(userId);
         return order.map(orderReadDto -> "redirect:/orders/" + orderReadDto.getId() + "?status=IN_PROGRESS")
-                .orElse("redirect:/orders/registration");
+                .orElse("redirect:/orders/reg");
     }
 
 
@@ -155,7 +155,7 @@ public class OrderController {
     public String create(@ModelAttribute @Validated OrderCreateEditDto order) {
         var orderReadDto = orderService.create(order);
         return orderReadDto.map(it -> "redirect:/orders/" + it.getId() + "?status=IN_PROGRESS")
-                .orElse("redirect:/orders/registration");
+                .orElse("redirect:/orders/reg");
     }
 
     @PostMapping("/{id}/update")
@@ -193,7 +193,6 @@ public class OrderController {
         model.addAttribute("payments", PaymentCondition.values());
         model.addAttribute("userid", getUserId(userDetails));
         model.addAttribute("status", values());
-//        model.addAttribute("ola", list);
         return "order/reg";
     }
 
@@ -213,10 +212,6 @@ public class OrderController {
             }
             return orderReadDto.map(it -> "redirect:/orders/" + it.getId() + "?status=IN_PROGRESS").orElse("redirect:/orders/reg");
         }
-//        for (Integer productId : list) {
-//            var id = orderService.findByStatusAndUserId(userId).map(OrderReadDto::getId).orElseThrow();
-//            shoppingCartService.create(new ShoppingCartCreateEditDto(id, productId, LocalDate.now()));
-//        }
         return "redirect:/products";
     }
 

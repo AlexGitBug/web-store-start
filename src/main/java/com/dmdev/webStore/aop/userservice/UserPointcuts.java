@@ -12,4 +12,8 @@ public class UserPointcuts {
     @Pointcut("execution(public * com.dmdev.webStore.service.UserService.findByEmail(*))")
     public void anyFindByEmailServiceMethod(){
     }
+
+    @Pointcut("execution(public * com.dmdev.webStore.service.UserService.loadUserByUsername(*))")
+    public void anyLoadUserByUsernameServiceMethod(){
+    }
 }

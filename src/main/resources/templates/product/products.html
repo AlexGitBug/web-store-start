@@ -54,7 +54,7 @@
 </form>
 <div th:each="product : ${products.content}">
     <a th:href="@{'/products/' + ${product.id}}"
-       th:text="|id: ${product.id}. price: ${product.price}, brand: ${product.brand.name()}|">Product</a>
+       th:text="|Category: ${product.catalog.category} brand: ${product.brand.name()} price: ${product.price}|">Product</a>
     <form th:action="@{/shoppingcarts/{productId}(productId=${product.id})}" th:if="${status}" method="post">
         <label for="count"><span th:text="#{products.count}">Count:</span>
             <input id="count" type="number" name="count">

@@ -13,22 +13,41 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserAspects {
 
-    @Before(value = "com.dmdev.webStore.aop.userservice.UserPointcuts.anyFindByEmailServiceMethod() " +
-            "&& args(email)" +
-            "&& target(service))",
-            argNames = "joinPoint,email,service")
-    public void addBeforeLoggingFindByEmail(JoinPoint joinPoint,
-                                         Object email,
-                                         Object service) {
-        log.info("before -invoke findByEmail method in class {}, id {}", service, email);
-    }
-
-    @AfterReturning(value = "com.dmdev.webStore.aop.userservice.UserPointcuts.anyFindByEmailServiceMethod() " +
-            "&& target(service)",
-            returning = "result",
-            argNames = "result,service")
-    public void addLoggingFindById(Object result,
-                                   Object service) {
-        log.info("After Returning - invoke findByEmail method in class {}, result {}", service, result);
-    }
+//    @Before(value = "com.dmdev.webStore.aop.userservice.UserPointcuts.anyLoadUserByUsernameServiceMethod() " +
+//            "&& args(email)" +
+//            "&& target(service))",
+//            argNames = "joinPoint,email,service")
+//    public void addBeforeLoggingLoadUserByUsername(JoinPoint joinPoint,
+//                                                   Object email,
+//                                                   Object service) {
+//        log.info("before -invoke findByEmail method in class {}, email: {}", service, email);
+//    }
+//
+//    @Before(value = "com.dmdev.webStore.aop.userservice.UserPointcuts.anyFindByEmailServiceMethod() " +
+//            "&& args(email)" +
+//            "&& target(service))",
+//            argNames = "joinPoint,email,service")
+//    public void addBeforeLoggingFindByEmail(JoinPoint joinPoint,
+//                                            Object email,
+//                                            Object service) {
+//        log.info("before -invoke findByEmail method in class {}, email: {}", service, email);
+//    }
+//
+//    @AfterReturning(value = "com.dmdev.webStore.aop.userservice.UserPointcuts.anyFindByEmailServiceMethod() " +
+//            "&& target(service)",
+//            returning = "result",
+//            argNames = "result,service")
+//    public void addLoggingFindById(Object result,
+//                                   Object service) {
+//        log.info("After Returning - invoke findByEmail method in class {}, result {}", service, result);
+//    }
+//
+//    @AfterReturning(value = "com.dmdev.webStore.aop.userservice.UserPointcuts.anyLoadUserByUsernameServiceMethod() " +
+//            "&& target(service)",
+//            returning = "result",
+//            argNames = "result,service")
+//    public void addBeforeLoggingLoadUserByUsername(Object result,
+//                                                   Object service) {
+//        log.info("After Returning - invoke findByEmail method in class {}, result {}", service, result);
+//    }
 }

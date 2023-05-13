@@ -23,31 +23,31 @@
 <br>
 <div th:fragment="footer">
     <form action="/catalogs" method="get">
-        <button type="submit">Redirect to catalogs</button>
+        <button type="submit"><span th:text="#{fragment.redirect.to.catalogs}">Redirect to catalogs</span></button>
     </form>
     <form action="/orders/reg" method="get">
-        <button type="submit">Redirect to order registration</button>
+        <button type="submit"><span th:text="#{fragment.redirect.to.order.registration}">Redirect to order registration</span></button>
     </form>
     <form action="/products/registration" method="get">
-        <button type="submit">Redirect to product registration</button>
+        <button type="submit"><span th:text="#{fragment.redirect.to.product.registration}">Redirect to product registration</span></button>
     </form>
     <form action="/products" method="get">
-        <button type="submit">Redirect to products</button>
+        <button type="submit"><span th:text="#{fragment.redirect.to.products}">Redirect to products</span></button>
     </form>
     <form action="/orders/allordersbyuserid" method="get">
-        <button type="submit">Redirect to your orders</button>
+        <button type="submit"><span th:text="#{fragment.redirect.to.your.orders}">Redirect to your orders</span></button>
     </form>
     <form action="/orders/allordersofoneuser" method="get">
-        <button type="submit">Redirect to your orders with all products</button>
+        <button type="submit"><span th:text="#{fragment.redirect.to.orders.with.all.products}">Redirect to orders with all products</span></button>
     </form>
     <form action="/orders/getstatisticofeachorderswithsum" method="get">
-        <button type="submit">Redirect to order statistic sum</button>
+        <button type="submit"><span th:text="#{fragment.redirect.to.orders.statistic.sum}">Redirect to order statistic sum</span></button>
     </form>
     <form action="/orders/afterloginpage" method="get">
-        <button type="submit">Continue old order</button>
+        <button type="submit"><span th:text="#{fragment.redirect.continue.order}">Continue old order</span></button>
     </form>
     <form action="/users" method="get">
-        <button type="submit">Redirect to list of users</button>
+        <button type="submit"><span th:text="#{fragment.redirect.list.of.users}">Redirect to list of users</span></button>
     </form>
 </div>
 <br>

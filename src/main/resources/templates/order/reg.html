@@ -6,17 +6,18 @@
 </head>
 <body>
 <div th:insert="~{fragment :: header}"></div>
+<div th:insert="~{fragment :: locale}"></div>
 <form th:action="@{/orders/create}" method="post" th:object="${order}">
-    <label for="city">City:
+    <label for="city"><span th:text="#{order.city}">City:</span>
         <input id="city" type="text" name="city" th:value="*{city}">
     </label><br>
-    <label for="street">Street:
+    <label for="street"><span th:text="#{order.street}">Street:</span>
         <input id="street" type="text" name="street" th:value="*{street}">
     </label><br>
-    <label for="building">Building:
+    <label for="building"><span th:text="#{order.building}">Building:</span>
         <input id="building" type="text" name="building" th:value="*{building}">
     </label><br>
-    <label for="deliveryDate">DeliveryDate:
+    <label for="deliveryDate"><span th:text="#{order.deliverydate}">DeliveryDate:</span>
         <input id="deliveryDate" type="date" name="deliveryDate" th:value="*{deliveryDate}">
     </label>
     <label for="user">
