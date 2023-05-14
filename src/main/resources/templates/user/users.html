@@ -8,9 +8,9 @@
 <div th:insert="~{fragment :: header}"></div>
 <form action="/users">
 <div th:each="user : ${users}">
-  <a th:href="@{'/users/' + ${user.id}}" th:text="|${user.id}. ${user.lastName}|">User</a>
+  <a th:href="@{'/users/' + ${user.id}}" th:text="|User id: ${user.id}, ${user.firstName} ${user.lastName} ${user.email}|">User</a>
 </div>
-</form>
+</form><br>
 <div th:insert="~{fragment :: footer}"></div>
 </body>
 </html>

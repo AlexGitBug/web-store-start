@@ -52,6 +52,9 @@ List of products:
 <form th:action="@{/orders/{orderId}/delete(orderId=${order.id})}" method="post">
     <button type="submit">Remove order</button>
 </form>
+<form th:action="@{/users/{userId}(userId=${userid})}" method="get">
+    <button type="submit">Redirect to your account</button>
+</form>
 <div th:insert="~{fragment :: footer}"></div>
 </body>
 </html>

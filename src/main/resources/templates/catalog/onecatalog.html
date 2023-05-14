@@ -8,11 +8,20 @@
 <div th:insert="~{fragment :: header}"></div>
 <div th:each="product : ${products}">
     <a th:href="@{'/products/' + ${product.id}}"
-       th:text="|id: ${product.id}. price: ${product.price}, brand: ${product.brand.name()}|">Product</a>
+       th:text="|Category: ${product.catalog.category} brand: ${product.brand.name()} price: ${product.price}|">Product</a>
     <form th:action="@{/shoppingcarts/{productId}(productId=${product.id})}" th:if="${status}" method="post">
-        <button type="submit">Add to shoppingcart</button>
+        <label for="count"><span th:text="#{products.count}">Count:</span>
+            <input id="count" type="number" name="count">
+        </label><br>
+        <button type="submit"><span th:text="#{products.button.addproductinshoppingcart}">Add to shoppingCart</span></button>
     </form>
-</div>
+    <form th:action="@{/products/{productId}/add(productId=${product.id})}" th:if="${!status}" method="post">
+        <label for="count14"><span th:text="#{products.count}">Count:</span>
+            <input id="count14" type="number" name="count14">
+        </label><br>
+        <button type="submit"><span th:text="#{products.button.addproductinlist}">Add product in List</span></button>
+    </form>
+</div><br>
 <div th:insert="~{fragment :: footer}"></div>
 </body>
 </html>

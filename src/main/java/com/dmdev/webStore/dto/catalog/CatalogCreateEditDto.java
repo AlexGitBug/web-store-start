@@ -11,8 +11,6 @@ import javax.validation.constraints.Size;
 @FieldNameConstants
 public class CatalogCreateEditDto {
 
-    @NotEmpty
-    @NotBlank
     @Size(min = 2, max = 80)
     String category;
 }

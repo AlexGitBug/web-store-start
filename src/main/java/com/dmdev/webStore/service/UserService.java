@@ -7,6 +7,7 @@ import com.dmdev.webStore.mapper.user.UserReadMapper;
 import com.dmdev.webStore.repository.UserRepository;
 import com.dmdev.webStore.repository.filter.UserFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,6 +28,12 @@ public class UserService implements UserDetailsService {
     private final UserCreateEditMapper userCreateEditMapper;
 
     public List<UserReadDto> findAll() {
+        return userRepository.findAll().stream()
+                .map(userReadMapper::map)
+                .toList();
+    }
+
+    public List<UserReadDto> findAllSort(Sort sort) {
         return userRepository.findAll().stream()
                 .map(userReadMapper::map)
                 .toList();

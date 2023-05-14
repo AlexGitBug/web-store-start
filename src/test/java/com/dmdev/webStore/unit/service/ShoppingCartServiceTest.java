@@ -182,15 +182,15 @@ public class ShoppingCartServiceTest {
     }
 
     private ShoppingCartReadDto getShoppingCartReadDto() {
-        return new ShoppingCartReadDto(1, getOrderReadDto(), getProductReadDto(getCatalogReadDto()), LocalDate.now());
+        return new ShoppingCartReadDto(1, getOrderReadDto(), getProductReadDto(getCatalogReadDto()), LocalDate.now(), null);
     }
 
     private ShoppingCartReadDto getShoppingCartReadDto2() {
-        return new ShoppingCartReadDto(2, getOrderReadDto(), getProductReadDto1(getCatalogReadDto()), LocalDate.now());
+        return new ShoppingCartReadDto(2, getOrderReadDto(), getProductReadDto1(getCatalogReadDto()), LocalDate.now(), null);
     }
 
     private ShoppingCartCreateEditDto getShoppingCartCreateEditDto() {
-        return new ShoppingCartCreateEditDto(1, 1, LocalDate.now());
+        return new ShoppingCartCreateEditDto(1, 1, LocalDate.now(), null);
     }
 
     private Order getOrder() {

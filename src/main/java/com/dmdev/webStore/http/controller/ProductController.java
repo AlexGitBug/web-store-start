@@ -41,8 +41,6 @@ public class ProductController {
     private final CatalogService catalogService;
     private final OrderService orderService;
     private final UserService userService;
-//    private final Map<Integer, Integer> productIdAndCount;
-//    private final List<Integer> list;
 
 
     @GetMapping("/registration")
@@ -69,15 +67,15 @@ public class ProductController {
                           Pageable pageable,
                           RedirectAttributes redirectAttributes,
                           @AuthenticationPrincipal UserDetails userDetails) {
+        var userId = getUserId(userDetails);
+        var orderExist = orderService.findByStatusAndUserId(userId)
+                .map(OrderReadDto::getStatus)
+                .isPresent();
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("filter", filter);
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/products";
         }
-        var userId = getUserId(userDetails);
-        var orderExist = orderService.findByStatusAndUserId(userId)
-                .map(OrderReadDto::getStatus)
-                .isPresent();
         model.addAttribute("status", orderExist);
         var page = productService.findAllProducts(filter, pageable);
         model.addAttribute("products", PageResponse.of(page));
@@ -85,6 +83,7 @@ public class ProductController {
         model.addAttribute("brands", Brand.values());
         model.addAttribute("catalogs", catalogService.findAll());
         model.addAttribute("orders", orderService.findAll());
+        model.addAttribute("userId", userId);
         return "product/products";
     }
 
@@ -104,16 +103,20 @@ public class ProductController {
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Integer id, Model model,
                            @AuthenticationPrincipal UserDetails userDetails) {
+        var userId = getUserId(userDetails);
+        var userById = userService.findById(userId);
+        var role = userById.map(UserReadDto::getRole).orElseThrow();
+        var orderExist = orderService.findByStatusAndUserId(userId)
+                .map(OrderReadDto::getStatus)
+                .isPresent();
         return productService.findById(id)
                 .map(product -> {
+                    model.addAttribute("status", orderExist);
                     model.addAttribute("product", product);
                     model.addAttribute("products", productService.findAll());
                     model.addAttribute("colors", Color.values());
                     model.addAttribute("brands", Brand.values());
                     model.addAttribute("catalogs", catalogService.findAll());
-                    var userId = getUserId(userDetails);
-                    var userById = userService.findById(userId);
-                    var role = userById.map(UserReadDto::getRole).orElseThrow();
                     model.addAttribute("user", role);
                     return "product/product";
                 })
@@ -154,8 +157,6 @@ public class ProductController {
                               CountDto countDto,
                               @ModelAttribute("basket") Map<Integer, Integer> productIdAndCount,
                               RedirectAttributes attributes) {
-//        list.add(productService.findByProductId(id).getId());
-//        model.addAttribute("basket", productIdAndCount);
         model.addAttribute("count14", countDto.getCount14());
         productIdAndCount.put(id, countDto.getCount14());
         attributes.addFlashAttribute("basket", productIdAndCount);

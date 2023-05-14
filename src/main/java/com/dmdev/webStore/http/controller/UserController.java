@@ -9,6 +9,8 @@ import com.dmdev.webStore.repository.filter.UserFilter;
 import com.dmdev.webStore.service.OrderService;
 import com.dmdev.webStore.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.util.Streamable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -58,21 +60,23 @@ public class UserController {
 
     @GetMapping
     public String findAll(Model model) {
-        model.addAttribute("users", userService.findAll());
+        var sort = Sort.sort(User.class);
+        var sortUser = sort.by(User::getId);
+        model.addAttribute("users", userService.findAllSort(sortUser));
         return "user/users";
     }
 
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Integer id, Model model,
                            @AuthenticationPrincipal UserDetails userDetails) {
+        var role = userService.findByEmail(userDetails.getUsername()).map(UserReadDto::getRole).orElseThrow();
         return userService.findById(id)
                 .map(user -> {
                     model.addAttribute("user", user);
                     model.addAttribute("users", userService.findAll());
                     model.addAttribute("roles", Role.values());
-//                    var userId = userService.findByEmail(userDetails.getUsername()).map(UserReadDto::getId).orElseThrow();
-                    var userById = userService.findById(id);
-                    model.addAttribute("userRole", userById.map(UserReadDto::getRole).orElseThrow());
+//                    var userById = userService.findById(id);
+                    model.addAttribute("userRole", role);
                     return "user/user";
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -93,7 +97,14 @@ public class UserController {
 
     @PostMapping("/{id}/update")
     public String update(@PathVariable("id") Integer id,
-                         @ModelAttribute @Validated UserCreateEditDto userDto) {
+                         @ModelAttribute @Validated UserCreateEditDto userDto,
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("user", userDto);
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/users/{id}";
+        }
         return userService.update(id, userDto)
                 .map(it -> "redirect:/users/{id}")
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

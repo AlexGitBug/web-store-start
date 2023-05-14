@@ -28,13 +28,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.annotation.PreDestroy;
-import javax.persistence.EntityManager;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.lang.constant.ConstantDesc;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 import static com.dmdev.webStore.entity.enums.ProgressStatus.*;
@@ -125,9 +119,9 @@ public class OrderController {
                            @RequestParam("status") ProgressStatus status,
                            Model model,
                            @AuthenticationPrincipal UserDetails userDetails) {
+        var userId = getUserId(userDetails);
         return orderService.findById(id)
                 .map(order -> {
-                    var userId = getUserId(userDetails);
                     model.addAttribute("order", order);
                     model.addAttribute("payments", PaymentCondition.values());
                     model.addAttribute("users", userService.findAll());
@@ -220,4 +214,5 @@ public class OrderController {
                 .map(UserReadDto::getId)
                 .orElseThrow();
     }
-}
+    }
+

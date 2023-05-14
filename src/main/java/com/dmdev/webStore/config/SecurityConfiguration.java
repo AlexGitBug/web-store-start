@@ -23,6 +23,9 @@ import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.Set;
 
+import static com.dmdev.webStore.entity.enums.Role.ADMIN;
+import static com.dmdev.webStore.entity.enums.Role.USER;
+
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -34,10 +37,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeHttpRequests(urlConfig -> urlConfig
-                        .antMatchers("/login", "/users/registration/**", "/users/**").permitAll()
-                        .antMatchers("/catalogs", "/orders/registration", "/orders/{\\d+}", "/orders/{\\d+}/update",
-                                "/products", "/catalogs/{\\d+}/onecatalog", "/products/{\\d+}",
-                                "/shoppingcarts/{\\d+}/add", "/shoppingcarts/{\\d+}").hasAnyAuthority(Role.USER.getAuthority(), Role.ADMIN.getAuthority())
+                        .antMatchers("/login", "/users/registration").permitAll()
+                        .antMatchers("/catalogs", "/catalogs/**",
+                                "/orders/reg", "orders/allordersbyuserid",
+                                "/products", "/logout").hasAnyAuthority(Role.USER.getAuthority(), Role.ADMIN.getAuthority())
+                        .antMatchers("/products/registration", "/orders/getstatisticofeachorderswithsum",
+                                "/orders/allordersofoneuser", "/users").hasAuthority(Role.ADMIN.getAuthority())
+                        //orders/allordersofoneuser
                         .anyRequest().authenticated())
                 .logout(logout -> logout
                         .logoutUrl("/logout")
@@ -66,8 +72,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             return (OidcUser) Proxy.newProxyInstance(SecurityConfiguration.class.getClassLoader(),
                     new Class[]{UserDetails.class, OidcUser.class},
                     (proxy, method, args) -> userDetailsMethods.contains(method)
-                    ? method.invoke(userDetails, args)
-                    : method.invoke(oidcUser, args));
+                            ? method.invoke(userDetails, args)
+                            : method.invoke(oidcUser, args));
         };
     }
 }

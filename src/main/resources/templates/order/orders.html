@@ -7,7 +7,8 @@
 <body>
 <div th:insert="~{fragment :: header}"></div>
 <div th:each="order : ${orders}">
-    <a th:href="@{'/orders/' + ${order.id} + '?status=' + ${order.status}}" th:text="|${order.id}. ${order.deliveryDate} street:${order.street} status:${order.status}|">Order</a>
+    <a th:href="@{'/orders/' + ${order.id} + '?status=' + ${order.status}}" th:text="|Order number: ${order.id}, delivery date: ${order.deliveryDate}, status:${order.status}|">Order</a>
 </div>
+<div th:insert="~{fragment :: footer}"></div>
 </body>
 </html>

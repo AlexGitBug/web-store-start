@@ -1,5 +1,7 @@
 package com.dmdev.webStore.repository;
 
+import com.dmdev.webStore.entity.ShoppingCart;
+import com.dmdev.webStore.repository.filter.OrderFilter;
 import com.dmdev.webStore.repository.filter.PersonalInformationFilter;
 import com.dmdev.webStore.repository.filter.QPredicate;
 import com.dmdev.webStore.entity.Order;
@@ -18,11 +20,14 @@ import static com.dmdev.webStore.entity.QUser.user;
 @RequiredArgsConstructor
 public class FilterOrderRepositoryImpl implements FilterOrderRepository {
     private final EntityManager entityManager;
+
     @Override
-    public List<Order> findAllOrdersWithProductsOfOneUser(PersonalInformationFilter personalInformationFilter) {
+    public List<Order> findAllOrdersWithProductsOfOneUser(PersonalInformationFilter personalInformationFilter, OrderFilter orderFilter) {
         var predicate = QPredicate.builder()
-                .add(personalInformationFilter.getEmail(), user.personalInformation.email::eq)
+                .add(personalInformationFilter.getEmail(), user.personalInformation.email::containsIgnoreCase)
+                .add(orderFilter.getDeliveryDate(), order.deliveryDate::eq)
                 .buildAnd();
+
 
         return new JPAQuery<Order>(entityManager)
                 .select(order)

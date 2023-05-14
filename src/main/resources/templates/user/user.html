@@ -27,14 +27,17 @@
     <input id="birthDate" type="date" name="birthDate" th:value="*{birthDate}">
   </label><br>
   <div th:each="role : ${roles}">
-    <input th:id="${role}" type="radio" name="role" th:value="${role}" th:checked="${role == user.role}">
-    <label th:for="${role}" th:text="${role}">Role name</label>
+    <input th:id="${role}" type="radio" hidden name="role" th:value="${role}" th:checked="${role == user.role}">
+    <label th:for="${role}" hidden th:text="${role}">Role name</label>
   </div>
-  <button type="submit" th:if="${userRole.name() == 'ADMIN'}">Update user</button>
+  <button type="submit">Update</button>
 </form>
 <form th:action="@{/users/{userId}/delete(userId=${user.id})}" th:if="${userRole.name() == 'ADMIN'}" method="post">
-  <button type="submit">Remove user</button>
+  <button type="submit">Remove</button>
 </form>
+<div th:if="${errors}">
+  <p style="color: red" th:each="error : ${errors}" th:text="${error.defaultMessage}">Error message</p>
+</div><br>
 <div th:insert="~{fragment :: footer}"></div>
 </body>
 </html>

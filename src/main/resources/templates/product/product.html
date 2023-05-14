@@ -21,7 +21,7 @@
     </div>
     <label for="image">Image:
         <input id="image" type="file" name="image" th:value="*{image}">
-    </label> <br>
+    </label><br>
     <span th:each="color : ${colors}">
             <input th:id="${color}" type="radio" name="color" th:value="${color}"
                    th:checked="${color == product.color}">
@@ -49,6 +49,18 @@
 <form th:action="@{/products/{productId}/delete(productId=${product.id})}" th:if="${user.name() == 'ADMIN'}" method="post">
     <button type="submit">Remove</button>
 </form>
+<form th:action="@{/shoppingcarts/{productId}(productId=${product.id})}" th:if="${status}" method="post">
+    <label for="count"><span th:text="#{products.count}">Count:</span>
+        <input id="count" type="number" name="count">
+    </label><br>
+    <button type="submit"><span th:text="#{products.button.addproductinshoppingcart}">Add to shoppingCart</span></button>
+</form>
+<form th:action="@{/products/{productId}/add(productId=${product.id})}" th:if="${!status}" method="post">
+    <label for="count14"><span th:text="#{products.count}">Count:</span>
+        <input id="count14" type="number" name="count14">
+    </label><br>
+    <button type="submit"><span th:text="#{products.button.addproductinlist}">Add product in List</span></button>
+</form><br>
 <div th:insert="~{fragment :: footer}"></div>
 </body>
 </html>

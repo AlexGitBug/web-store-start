@@ -20,7 +20,8 @@
 </form>
 <div th:each="shoppingcart : ${shoppingcarts}">
     <a th:href="|/products/ + ${shoppingcart.product.id}|"
-    th:text="|order id:${shoppingcart.order.id} category:${shoppingcart.product.catalog.category} model:${shoppingcart.product.model}|">Order</a>
+    th:text="|Order id:${shoppingcart.order.id} category:${shoppingcart.product.catalog.category} model:${shoppingcart.product.model}
+    count:${shoppingcart.count} email: ${shoppingcart.order.user.email}|">Order</a>
 </div>
 <div th:insert="~{fragment :: footer}"></div>
 </body>

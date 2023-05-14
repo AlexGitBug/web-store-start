@@ -42,7 +42,8 @@
     <br>
     <div th:if="${errors}">
         <p style="color: red" th:each="error : ${errors}" th:text="${error.defaultMessage}">Error message</p>
-    </div><br>
+    </div>
+    <br>
     <div>
         <label for="page"><span th:text="#{products.page}">Page:</span>
             <input id="page" type="number" name="page" th:value="${products.metadata.page}">
@@ -50,24 +51,36 @@
         <label for="size"><span th:text="#{products.size}">Size:</span>
             <input id="size" type="number" name="size" th:value="${products.metadata.size}">
         </label>
-    </div><br>
+    </div>
+    <br>
 </form>
 <div th:each="product : ${products.content}">
-    <a th:href="@{'/products/' + ${product.id}}"
-       th:text="|Category: ${product.catalog.category} brand: ${product.brand.name()} price: ${product.price}|">Product</a>
-    <form th:action="@{/shoppingcarts/{productId}(productId=${product.id})}" th:if="${status}" method="post">
-        <label for="count"><span th:text="#{products.count}">Count:</span>
-            <input id="count" type="number" name="count">
-        </label><br>
-        <button type="submit"><span th:text="#{products.button.addproductinshoppingcart}">Add to shoppingCart</span></button>
-    </form>
-    <form th:action="@{/products/{productId}/add(productId=${product.id})}" th:if="${!status}" method="post">
-        <label for="count14"><span th:text="#{products.count}">Count:</span>
-            <input id="count14" type="number" name="count14">
-        </label><br>
-        <button type="submit"><span th:text="#{products.button.addproductinlist}">Add product in List</span></button>
-    </form>
-</div><br>
+    <div th:if="${product.image}">
+        <img width="100" height="100" th:src="@{/api/v1/products/{productId}/avatar(productId=${product.id})}"
+             alt="Product image">
+        <a th:href="@{'/products/' + ${product.id}}"
+           th:text="|Category: ${product.catalog.category} Brand: ${product.brand.name()} Price: ${product.price}|">Product</a>
+        <form th:action="@{/shoppingcarts/{productId}(productId=${product.id})}" th:if="${status}" method="post">
+            <label for="count"><span th:text="#{products.count}">Count:</span>
+                <input id="count" type="number" name="count">
+            </label><br>
+            <button type="submit"><span th:text="#{products.button.addproductinshoppingcart}">Add to shoppingCart</span>
+            </button>
+        </form>
+        <form th:action="@{/products/{productId}/add(productId=${product.id})}" th:if="${!status}" method="post">
+            <label for="count14"><span th:text="#{products.count}">Count:</span>
+                <input id="count14" type="number" name="count14">
+            </label><br>
+            <button type="submit"><span th:text="#{products.button.addproductinlist}">Add product in List</span>
+            </button>
+        </form>
+    </div>
+    <br>
+</div>
+<br>
+<form th:action="@{/users/{userId}(userId=${userId})}" method="get">
+    <button type="submit">Redirect to your account</button>
+</form>
 <div th:insert="~{fragment :: footer}"></div>
 </body>
 </html>
