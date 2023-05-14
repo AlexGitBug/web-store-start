@@ -30,6 +30,9 @@
             <button type="submit"><span th:text="#{fragment.redirect.to.catalog.registration}">Redirect to catalogs registration</span>
             </button>
         </form>
+        <form action="/orders/afterloginpage" method="get">
+            <button type="submit"><span th:text="#{fragment.redirect.continue.order}">Continue old order</span></button>
+        </form>
         <form action="/orders/reg" method="get">
             <button type="submit"><span th:text="#{fragment.redirect.to.order.registration}">Redirect to order registration</span>
             </button>
@@ -41,10 +44,6 @@
         <form action="/products" method="get">
             <button type="submit"><span th:text="#{fragment.redirect.to.products}">Redirect to products</span></button>
         </form>
-        <form action="/orders/allordersbyuserid" method="get">
-            <button type="submit"><span th:text="#{fragment.redirect.to.your.orders}">Redirect to your orders</span>
-            </button>
-        </form>
         <form action="/orders/allordersofoneuser" method="get" th:if="${role.name() == 'ADMIN'}">
             <button type="submit"><span th:text="#{fragment.redirect.to.orders.with.all.products}">Redirect to orders with all products</span>
             </button>
@@ -53,8 +52,9 @@
             <button type="submit"><span th:text="#{fragment.redirect.to.orders.statistic.sum}">Redirect to order statistic sum</span>
             </button>
         </form>
-        <form action="/orders/afterloginpage" method="get">
-            <button type="submit"><span th:text="#{fragment.redirect.continue.order}">Continue old order</span></button>
+        <form action="/orders/allordersbyuserid" method="get">
+            <button type="submit"><span th:text="#{fragment.redirect.to.your.orders}">Redirect to your orders</span>
+            </button>
         </form>
         <form action="/users" method="get" th:if="${role.name() == 'ADMIN'}">
             <button type="submit"><span th:text="#{fragment.redirect.list.of.users}">Redirect to list of users</span>

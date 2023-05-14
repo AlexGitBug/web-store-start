@@ -42,7 +42,7 @@ List of products:
   </form>
 </div>
 <div th:each="statistic : ${statistics}">
-    <a th:text="|order sum: ${statistic.getSum()}|"></a>
+    <a th:text="|Order sum: ${statistic.getSum()}|"></a>
 </div>
 <form th:action="@{/orders/{orderId}/setStatus(orderId=${order.id})}" th:if="${order.status.name() == 'IN_PROGRESS'}"
       method="post">

@@ -30,11 +30,11 @@
         <input th:id="${paymentCondition}" type="radio" name="paymentCondition" th:value="${paymentCondition}" th:checked="${paymentCondition == order.paymentCondition}">
         <label th:for="${paymentCondition}" th:text="${paymentCondition}">Role name</label>
     </div>
-    <button type="submit">Register</button>
+    <button type="submit"><span th:text="#{order.button.registration}">Registration</span></button>
 </form>
-<!--<div th:each="ola : ${ola}">-->
-<!--    <a th:text="${ola}"></a>-->
-<!--</div><br>-->
+<form th:action="@{/users/{userId}(userId=${userid})}" method="get">
+    <button type="submit"><span th:text="#{order.redirect.to.your.account}">Redirect to your account</span></button>
+</form>
 <div th:insert="~{fragment :: footer}"></div>
 </body>
 </html>

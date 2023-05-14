@@ -30,6 +30,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.dmdev.webStore.entity.enums.ProgressStatus.*;
 
@@ -116,7 +117,7 @@ public class OrderController {
 
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Integer id,
-                           @RequestParam("status") ProgressStatus status,
+//                           @RequestParam("status") ProgressStatus status,
                            Model model,
                            @AuthenticationPrincipal UserDetails userDetails) {
         var userId = getUserId(userDetails);

@@ -5,9 +5,9 @@
     <title>Statistic</title>
 </head>
 <body>
+<span>Orders statistics</span>
 <div th:each="statistic : ${statistics}">
-    <a th:text="|order id: ${statistic.getOrderId()}|"></a>
-    <a th:text="|order sum: ${statistic.getSum()}|"></a>
+    <a th:href="@{'/orders/' + ${statistic.getOrderId()}}" th:text="|Order id: ${statistic.getOrderId()}, order sum: ${statistic.getSum()}|">Order</a>
 </div>
 <div th:insert="~{fragment :: footer}"></div>
 </body>
