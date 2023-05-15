@@ -6,6 +6,7 @@ import com.dmdev.webStore.entity.enums.ProgressStatus;
 import lombok.Value;
 import lombok.experimental.FieldNameConstants;
 
+import javax.validation.constraints.FutureOrPresent;
 import java.time.LocalDate;
 
 @Value
@@ -15,6 +16,7 @@ public class OrderCreateEditDto {
     String city;
     String street;
     Integer building;
+    @FutureOrPresent
     LocalDate deliveryDate;
     PaymentCondition paymentCondition;
     ProgressStatus status;

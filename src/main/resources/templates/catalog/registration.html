@@ -6,14 +6,13 @@
 </head>
 <body>
 <div th:insert="~{fragment :: header}"></div>
-<span>Регистрация нового каталога</span><br><br>
-
+<div th:insert="~{fragment :: locale}"></div><br>
 <form th:action="@{/catalogs}" method="post" th:object="${catalog}">
-  <label for="category">Введите новый каталог:
+  <label for="category"><span th:text="#{catalog.add.new.category}">Add new category</span>
     <input id="category" type="text" name="category" th:value="*{category}">
   </label><br>
-  <button type="submit">Registration</button>
-</form>
+  <button type="submit"><span th:text="#{catalog.button.registration}">Registration</span></button>
+</form><br>
 <div th:insert="~{fragment :: footer}"></div>
 </body>
 </html>

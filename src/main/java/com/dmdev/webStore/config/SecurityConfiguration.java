@@ -37,13 +37,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeHttpRequests(urlConfig -> urlConfig
-                        .antMatchers("/login", "/users/registration").permitAll()
+                        .antMatchers("/login", "/users", "/users/registration").permitAll()
                         .antMatchers("/catalogs", "/catalogs/**",
                                 "/orders/reg", "orders/allordersbyuserid",
                                 "/products", "/logout").hasAnyAuthority(Role.USER.getAuthority(), Role.ADMIN.getAuthority())
                         .antMatchers("/products/registration", "/orders/getstatisticofeachorderswithsum",
-                                "/orders/allordersofoneuser", "/users").hasAuthority(Role.ADMIN.getAuthority())
-                        //orders/allordersofoneuser
+                                "/orders/allordersofoneuser").hasAuthority(Role.ADMIN.getAuthority())
                         .anyRequest().authenticated())
                 .logout(logout -> logout
                         .logoutUrl("/logout")
@@ -54,7 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         .defaultSuccessUrl("/users/oldorneworder"))
                 .oauth2Login(config -> config
                         .loginPage("/login")
-                        .defaultSuccessUrl("/catalogs")
+                        .defaultSuccessUrl("/products")
                         .userInfoEndpoint(userInfo->userInfo.oidcUserService(oidcUserService()))
                 );
     }

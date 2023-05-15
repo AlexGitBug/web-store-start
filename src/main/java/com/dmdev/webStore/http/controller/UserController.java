@@ -39,7 +39,6 @@ public class UserController {
     public String registration(Model model, @ModelAttribute("user") UserCreateEditDto user) {
         model.addAttribute("user", user);
         model.addAttribute("roles", Role.values());
-        model.addAttribute("users", userService.findAll());
         return "user/registration";
     }
 
@@ -75,7 +74,6 @@ public class UserController {
                     model.addAttribute("user", user);
                     model.addAttribute("users", userService.findAll());
                     model.addAttribute("roles", Role.values());
-//                    var userById = userService.findById(id);
                     model.addAttribute("userRole", role);
                     return "user/user";
                 })

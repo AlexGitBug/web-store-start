@@ -5,6 +5,7 @@ import com.dmdev.webStore.dto.order.OrderCreateEditDto;
 import com.dmdev.webStore.dto.order.OrderReadDto;
 import com.dmdev.webStore.dto.shoppingCart.ShoppingCartCreateEditDto;
 import com.dmdev.webStore.dto.shoppingCart.ShoppingCartReadDto;
+import com.dmdev.webStore.dto.user.UserCreateEditDto;
 import com.dmdev.webStore.dto.user.UserReadDto;
 import com.dmdev.webStore.entity.Order;
 import com.dmdev.webStore.entity.enums.PaymentCondition;
@@ -24,9 +25,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -117,7 +120,6 @@ public class OrderController {
 
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Integer id,
-//                           @RequestParam("status") ProgressStatus status,
                            Model model,
                            @AuthenticationPrincipal UserDetails userDetails) {
         var userId = getUserId(userDetails);
@@ -147,8 +149,8 @@ public class OrderController {
 
 
     @PostMapping
-    public String create(@ModelAttribute @Validated OrderCreateEditDto order) {
-        var orderReadDto = orderService.create(order);
+    public String create(@ModelAttribute @Validated OrderCreateEditDto dto) {
+        var orderReadDto = orderService.create(dto);
         return orderReadDto.map(it -> "redirect:/orders/" + it.getId() + "?status=IN_PROGRESS")
                 .orElse("redirect:/orders/reg");
     }
@@ -164,7 +166,7 @@ public class OrderController {
 
     @PostMapping("/{id}/setStatus")
     public String setStatus(@PathVariable("id") Integer id,
-                           @SessionAttribute("basket") Map<Integer, Integer> productIdAndCount) {
+                            @SessionAttribute("basket") Map<Integer, Integer> productIdAndCount) {
         orderService.setStatus(id);
         productIdAndCount.clear();
         return "redirect:/catalogs";
@@ -182,9 +184,9 @@ public class OrderController {
 
     @GetMapping("/reg")
     public String registration2(Model model,
-                                @ModelAttribute("order") @Validated OrderCreateEditDto order,
-                                @AuthenticationPrincipal UserDetails userDetails) {
-        model.addAttribute("order", order);
+                                @AuthenticationPrincipal UserDetails userDetails,
+                                @ModelAttribute("order") @Validated OrderCreateEditDto dto) {
+        model.addAttribute("order", dto);
         model.addAttribute("payments", PaymentCondition.values());
         model.addAttribute("userid", getUserId(userDetails));
         model.addAttribute("status", values());
@@ -193,8 +195,15 @@ public class OrderController {
 
     @PostMapping("/create")
     public String create2(@ModelAttribute @Validated OrderCreateEditDto order,
+                          BindingResult bindingResult,
+                          RedirectAttributes redirectAttributes,
                           @AuthenticationPrincipal UserDetails userDetails,
                           @SessionAttribute("basket") Map<Integer, Integer> productIdAndCount) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("order", order);
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            return "redirect:/orders/reg";
+        }
         var orderReadDto = orderService.create(order);
         var userId = getUserId(userDetails);
         var orderId = orderService.findByStatusAndUserId(userId).map(OrderReadDto::getId).orElseThrow();
@@ -205,7 +214,8 @@ public class OrderController {
                 var count = integerEntry.getValue();
                 var shoppingCartReadDto = shoppingCartService.create(new ShoppingCartCreateEditDto(orderId, productId, LocalDate.now(), count));
             }
-            return orderReadDto.map(it -> "redirect:/orders/" + it.getId() + "?status=IN_PROGRESS").orElse("redirect:/orders/reg");
+            return orderReadDto.map(it -> "redirect:/orders/" + it.getId() + "?status=IN_PROGRESS")
+                    .orElse("redirect:/orders/reg");
         }
         return "redirect:/products";
     }
@@ -215,5 +225,5 @@ public class OrderController {
                 .map(UserReadDto::getId)
                 .orElseThrow();
     }
-    }
+}
 

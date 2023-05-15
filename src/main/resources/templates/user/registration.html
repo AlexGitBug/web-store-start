@@ -14,13 +14,13 @@
     <input id="lastname" type="text" name="lastName" th:value="*{lastName}">
   </label><br>
   <label for="email"><span th:text="#{registration.email}">Email:</span>
-    <input id="email" type="text" name="email" th:value="*{email}">
+    <input id="email" type="text" name="email"  placeholder="email@gmail.com" th:value="*{email}">
   </label><br>
   <label for="password"><span th:text="#{registration.password}">Password:</span>
     <input id="password" type="text" name="password">
   </label><br>
   <label for="telephone"><span th:text="#{registration.telephone}">Telephone:</span>
-    <input id="telephone" type="text" name="telephone" th:value="*{telephone}">
+    <input id="telephone" type="text" name="telephone"  placeholder="+375 (29) 123-45-67" th:value="*{telephone}">
   </label><br>
   <label for="birthDate"><span th:text="#{registration.birthdate}">BirthDate:</span>
     <input id="birthDate" type="date" name="birthDate" th:value="*{birthDate}">

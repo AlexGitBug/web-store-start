@@ -6,16 +6,17 @@
 </head>
 <body>
 <div th:insert="~{fragment :: header}"></div>
+<div th:insert="~{fragment :: locale}"></div>
 <div th:each="catalog : ${catalogs}">
     <a th:href="@{'/catalogs/' + ${catalog.getId() + '/onecatalog'}}"
-       th:text="|category: ${catalog.getCategory()}|">Catalog</a>
+       th:text="|#{product.registration.catalog.category} Category: ${catalog.getCategory()}|">Catalog</a>
 </div><br>
 <div th:each="catalog : ${catalogs}">
     <div th:each="role : ${#authentication.principal.authorities}">
     <a th:href="@{'/catalogs/' + ${catalog.getId()}}"
        th:text="|Enter in the catalog for Admin Category: ${catalog.getCategory()}|" th:if="${role.name() == 'ADMIN'}">Catalog</a>
 </div>
-</div>
+</div><br>
 <div th:insert="~{fragment :: footer}"></div>
 </body>
 </html>

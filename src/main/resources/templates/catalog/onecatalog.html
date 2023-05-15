@@ -6,9 +6,12 @@
 </head>
 <body>
 <div th:insert="~{fragment :: header}"></div>
+<div th:insert="~{fragment :: locale}"></div>
 <div th:each="product : ${products}">
+    <img width="100" height="100" th:src="@{/api/v1/products/{productId}/avatar(productId=${product.id})}"
+         alt="Product image">
     <a th:href="@{'/products/' + ${product.id}}"
-       th:text="|Category: ${product.catalog.category} brand: ${product.brand.name()} price: ${product.price}|">Product</a>
+       th:text="|Category: ${product.catalog.category} brand: ${product.brand.name()} model: ${product.model} price: ${product.price}|">Product</a>
     <form th:action="@{/shoppingcarts/{productId}(productId=${product.id})}" th:if="${status}" method="post">
         <label for="count"><span th:text="#{products.count}">Count:</span>
             <input id="count" type="number" name="count">

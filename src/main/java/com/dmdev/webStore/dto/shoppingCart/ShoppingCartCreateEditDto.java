@@ -5,6 +5,7 @@ import com.dmdev.webStore.entity.enums.PaymentCondition;
 import lombok.Value;
 import lombok.experimental.FieldNameConstants;
 
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 
 @Value
@@ -14,5 +15,6 @@ public class ShoppingCartCreateEditDto {
     Integer orderId;
     Integer productId;
     LocalDate createdAt;
+    @Min(1L)
     Integer count;
 }

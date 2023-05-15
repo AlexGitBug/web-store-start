@@ -6,14 +6,15 @@
 </head>
 <body>
 <div th:insert="~{fragment :: header}"></div>
+<div th:insert="~{fragment :: locale}"></div>
 <form th:action="@{/catalogs/{catalogId}/update(catalogId=${catalog.id})}" method="post" th:object="${catalog}">
-    <label for="category">Category:
+    <label for="category"><span th:text="#{catalog.category}">Category</span>
         <input id="category" type="text" name="category" th:value="*{category}">
     </label> <br>
-    <button type="submit">Update</button><br>
+    <button type="submit"><span th:text="#{catalog.button.update}">Update</span></button><br>
 </form>
 <form th:action="@{/catalogs/{catalogId}/delete(catalogId=${catalog.id})}" method="post">
-    <button type="submit">Remove</button>
+    <button type="submit"><span th:text="#{catalog.button.remove}">Remove</span></button>
 </form><br>
 <div th:insert="~{fragment :: footer}"></div>
 </body>

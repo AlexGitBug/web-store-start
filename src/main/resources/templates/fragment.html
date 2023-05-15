@@ -6,7 +6,7 @@
 </head>
 <body>
 <div th:fragment="header">
-    <span th:text="|Email: ${#authentication.principal.username}|">Email</span>
+    <span th:text="|#{registration.email}: ${#authentication.principal.username}|">Email</span>
     <form action="/logout" method="post">
         <button type="submit"><span th:text="#{fragment.logout}">Logout</span></button>
     </form>
@@ -26,7 +26,7 @@
         <form action="/catalogs" method="get">
             <button type="submit"><span th:text="#{fragment.redirect.to.catalogs}">Redirect to catalogs</span></button>
         </form>
-        <form action="/catalogs/registration" method="get">
+        <form action="/catalogs/registration" method="get" th:if="${role.name() == 'ADMIN'}">
             <button type="submit"><span th:text="#{fragment.redirect.to.catalog.registration}">Redirect to catalogs registration</span>
             </button>
         </form>

@@ -6,9 +6,9 @@ CREATE TABLE IF NOT EXISTS users
     id  SERIAL PRIMARY KEY,
     first_name VARCHAR(128) NOT NULL,
     last_name  VARCHAR(128) NOT NULL,
-    email      VARCHAR(128) NOT NULL,
+    email      VARCHAR(128) NOT NULL UNIQUE ,
     password   VARCHAR(128),
-    telephone  VARCHAR(128) NOT NULL,
+    telephone  VARCHAR(128) NOT NULL UNIQUE ,
     birth_date DATE         NOT NULL,
     role       VARCHAR(128) NOT NULL
     );
@@ -36,20 +36,22 @@ CREATE TABLE IF NOT EXISTS product
 --changeset anisimov:4
 CREATE TABLE IF NOT EXISTS orders
 (
-    id  SERIAL PRIMARY KEY,
+    id  SERIAL PRIMARY KEY ,
     delivery_city VARCHAR(128) NOT NULL,
     delivery_street VARCHAR(128) NOT NULL,
     delivery_building INT NOT NULL,
     delivery_date DATE NOT NULL,
     payment_condition VARCHAR(128) NOT NULL,
+    status VARCHAR(64) NOT NULL ,
     user_id INT NOT NULL REFERENCES users (id)
     );
 
 --changeset anisimov:5
 CREATE TABLE IF NOT EXISTS shopping_cart
 (
-    id  SERIAL PRIMARY KEY,
-    created_at DATE NOT NULL,
-    order_id   INT NOT NULL REFERENCES orders (id),
-    product_id INT NOT NULL REFERENCES product (id)
+    id  SERIAL PRIMARY KEY ,
+    created_at DATE NOT NULL ,
+    order_id   INT NOT NULL REFERENCES orders (id) ON DELETE CASCADE ,
+    product_id INT NOT NULL REFERENCES product (id) ON DELETE CASCADE,
+    count INT NOT NULL
     );
