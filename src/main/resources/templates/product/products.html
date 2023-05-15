@@ -79,7 +79,7 @@
 </div>
 <br>
 <form th:action="@{/users/{userId}(userId=${userId})}" method="get">
-    <button type="submit">Redirect to your account</button>
+    <button type="submit"><span th:text="#{order.redirect.to.your.account}">Redirect to your account</span></button>
 </form>
 <div th:insert="~{fragment :: footer}"></div>
 </body>

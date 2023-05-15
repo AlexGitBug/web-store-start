@@ -6,9 +6,9 @@
 </head>
 <body>
 <div th:fragment="header">
-    <span th:text="${#authentication.principal.username}">Email</span>
+    <span th:text="|Email: ${#authentication.principal.username}|">Email</span>
     <form action="/logout" method="post">
-        <button type="submit">Logout</button>
+        <button type="submit"><span th:text="#{fragment.logout}">Logout</span></button>
     </form>
 </div>
 <div th:fragment="locale">

@@ -6,17 +6,18 @@
 </head>
 <body>
 <div th:insert="~{fragment :: header}"></div>
+<div th:insert="~{fragment :: locale}"></div>
 <form th:action="@{/products}" enctype="multipart/form-data" method="post" th:object="${product}">
-    <label for="model">Model:
+    <label for="model"><span th:text="#{product.registration.model}">Model</span>
         <input id="model" type="text" name="model" th:value="*{model}">
     </label> <br>
-    <label for="dateOfRelease">Date of release:
+    <label for="dateOfRelease"><span th:text="#{product.registration.date.of.release}">Date of release</span>
         <input id="dateOfRelease" type="date" name="dateOfRelease" th:value="*{dateOfRelease}">
     </label> <br>
-    <label for="price">Price:
+    <label for="price"><span th:text="#{product.registration.price}">Price</span>
         <input id="price" type="number" name="price" th:value="*{price}">
     </label> <br>
-    <label for="image">Image:
+    <label for="image"><span th:text="#{product.registration.image}">Image</span>
         <input width="150" height="150" id="image" type="file" name="image" th:value="*{image}">
     </label> <br>
     <span th:each="color : ${colors}">
@@ -28,7 +29,7 @@
             <label th:for="${brand}"  th:text="${brand}">Color name</label>
         </span><br>
     <div>
-        <label for="catalog">Catalog:
+        <label for="catalog"><span th:text="#{product.registration.catalog}">Catalog</span>
             <select id="catalog" name="catalogId">
                 <option></option>
                 <option th:each="catalog : ${catalogs}"
@@ -38,8 +39,8 @@
             </select>
         </label>
     </div>
-    <button type="submit">Register</button>
-</form>
+    <button type="submit"><span th:text="#{product.registration.button.registration}">Registration</span></button>
+</form><br>
 <div th:if="${errors}">
     <p style="color: red" th:each="error : ${errors}" th:text="${error.defaultMessage}">Error message</p>
 </div>
