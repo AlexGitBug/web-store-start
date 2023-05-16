@@ -7,7 +7,7 @@
 <body>
 <div th:insert="~{fragment :: header}"></div>
 <div th:each="user : ${users}">
-  <a th:href="@{'/users/' + ${user.id}}" th:text="|User id: ${user.id}, ${user.firstName} ${user.lastName} ${user.email}|">User</a>
+  <a th:href="@{'/users/' + ${user.id}}" th:text="|${user.firstName} ${user.lastName} ${user.email}|">User</a>
 </div>
 <br>
 <div th:insert="~{fragment :: footer}"></div>

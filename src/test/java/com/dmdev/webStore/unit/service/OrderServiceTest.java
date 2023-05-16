@@ -95,7 +95,7 @@ public class OrderServiceTest {
         doReturn(Optional.of(order)).when(orderRepository).findByUserId(user.getId());
         doReturn(orderReadDto).when(orderReadMapper).map(order);
 
-        var actualResult = orderService.findByUserId(user.getId());
+        var actualResult = orderService.findByUserId(user.getId()).get();
 
         assertEquals(actualResult, orderReadDto);
     }
@@ -128,17 +128,10 @@ public class OrderServiceTest {
         doReturn(Optional.of(order)).when(orderRepository).findByStatusAndUserId(IN_PROGRESS, order.getId());
         doReturn(orderReadDto).when(orderReadMapper).map(order);
 
-        var actualResult = orderService.findByStatusAndUserId(order.getId());
+        var actualResult = orderService.findByStatusAndUserId(order.getId()).get();
 
         assertNotNull(actualResult);
         assertEquals(orderReadDto, actualResult);
-    }
-
-    @Test
-    void orderNotFoundByStatusAndUserId() {
-        doReturn(Optional.empty()).when(orderRepository).findByStatusAndUserId(IN_PROGRESS, 123);
-
-        assertThrows(RuntimeException.class, () ->orderService.findByStatusAndUserId(123));
     }
 
     @Test
@@ -201,7 +194,7 @@ public class OrderServiceTest {
         doReturn(order).when(orderRepository).save(order);
         doReturn(orderReadDto).when(orderReadMapper).map(order);
 
-        var actualResult = orderService.create(orderCreateEditDto);
+        var actualResult = orderService.create(orderCreateEditDto).get();
 
         assertThat(actualResult).isEqualTo(orderReadDto);
         verify(orderRepository).save(order);

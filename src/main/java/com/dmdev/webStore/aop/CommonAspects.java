@@ -13,117 +13,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommonAspects {
 
-    @Before(value = "com.dmdev.webStore.aop.CommonPointcuts.anyServiceMethod()" +
-            "&& args(id,..)" +
-            "&& target(service)", argNames = "joinPoint,id,service")
-    public void addBeforeLoggingForAllMethodService(JoinPoint joinPoint,
-                                                    Object id,
-                                                    Object service) {
-        log.info("before -invoke method in class {}, id {}", service, id);
+    @Before(value = "com.dmdev.webStore.aop.CommonPointcuts.anyServiceMethod()")
+    public void addBeforeLoggingForAllMethodService(JoinPoint joinPoint) {
+        String methodName = joinPoint.getSignature().getName();
+        String className = joinPoint.getTarget().getClass().getSimpleName();
+        Object[] args = joinPoint.getArgs();
+        log.info("before -invoke method [{}] in class [{}] with args [{}]", methodName, className, args);
     }
 
-    @AfterReturning(value = "com.dmdev.webStore.aop.CommonPointcuts.anyServiceMethod()" +
-            "&& target(service)",
-            returning = "result",
-            argNames = "result,service")
-    public void addLoggingFindById(Object result,
-                                   Object service) {
-        log.info("After Returning - invoke method in class {}, result {}", service, result);
+    @AfterReturning(value = "com.dmdev.webStore.aop.CommonPointcuts.anyServiceMethod()", returning = "result")
+    public void addLoggingFindById(JoinPoint joinPoint, Object result) {
+        String methodName = joinPoint.getSignature().getName();
+        String className = joinPoint.getTarget().getClass().getSimpleName();
+        log.info("before -invoke method [{}] in class [{}] with result [{}]", methodName, className, result);
     }
-
 }
-
-//    @Before(value = "com.dmdev.webStore.aop.CommonPointcuts.anyFindByIdServiceMethod() " +
-//            "&& args(id)" +
-//            "&& target(service))",
-//            argNames = "joinPoint,id,service")
-//    public void addBeforeLoggingFindById(JoinPoint joinPoint,
-//                                         Object id,
-//                                         Object service) {
-//        log.info("before -invoke findById method in class {}, id {}", service, id);
-//    }
-//
-//    @Before(value = "com.dmdev.webStore.aop.CommonPointcuts.anyFindAllServiceMethod() " +
-//            "&& target(service)")
-//    public void addBeforeLoggingFindAll(JoinPoint joinPoint,
-//                                        Object service) {
-//        log.info("before -invoke findAll method in class {}", service);
-//    }
-//
-//    @Before(value = "com.dmdev.webStore.aop.CommonPointcuts.anyCreateServiceMethod() " +
-//            "&& args(dto)" +
-//            "&& target(service)",
-//            argNames = "joinPoint,service,dto")
-//    public void addBeforeLoggingCreate(JoinPoint joinPoint,
-//                                       Object service,
-//                                       Object dto) {
-//        log.info("before -invoke create method in class {}, dto {}", service, dto);
-//    }
-//
-//    @Before(value = "com.dmdev.webStore.aop.CommonPointcuts.anyDeleteServiceMethod() " +
-//            "&& args(id)" +
-//            "&& target(service)",
-//            argNames = "joinPoint,service,id")
-//    public void addBeforeLoggingDelete(JoinPoint joinPoint,
-//                                       Object service,
-//                                       Object id) {
-//        log.info("before -invoke delete method in class {}, id {}", service, id);
-//    }
-//
-//    @Before(value = "com.dmdev.webStore.aop.CommonPointcuts.anyUpdateServiceMethod() " +
-//            "&& args(id, dto)" +
-//            "&& target(service)",
-//            argNames = "joinPoint,service,id,dto")
-//    public void addBeforeLoggingUpdate(JoinPoint joinPoint,
-//                                       Object service,
-//                                       Object id,
-//                                       Object dto) {
-//        log.info("before -invoke update method in class {}, id {}, dto {}", service, id, dto);
-//    }
-//
-//    @AfterReturning(value = "com.dmdev.webStore.aop.CommonPointcuts.anyFindByIdServiceMethod() " +
-//            "&& target(service)",
-//            returning = "result",
-//            argNames = "result,service")
-//    public void addLoggingFindById(Object result,
-//                                   Object service) {
-//        log.info("After Returning - invoke findById method in class {}, result {}", service, result);
-//    }
-//
-//    @AfterReturning(value = "com.dmdev.webStore.aop.CommonPointcuts.anyFindAllServiceMethod() " +
-//            "&& target(service)",
-//            returning = "result",
-//            argNames = "result,service")
-//    public void addLoggingFindAll(Object result,
-//                                  Object service) {
-//        log.info("After Returning - invoke findAll method in class {}, result {}", service, result);
-//    }
-//
-//    @AfterReturning(value = "com.dmdev.webStore.aop.CommonPointcuts.anyDeleteServiceMethod() " +
-//            "&& target(service)",
-//            returning = "result",
-//            argNames = "result,service")
-//    public void addLoggingDelete(Object result,
-//                                 Object service) {
-//        log.info("After Returning - invoke delete method in class {}, result {}", service, result);
-//    }
-//
-//    @AfterReturning(value = "com.dmdev.webStore.aop.CommonPointcuts.anyCreateServiceMethod() " +
-//            "&& target(service)",
-//            returning = "result",
-//            argNames = "result,service")
-//    public void addLoggingCreate(Object result,
-//                                 Object service) {
-//        log.info("After Returning - invoke create method in class {}, result {}", service, result);
-//    }
-//
-//    @AfterReturning(value = "com.dmdev.webStore.aop.CommonPointcuts.anyUpdateServiceMethod() " +
-//            "&& target(service)",
-//            returning = "result",
-//            argNames = "result,service")
-//    public void addLoggingUpdate(Object result,
-//                                 Object service) {
-//        log.info("After Returning - invoke update method in class {}, result {}", service, result);
-//    }
-//
-//}

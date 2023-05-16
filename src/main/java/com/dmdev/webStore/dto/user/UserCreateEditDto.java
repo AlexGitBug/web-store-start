@@ -15,12 +15,16 @@ public class UserCreateEditDto {
     @NotEmpty
     @Size(min = 3, max = 30)
     String firstName;
+
     @NotBlank
     @NotEmpty
     @Size(min = 3, max = 30)
     String lastName;
+
     @Email
+    @Size(min = 3, max = 30)
     String email;
+    @Size(min = 3, max = 30)
     String password;
     String telephone;
     @Past

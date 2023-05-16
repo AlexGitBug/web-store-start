@@ -50,7 +50,7 @@ public class CatalogService {
                 .map(catalogReadMapper::map);
     }
 
-    @Transactional
+    @Transactional()
     public boolean delete(Integer id) {
         return catalogRepository.findById(id)
                 .map(entity -> {

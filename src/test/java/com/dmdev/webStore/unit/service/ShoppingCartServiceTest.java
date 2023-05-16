@@ -148,13 +148,6 @@ public class ShoppingCartServiceTest {
         assertEquals(shoppingCartReadDtos, actualResult);
     }
 
-    @Test
-    void getStatisticOfEachOrdersWithSum() {
-        List<TupleReadDto> expectedList = List.of(getTupleReadDto(), getTupleReadDto2());
-        doReturn(Arrays.asList(new Object[]{1, 1}, new Object[]{2, 2}))
-                .when(shoppingCartRepository).getStatisticOfEachOrdersWithSum();
-    }
-
     private TupleReadDto getTupleReadDto() {
         return new TupleReadDto(1, 1);
     }

@@ -103,20 +103,6 @@ public class ProductRepositoryIT extends IntegrationTestBase {
     }
 
     @Test
-    void findTopByOrderByPriceAsc() {
-        var actualResult = productRepository.findTopByOrderByPriceAsc();
-        assertTrue(actualResult.isPresent());
-        actualResult.ifPresent(product -> assertEquals(12, product.getId()));
-    }
-
-    @Test
-    void findTopByOrderByPriceDesc() {
-        var actualResult = productRepository.findTopByOrderByPriceDesc();
-        assertTrue(actualResult.isPresent());
-        actualResult.ifPresent(product -> assertEquals(7, product.getId()));
-    }
-
-    @Test
     void findAllProductsFromOrderIT() {
         var orderFilter = OrderFilter.builder()
                 .deliveryDate(LocalDate.of(2022, 12, 10))

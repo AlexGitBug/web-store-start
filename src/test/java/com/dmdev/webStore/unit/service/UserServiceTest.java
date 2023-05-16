@@ -146,7 +146,7 @@ public class UserServiceTest {
         doReturn(Optional.of(user)).when(userRepository).findByEmail(email);
         doReturn(userReadDto).when(userReadMapper).map(user);
 
-        var actualResult = userService.findByEmail(email);
+        var actualResult = userService.findByEmail(email).get();
 
         assertThat(actualResult).isNotNull();
         assertThat(actualResult).isEqualTo(userReadDto);

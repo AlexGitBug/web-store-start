@@ -35,7 +35,6 @@ public class Catalog implements BaseEntity<Integer>{
 
     @Builder.Default
     @OneToMany(mappedBy = "catalog")
-//    @JoinColumn(name = "catalog_id")
     List<Product> products = new ArrayList<>();
 
 }

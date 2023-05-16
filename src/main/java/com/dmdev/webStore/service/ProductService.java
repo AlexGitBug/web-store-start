@@ -13,11 +13,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +35,7 @@ public class ProductService {
     private final ProductReadMapper productReadMapper;
     private final ProductCreateEditMapper productCreateEditMapper;
     private final ImageService imageService;
+
 
     public Page<ProductReadDto> findAllProducts(ProductFilter filter, Pageable pageable) {
         var predicate = QPredicate.builder()
