@@ -17,6 +17,9 @@
        th:text="|Enter in the catalog for Admin Category: ${catalog.getCategory()}|" th:if="${role.name() == 'ADMIN'}">Catalog</a>
 </div>
 </div><br>
+<form th:action="@{/users/{userId}(userId=${userId})}" method="get">
+    <button type="submit"><span th:text="#{order.redirect.to.your.account}">Redirect to your account</span></button>
+</form><br>
 <div th:insert="~{fragment :: footer}"></div>
 </body>
 </html>

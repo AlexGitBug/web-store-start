@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class CommonAspects {
 
     @Before(value = "com.dmdev.webStore.aop.CommonPointcuts.anyServiceMethod()")
-    public void addBeforeLoggingForAllMethodService(JoinPoint joinPoint) {
+    public void addBefore(JoinPoint joinPoint) {
         String methodName = joinPoint.getSignature().getName();
         String className = joinPoint.getTarget().getClass().getSimpleName();
         Object[] args = joinPoint.getArgs();
@@ -22,9 +22,9 @@ public class CommonAspects {
     }
 
     @AfterReturning(value = "com.dmdev.webStore.aop.CommonPointcuts.anyServiceMethod()", returning = "result")
-    public void addLoggingFindById(JoinPoint joinPoint, Object result) {
+    public void addAfterLogging(JoinPoint joinPoint, Object result) {
         String methodName = joinPoint.getSignature().getName();
         String className = joinPoint.getTarget().getClass().getSimpleName();
-        log.info("before -invoke method [{}] in class [{}] with result [{}]", methodName, className, result);
+        log.info("after -invoke method [{}] in class [{}] with result [{}]", methodName, className, result);
     }
 }

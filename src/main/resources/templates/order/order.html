@@ -34,11 +34,13 @@
     </div>
     <button type="submit" th:if="${order.status.name() == 'IN_PROGRESS'}"><span th:text="#{order.button.update}">Update</span></button>
 </form><br>
-<span th:text="#{order.list.of.products}">Payment method</span>
+<span th:text="#{order.list.of.products}">List of products</span>
 <div th:each="shoppingcart : ${shoppingcarts}">
   <a th:text="|#{product.registration.catalog.category}: ${shoppingcart.product.catalog.category},
    #{product.registration.model}: ${shoppingcart.product.model},
    #{products.count}: ${shoppingcart.count}|">shoppingcart</a>
+    <img width="100" height="100" th:src="@{/api/v1/products/{productId}/avatar(productId=${shoppingcart.product.id})}"
+         alt="Product image">
   <form th:action="@{/shoppingcarts/{shid}/delete(shid=${shoppingcart.id})}"
         th:if="${order.status.name() == 'IN_PROGRESS'}" method="post">
     <button type="submit"><span th:text="#{order.button.remove}">Remove product</span></button>

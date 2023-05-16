@@ -51,16 +51,16 @@ public class UserController {
         return "user/oldorneworder";
     }
 
-    @GetMapping("/ordertime")
-    public String findUsersWhoMadeOrderSpecificTime(Model model, UserFilter filter) {
-        model.addAttribute("users", userService.findUsersWhoMadeOrderSpecificTime(filter));
-        return "user/ordertime";
-    }
+//    @GetMapping("/ordertime")
+//    public String findUsersWhoMadeOrderSpecificTime(Model model, UserFilter filter) {
+//        model.addAttribute("users", userService.findUsersWhoMadeOrderSpecificTime(filter));
+//        return "user/ordertime";
+//    }
 
     @GetMapping
     public String findAll(Model model) {
         var sort = Sort.sort(User.class);
-        var sortUser = sort.by(User::getId);
+        var sortUser = sort.by((User user) -> user.getPersonalInformation().getFirstName()).ascending();
         model.addAttribute("users", userService.findAllSort(sortUser));
         return "user/users";
     }

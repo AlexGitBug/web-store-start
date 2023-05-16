@@ -17,6 +17,7 @@ public interface ProductRepository extends
         FilterProductRepository,
         QuerydslPredicateExecutor<Product> {
     List<Product> findAllByBrand(Brand brand);
+
     List<Product> findAllByCatalogId(Integer catalog);
 
 }

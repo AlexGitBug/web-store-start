@@ -8,7 +8,7 @@
 <div th:insert="~{fragment :: header}"></div>
 <div th:insert="~{fragment :: locale}"></div>
 <span th:text="|#{oldorneworder.hello.dear} ${user.firstName} ${user.lastName}|">Hello, Dear</span>
-<form th:action="@{/orders/afterloginpage}" th:if="status." method="get">
+<form th:action="@{/orders/afterloginpage}" th:if="status" method="get">
     <button type="submit"><span th:text="#{oldorneworder.buttoncontinueoldorder}">Continue old order</span></button>
 </form><br>
 <form th:action="@{/orders/reg}" method="get">

@@ -20,7 +20,7 @@ public interface OrderRepository extends
     @Modifying
     @Query("update Order o " +
             "set o.status = :status " +
-            "where o.id in (:id)")
+            "where o.id = :id")
     int setStatus(ProgressStatus status, Integer id);
 
     Optional<Order> findByStatusAndUserId(ProgressStatus status, Integer id);

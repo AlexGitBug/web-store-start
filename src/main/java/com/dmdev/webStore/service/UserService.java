@@ -34,7 +34,7 @@ public class UserService implements UserDetailsService {
     }
 
     public List<UserReadDto> findAllSort(Sort sort) {
-        return userRepository.findAll().stream()
+        return userRepository.findAll(sort).stream()
                 .map(userReadMapper::map)
                 .toList();
     }

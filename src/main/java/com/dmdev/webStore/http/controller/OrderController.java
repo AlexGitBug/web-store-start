@@ -69,7 +69,7 @@ public class OrderController {
     @GetMapping
     public String findAll(Model model, @ModelAttribute OrderCreateEditDto order) {
         var sortBy = Sort.sort(Order.class);
-        var sort = sortBy.by(Order::getDeliveryDate);
+        var sort = sortBy.by(Order::getId);
         model.addAttribute("orders", orderService.findAll(sort));
         return "order/orders";
     }
@@ -139,7 +139,8 @@ public class OrderController {
     }
 
     @GetMapping("/afterloginpage")
-    public String afterLoginPageContinue(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String afterLoginPageContinue(Model model,
+                                         @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("user", userService.findByEmail(userDetails.getUsername()));
         var userId = getUserId(userDetails);
         var order = orderService.findByStatusAndUserId(userId);

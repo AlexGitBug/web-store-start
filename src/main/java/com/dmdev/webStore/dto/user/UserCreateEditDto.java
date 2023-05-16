@@ -3,7 +3,6 @@ package com.dmdev.webStore.dto.user;
 import com.dmdev.webStore.entity.enums.Role;
 import lombok.Value;
 import lombok.experimental.FieldNameConstants;
-//import com.dmdev.spring.validation.group.CreateAction;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -24,8 +23,9 @@ public class UserCreateEditDto {
     @Email
     @Size(min = 3, max = 30)
     String email;
-    @Size(min = 3, max = 30)
     String password;
+
+    @Pattern(regexp = "\\+375 \\(\\d{2}\\) \\d{3}-\\d{2}-\\d{2}")
     String telephone;
     @Past
     LocalDate birthDate;

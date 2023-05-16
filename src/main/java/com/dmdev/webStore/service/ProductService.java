@@ -28,7 +28,6 @@ import static com.dmdev.webStore.entity.QProduct.product;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductRepository productRepository;

@@ -43,8 +43,11 @@ public class CatalogController {
     }
 
     @GetMapping
-    public String findAll(Model model) {
+    public String findAll(Model model,
+                          @AuthenticationPrincipal UserDetails userDetails) {
+        var userId = getUserId(userDetails);
         model.addAttribute("catalogs", catalogService.findAll());
+        model.addAttribute("userId", userId);
         return "catalog/catalogs";
     }
 
@@ -91,6 +94,10 @@ public class CatalogController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         return "redirect:/catalogs";
+    }
+
+    private Integer getUserId(UserDetails userDetails) {
+        return userService.findByEmail(userDetails.getUsername()).map(UserReadDto::getId).orElseThrow();
     }
 }
 

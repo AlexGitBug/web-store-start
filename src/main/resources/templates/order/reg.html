@@ -34,7 +34,7 @@
 </form>
 <div th:if="${errors}">
     <p style="color: red" th:each="error : ${errors}" th:text="${error.defaultMessage}">Error message</p>
-</div>
+</div><br>
 <form th:action="@{/users/{userId}(userId=${userid})}" method="get">
     <button type="submit"><span th:text="#{order.redirect.to.your.account}">Redirect to your account</span></button>
 </form>
